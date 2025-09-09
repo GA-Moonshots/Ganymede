@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
-import org.firstinspires.ftc.teamcode.subsystems.SensorPackage;
+import org.firstinspires.ftc.teamcode.subsystems.Sensors;
 
 /**
  * Main robot class for the 2025 FTC season using SolversLib and Pedro Pathing
@@ -30,7 +30,7 @@ public class Ganymede extends Robot {
 
     // SUBSYSTEMS
     public PedroDrive drive;
-    public SensorPackage sensors;
+    public Sensors sensors;
 
     // Convenience references
     public Telemetry telemetry;
@@ -85,7 +85,7 @@ public class Ganymede extends Robot {
         drive = new PedroDrive(this, startPose);
 
         // Initialize sensor package (mostly unchanged from your original)
-        sensors = new SensorPackage(this);
+        sensors = new Sensors(this);
 
         // Register subsystems with the command scheduler
         register(drive, sensors);
@@ -108,8 +108,7 @@ public class Ganymede extends Robot {
         drive = new PedroDrive(this, startPose);
 
         // Initialize sensors with April Tag tracking enabled
-        sensors = new SensorPackage(this);
-        sensors.enableAprilTagTracking();
+        sensors = new Sensors(this);
 
         // Register subsystems
         register(drive, sensors);
@@ -138,25 +137,11 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
-        // X Button - Save current pose (for persistent pose between runs)
-        new GamepadButton(player1, GamepadKeys.Button.X)
-                .whenPressed(() -> drive.saveCurrentPose());
-
-        // Y Button - Snap to nearest cardinal direction (0, 90, 180, 270)
-        new GamepadButton(player1, GamepadKeys.Button.Y)
-                .whenPressed(() -> drive.snapToCardinal());
 
         // --- PLAYER 2 CONTROLS ---
         // Add subsystem-specific controls here as you add them back
         // For now, keeping it minimal as requested
 
-        // Dpad Up - Enable April Tag position correction
-        new GamepadButton(player2, GamepadKeys.Button.DPAD_UP)
-                .whenPressed(() -> sensors.enableAprilTagCorrection());
-
-        // Dpad Down - Disable April Tag position correction
-        new GamepadButton(player2, GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(() -> sensors.disableAprilTagCorrection());
     }
 
     /**
@@ -197,10 +182,6 @@ public class Ganymede extends Robot {
         // Update Pedro's localization
         drive.update();
 
-        // Update sensor readings if needed
-        if (sensors.isAprilTagCorrectionEnabled()) {
-            sensors.processAprilTags();
-        }
     }
 
     /**

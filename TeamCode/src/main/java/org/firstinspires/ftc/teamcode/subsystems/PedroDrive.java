@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.geometry.BezierCurve;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -72,13 +71,9 @@ public class PedroDrive extends SubsystemBase {
         imu.initialize(parameters);
 
         // Initialize Pedro Pathing Follower
-        follower = new Follower();
+        follower = Constants.createFollower(robot.hardwareMap);
         follower.setStartingPose(startPose);
 
-        // Configure follower PID coefficients (tune these for your robot)
-        follower.setTranslationalPIDCoefficients(0.3, 0, 0.01);
-        follower.setHeadingPIDCoefficients(2, 0, 0.1);
-        follower.setDrivePowersClipping(false); // Allow full power range
     }
 
     /**
@@ -182,19 +177,6 @@ public class PedroDrive extends SubsystemBase {
         driveSpeed = Math.max(0.1, Math.min(1.0, speed));
     }
 
-    /**
-     * Snap robot to nearest cardinal direction
-     */
-    public void snapToCardinal() {
-        double currentHeading = getPose().getHeading();
-        double targetHeading = Math.round(currentHeading / 90) * 90;
-
-        // Create a path that just rotates to the target heading
-        Pose currentPose = getPose();
-        Pose targetPose = new Pose(currentPose.getX(), currentPose.getY(), targetHeading);
-
-        followPath(new PathChain(lineToPosition(targetPose)));
-    }
 
     /**
      * Save current pose for persistence between runs

@@ -9,9 +9,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Constants {
 
     public static final double KP = 0.2;
+    public static final double INPUT_THRESHOLD = 0.1;
+
 
     // ----- HARDWARE MAP NAMES ------
     // -------- SENSOR NAMES ---------
+    public static final String LIMELIGHT_NAME = "limelight";
     public static final String IMU_NAME = "imu";
     public static final String REAR_DIST_NAME = "rear_distance";
     public static final String RIGHT_DIST_NAME = "right_distance";
