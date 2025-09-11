@@ -52,9 +52,9 @@ public class Constants {
             .leftPodY(8.007739252)
             .rightPodY(-7.658540267)
             .strafePodX(-6.370904873)
-            .leftEncoder_HardwareMapName("leftFront")
-            .rightEncoder_HardwareMapName("rightRear")
-            .strafeEncoder_HardwareMapName("rightFront")
+            .leftEncoder_HardwareMapName(LEFT_FRONT_NAME) // REFERENCE VARIABLE ABOVE. MOTOR NAME, NOT PAR
+            .rightEncoder_HardwareMapName(RIGHT_BACK_NAME) // REFERENCE VARIABLE ABOVE. MOTOR NAME, NOT PAR
+            .strafeEncoder_HardwareMapName(RIGHT_FRONT_NAME) // REFERENCE VARIABLE ABOVE. MOTOR NAME, NOT PERP
             .leftEncoderDirection(Encoder.FORWARD)  // if we are noticing  crazy # one of these might need to be reversed
             .rightEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.FORWARD)
