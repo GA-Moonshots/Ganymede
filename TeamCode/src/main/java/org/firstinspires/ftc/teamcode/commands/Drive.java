@@ -36,7 +36,6 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-
         // Slow mode activated if right bumper or lift is up
         double speedMod = robot.opMode.gamepad1.right_bumper
                 ? 0.25 : 1; // slow mode

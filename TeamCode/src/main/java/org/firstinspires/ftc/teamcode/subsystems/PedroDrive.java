@@ -23,7 +23,7 @@ public class PedroDrive extends SubsystemBase {
     private final Ganymede robot;
 
     // Pedro Pathing Follower - handles all path following and localization
-    private final Follower follower;
+    public final Follower follower;
 
     // Drive motors
     private final DcMotorEx leftFront, leftBack, rightFront, rightBack;
@@ -73,7 +73,6 @@ public class PedroDrive extends SubsystemBase {
         // Initialize Pedro Pathing Follower
         follower = Constants.createFollower(robot.hardwareMap);
         follower.setStartingPose(startPose);
-
     }
 
     /**

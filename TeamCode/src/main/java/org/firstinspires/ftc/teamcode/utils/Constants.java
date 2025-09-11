@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.utils;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
+import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
@@ -43,6 +45,17 @@ public class Constants {
     // ---- PEDRO PATHING -----
     public static FollowerConstants followerConstants = new FollowerConstants();
 
+    public static MecanumConstants mecanumConstants = new MecanumConstants()
+            .maxPower(1)
+            .rightRearMotorName(RIGHT_BACK_NAME)
+            .rightFrontMotorName(RIGHT_FRONT_NAME)
+            .leftRearMotorName(LEFT_BACK_NAME)
+            .leftFrontMotorName(LEFT_FRONT_NAME)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
+
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
@@ -65,6 +78,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .threeWheelIMULocalizer(localizerConstants)
                 .pathConstraints(pathConstraints)
+                .mecanumDrivetrain(mecanumConstants)
                 .build();
     }
 }
