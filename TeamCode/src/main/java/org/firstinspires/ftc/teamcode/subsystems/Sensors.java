@@ -29,10 +29,10 @@ public class Sensors implements Subsystem {
         telemetry = robot.telemetry;
 
         try {
-            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
-            limelight.setPollRateHz(100);
-            limelight.start();
-            limelight.pipelineSwitch(0);
+//            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
+//            limelight.setPollRateHz(100);
+//            limelight.start();
+//            limelight.pipelineSwitch(0);
         } catch (Exception e) {
             telemetry.addData("Limelight Error", e.getMessage());
         }

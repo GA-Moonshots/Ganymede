@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.Robot;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -15,7 +16,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Sensors;
 
 /**
  * Main robot class for the 2025 FTC season using SolversLib and Pedro Pathing
- * This replaces the old Callisto.java and removes unnecessary subsystems
  */
 public class Ganymede extends Robot {
 
@@ -72,7 +72,23 @@ public class Ganymede extends Robot {
         player2 = new GamepadEx(opMode.gamepad2);
 
         // Set starting pose based on alliance and side
-        setAutonomousStartPose();
+        if (isRed) {
+            if (isLeft) {
+                // Red Left starting position
+                startPose = new Pose(-36, -62, 180);
+            } else {
+                // Red Right starting position
+                startPose = new Pose(12, -62, 180);
+            }
+        } else {
+            if (isLeft) {
+                // Blue Left starting position
+                startPose = new Pose(-12, 62, 0);
+            } else {
+                // Blue Right starting position
+                startPose = new Pose(36, 62, 0);
+            }
+        }
 
         initAuto();
     }
@@ -94,10 +110,43 @@ public class Ganymede extends Robot {
         drive.setDefaultCommand(new Drive(this));
 
         // Configure button bindings for TeleOp
-        configureButtonBindings();
+        /*
 
-        telemetry.addData("Status", "Robot initialized for TeleOp");
-        telemetry.update();
+                .__                                      ____
+        ______  |  |  _____   ___.__.  ____ _______     /_   |
+        \____ \ |  |  \__  \ <   |  |_/ __ \\_  __ \     |   |
+        |  |_> >|  |__ / __ \_\___  |\  ___/ |  | \/     |   |
+        |   __/ |____/(____  // ____| \___  >|__|        |___|
+        |__|               \/ \/          \/
+
+        */
+
+        // Right bumper - Slow mode (handled in Drive command)
+        // Already handled by checking gamepad1.right_bumper in Drive command
+
+        // A Button - Reset heading
+        new GamepadButton(player1, GamepadKeys.Button.A)
+                .whenPressed(() -> drive.resetHeading());
+
+        // B Button - Toggle field-centric mode
+        new GamepadButton(player1, GamepadKeys.Button.B)
+                .whenPressed(() -> drive.toggleFieldCentric());
+
+
+        /*
+
+                _                                    __
+               (_ )                                /'__`\
+         _ _    | |    _ _  _   _    __   _ __    (_)  ) )
+        ( '_`\  | |  /'_` )( ) ( ) /'__`\( '__)      /' /
+        | (_) ) | | ( (_| || (_) |(  ___/| |       /' /( )
+        | ,__/'(___)`\__,_)`\__, |`\____)(_)      (_____/'
+        | |                ( )_| |
+        (_)                `\___/'
+
+        */
+
+
     }
 
     /**
@@ -117,79 +166,11 @@ public class Ganymede extends Robot {
         telemetry.addData("Alliance", isRed ? "RED" : "BLUE");
         telemetry.addData("Starting Side", isLeft ? "LEFT" : "RIGHT");
         telemetry.addData("Start Pose", startPose.toString());
-        telemetry.update();
+
+        // TODO: Call autonomous routines here
+        new SequentialCommandGroup(
+
+        ).schedule();
     }
 
-    /**
-     * Configure button mappings for TeleOp
-     */
-    private void configureButtonBindings() {
-        // --- PLAYER 1 CONTROLS (Drive) ---
-
-        // Right bumper - Slow mode (handled in Drive command)
-        // Already handled by checking gamepad1.right_bumper in Drive command
-
-        // A Button - Reset heading
-        new GamepadButton(player1, GamepadKeys.Button.A)
-                .whenPressed(() -> drive.resetHeading());
-
-        // B Button - Toggle field-centric mode
-        new GamepadButton(player1, GamepadKeys.Button.B)
-                .whenPressed(() -> drive.toggleFieldCentric());
-
-
-        // --- PLAYER 2 CONTROLS ---
-        // Add subsystem-specific controls here as you add them back
-        // For now, keeping it minimal as requested
-
-    }
-
-    /**
-     * Set the starting pose based on alliance and starting position
-     */
-    private void setAutonomousStartPose() {
-        // These are example starting positions - adjust based on your field setup
-        // Pedro uses inches for X/Y and degrees for heading
-
-        if (isRed) {
-            if (isLeft) {
-                // Red Left starting position
-                startPose = new Pose(-36, -62, 180);
-            } else {
-                // Red Right starting position
-                startPose = new Pose(12, -62, 180);
-            }
-        } else {
-            if (isLeft) {
-                // Blue Left starting position
-                startPose = new Pose(-12, 62, 0);
-            } else {
-                // Blue Right starting position
-                startPose = new Pose(36, 62, 0);
-            }
-        }
-    }
-
-    /**
-     * Update method to be called in OpMode loops
-     * This ensures gamepad states are updated
-     */
-    public void update() {
-        // Update gamepad states
-        player1.readButtons();
-        player2.readButtons();
-
-        // Update Pedro's localization
-        drive.update();
-
-    }
-
-    /**
-     * Emergency stop - disable all subsystems
-     */
-    public void emergencyStop() {
-        drive.stop();
-        telemetry.addData("Status", "EMERGENCY STOP ACTIVATED");
-        telemetry.update();
-    }
 }

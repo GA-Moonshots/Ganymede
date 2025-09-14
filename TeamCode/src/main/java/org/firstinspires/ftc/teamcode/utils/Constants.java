@@ -38,11 +38,26 @@ public class Constants {
     /** Maximum drive power multiplier for safety (0.0 - 1.0) */
     public static final double MAX_DRIVE_POWER = 1.0;
 
+    /** Minimum drive speed multiplier (prevents robot from being too slow) */
+    public static final double MIN_DRIVE_SPEED = 0.1;
+
+    /** Maximum drive speed multiplier (safety limit) */
+    public static final double MAX_DRIVE_SPEED = 1.0;
+
+    /** Default drive speed on initialization (1.0 = full speed) */
+    public static final double DEFAULT_DRIVE_SPEED = 1.0;
+
+    /** Default field-centric mode on initialization */
+    public static final boolean DEFAULT_FIELD_CENTRIC = true;
+
+    /** Slow mode speed multiplier when activated */
+    public static final double SLOW_MODE_MULTIPLIER = 0.25;
+
 
     /*
      * ╔═══════════════════════════════════════════════════════════════════╗
      * ║                      HARDWARE MAP NAMES                           ║
-     * ║                    🤖 Robot Configuration 🤖                      ║
+     * ║                    🤖 Robot Configuration 🤖                       ║
      * ╚═══════════════════════════════════════════════════════════════════╝
      */
 
@@ -50,73 +65,41 @@ public class Constants {
     //                    🎮 MOTOR MAPPINGS 🎮
     // ============================================================
 
-    /** Left front drive motor - Control Hub Port 0 */
+    /** Drive motor hardware map names - must match robot configuration */
     public static final String LEFT_FRONT_NAME = "leftFront";
-
-    /** Right front drive motor - Control Hub Port 1 */
     public static final String RIGHT_FRONT_NAME = "rightFront";
-
-    /** Left back drive motor - Control Hub Port 2 */
     public static final String LEFT_BACK_NAME = "leftBack";
-
-    /** Right back drive motor - Control Hub Port 3 */
     public static final String RIGHT_BACK_NAME = "rightBack";
-
 
     // ============================================================
     //                    📡 SENSOR MAPPINGS 📡
     // ============================================================
 
-    /** Limelight 3A vision camera */
-    public static final String LIMELIGHT_NAME = "limelight";
-
-    /** REV IMU for heading data */
+    /** IMU hardware map name */
     public static final String IMU_NAME = "imu";
 
-
-    // ============================================================
-    //                 🎯 ODOMETRY ENCODER MAPPINGS 🎯
-    // ============================================================
-
-    /**
-     * Odometry encoder port aliases - these map to the motor ports
-     * but are used by the odometry system for position tracking
-     *
-     */
-
-    /** Left odometry pod - shares port with left front motor */
-    public static final String LEFT_ODOMETRY_NAME = LEFT_FRONT_NAME;
-
-    /** Right odometry pod - shares port with right front motor */
-    public static final String RIGHT_ODOMETRY_NAME = RIGHT_FRONT_NAME;
-
-    /** Center (perpendicular) odometry pod - shares port with right back motor */
-    public static final String CENTER_ODOMETRY_NAME = RIGHT_BACK_NAME;
-
-
-    // ============================================================
-    //                    🎭 SERVO MAPPINGS 🎭
-    // ============================================================
-
-    // TODO: Add servo mappings when mechanisms are installed
-    // Example:
-    // public static final String CLAW_SERVO_NAME = "claw";
-    // public static final String ARM_SERVO_NAME = "arm";
+    /** IMU mounting orientation on robot */
+    public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    public static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
+            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
 
     /*
-     * ████████████████████████████████████████████████████████████████████
-     * █                                                                  █
-     * █                     PEDRO PATHING CONFIGURATION                  █
-     * █                         🗺️ Path Following 🗺️                     █
-     * █                                                                  █
-     * ████████████████████████████████████████████████████████████████████
+     * ╔═══════════════════════════════════════════════════════════════════╗
+     * ║                    PEDRO PATHING CONFIGURATION                    ║
+     * ║                    🗺️ Path Following Setup 🗺️                     ║
+     * ╚═══════════════════════════════════════════════════════════════════╝
      */
 
     /**
-     * Pedro Pathing follower constants
-     * Contains PID values and path following parameters
-     * Tune these values using the Pedro Tuning OpMode!
+     * Pedro Pathing Follower constants
+     * Controls path following behavior and correction
+     *
+     * TUNING GUIDE:
+     * - translationalPID: Controls forward/backward accuracy
+     * - headingPID: Controls rotational accuracy
+     * - drivePID: Controls overall path following smoothness
      */
     public static FollowerConstants followerConstants = new FollowerConstants()
             // Translational PID - controls forward/backward movement accuracy
@@ -126,13 +109,11 @@ public class Constants {
             .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0, 0))
 
             // Drive PID - controls path following accuracy
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0)
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0))
 
-            // Optional: Enable dual PID for better correction
-            // .useSecondaryTranslationalPIDF(false)
-            // .useSecondaryHeadingPIDF(false)
-            // .useSecondaryDrivePIDF(false)
-            );
+            // Robot mass in kilograms (for centripetal force compensation)
+            .mass(5.0);
+
 
     /**
      * Mecanum drivetrain configuration
@@ -164,26 +145,28 @@ public class Constants {
      * Three-wheel odometry with IMU configuration
      * Contains physical measurements and conversion factors
      *
-     * IMPORTANT: These values MUST be tuned for your specific robot!
-     * Use the Pedro Tuning OpMode to find these values
+     * ⚠️ IMPORTANT: Use the Pedro Tuning OpMode to find these values
      */
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
-            // Encoder tick-to-inch conversion factors (MUST BE TUNED!)
-            .forwardTicksToInches(0.001989436789)  // Tune with Forward Localizer Test
-            .strafeTicksToInches(0.001989436789)   // Tune with Strafe Localizer Test
-            .turnTicksToInches(0.001989436789)     // Tune with Turn Localizer Test
+            // ============ ENCODER CONVERSION FACTORS ============
+            // These convert encoder ticks to inches - MUST BE TUNED!
+            .forwardTicksToInches(0.001989436789)  // From forward tuner
+            .strafeTicksToInches(0.001989436789)   // From lateral tuner
+            .turnTicksToInches(0.001989436789)     // From turn tuner
 
-            // Physical pod positions from robot center (inches)
-            .leftPodY(8.007739252)     // Distance from center to left pod
-            .rightPodY(-7.658540267)   // Distance from center to right pod (negative = right)
-            .strafePodX(-6.370904873)  // Distance from center to perpendicular pod (negative = back)
+            // ============ PHYSICAL OFFSETS ============
+            // Pod positions relative to robot center (inches)
+            .leftPodY(1)        // Left encoder Y offset
+            .rightPodY(-1)      // Right encoder Y offset
+            .strafePodX(-2.5)   // Strafe encoder X offset
 
-            // Encoder hardware mappings
-            .leftEncoder_HardwareMapName(LEFT_ODOMETRY_NAME)
-            .rightEncoder_HardwareMapName(RIGHT_ODOMETRY_NAME)
-            .strafeEncoder_HardwareMapName(CENTER_ODOMETRY_NAME)
+            // ============ HARDWARE CONFIGURATION ============
+            // Encoder port names (use motor ports)
+            .leftEncoder_HardwareMapName(LEFT_FRONT_NAME) // TODO: verify these are correct
+            .rightEncoder_HardwareMapName(RIGHT_BACK_NAME)
+            .strafeEncoder_HardwareMapName(RIGHT_FRONT_NAME)
 
-            // Encoder directions (adjust if counting backwards)
+            // Encoder directions (adjust if needed)
             .leftEncoderDirection(Encoder.FORWARD)
             .rightEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.FORWARD)
@@ -191,70 +174,30 @@ public class Constants {
             // IMU configuration
             .IMU_HardwareMapName(IMU_NAME)
             .IMU_Orientation(new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                    RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                    IMU_LOGO_DIRECTION,
+                    IMU_USB_DIRECTION
             ));
 
 
     /*
-     * ╭───────────────────────────────────────────────────────────────╮
-     * │                    FACTORY METHODS                            │
-     * │                  🏭 Object Builders 🏭                        │
-     * ╰───────────────────────────────────────────────────────────────╯
+     * ╔═══════════════════════════════════════════════════════════════════╗
+     * ║                      BUILDER METHOD                               ║
+     * ║                Creates configured Pedro Follower                   ║
+     * ╚═══════════════════════════════════════════════════════════════════╝
      */
 
     /**
-     * Creates and configures a Pedro Pathing Follower instance
-     * This is the main entry point for autonomous path following
+     * Factory method to create a configured Pedro Pathing Follower
+     * This method assembles all the constants into a working Follower instance
      *
-     * @param hardwareMap The OpMode's hardware map
-     * @return Configured Follower ready for path execution
+     * @param hardwareMap Hardware map from OpMode
+     * @return Configured Follower ready for path following
      */
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
+                .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(mecanumConstants)
                 .threeWheelIMULocalizer(localizerConstants)
-                .pathConstraints(pathConstraints)
                 .build();
     }
-
-
-    /*
-     * ╔═══════════════════════════════════════════════════════════════╗
-     * ║                    UTILITY CONSTANTS                          ║
-     * ║                   🛠️ Helper Values 🛠️                         ║
-     * ╚═══════════════════════════════════════════════════════════════╝
-     */
-
-    /** Field dimensions for path planning (inches) */
-    public static final double FIELD_SIZE = 144.0;  // 12 feet square
-
-    /** Robot dimensions (inches) */
-    public static final double ROBOT_WIDTH = 18.0;
-    public static final double ROBOT_LENGTH = 18.0;
-
-    /** Starting positions for autonomous */
-    public static class StartingPositions {
-        // Blue Alliance
-        public static final double BLUE_LEFT_X = 12.0;
-        public static final double BLUE_LEFT_Y = 63.0;
-        public static final double BLUE_RIGHT_X = 36.0;
-        public static final double BLUE_RIGHT_Y = 63.0;
-
-        // Red Alliance
-        public static final double RED_LEFT_X = -36.0;
-        public static final double RED_LEFT_Y = 63.0;
-        public static final double RED_RIGHT_X = -12.0;
-        public static final double RED_RIGHT_Y = 63.0;
-    }
-
-
-    /*
-     * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-     * ░                                                              ░
-     * ░                    END OF CONSTANTS FILE                     ░
-     * ░             May the pizza be delivered on time 🍀            ░
-     * ░                                                              ░
-     * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-     */
 }

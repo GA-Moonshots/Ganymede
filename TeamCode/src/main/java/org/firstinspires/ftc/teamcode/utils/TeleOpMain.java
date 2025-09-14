@@ -34,15 +34,12 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.update();
     }
 
-    // That's it! No run() method needed!
-    // CommandOpMode handles the main loop automatically
-
-    // Optional: Override these if you need them
 
     @Override
     public void run() {
         super.run(); // This runs the command scheduler
-
+        robot.player1.readButtons();
+        robot.player2.readButtons();
         // Add any additional per-loop code here if needed
         // But usually you don't need anything here
     }
