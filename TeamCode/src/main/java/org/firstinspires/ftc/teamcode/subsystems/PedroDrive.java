@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-
+import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
@@ -17,14 +14,14 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        PEDRO DRIVE SUBSYSTEM                              ║
  * ║                                                                           ║
- * ║  Advanced mecanum drive subsystem using Pedro Pathing for precise         ║
- * ║  autonomous path following and smooth teleop control.                     ║
+ * ║  Mecanum drivetrain with Pedro Pathing integration                        ║
  * ║                                                                           ║
  * ║  Features:                                                                ║
  * ║    • Field-centric and robot-centric drive modes                          ║
  * ║    • Integrated Pedro Pathing localization                                ║
  * ║    • Variable speed control for precision movements                       ║
  * ║    • IMU-based heading correction                                         ║
+ * ║    • All motor configuration centralized in Constants.java                ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 public class PedroDrive extends SubsystemBase {
@@ -55,13 +52,13 @@ public class PedroDrive extends SubsystemBase {
     /** Speed multiplier for fine control (0.0 to 1.0) */
     private double driveSpeed = Constants.DEFAULT_DRIVE_SPEED;
 
-
     /**
      * ┌─────────────────────────────────────────────────────────────────────┐
      * │                         CONSTRUCTOR                                 │
      * │                                                                     │
      * │  Initializes the Pedro Drive subsystem with motor configuration,     │
      * │  IMU setup, and Pedro Pathing follower initialization.              │
+     * │  All motor configuration is now pulled from Constants.java          │
      * └─────────────────────────────────────────────────────────────────────┘
      *
      * @param robot Reference to the main robot object
@@ -77,17 +74,19 @@ public class PedroDrive extends SubsystemBase {
         rightBack = robot.hardwareMap.get(DcMotorEx.class, Constants.RIGHT_BACK_NAME);
 
         // ============ Motor Configuration ============
-        // Set motor directions for proper mecanum kinematics
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        // All motor configuration now comes from Constants.java for easy machine-specific tuning
 
-        // Configure zero power behavior for smooth stops
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Set motor directions from Constants
+        leftFront.setDirection(Constants.LEFT_FRONT_DIRECTION);
+        leftBack.setDirection(Constants.LEFT_BACK_DIRECTION);
+        rightFront.setDirection(Constants.RIGHT_FRONT_DIRECTION);
+        rightBack.setDirection(Constants.RIGHT_BACK_DIRECTION);
+
+        // Set zero power behavior from Constants
+        leftFront.setZeroPowerBehavior(Constants.DRIVE_ZERO_POWER_BEHAVIOR);
+        leftBack.setZeroPowerBehavior(Constants.DRIVE_ZERO_POWER_BEHAVIOR);
+        rightFront.setZeroPowerBehavior(Constants.DRIVE_ZERO_POWER_BEHAVIOR);
+        rightBack.setZeroPowerBehavior(Constants.DRIVE_ZERO_POWER_BEHAVIOR);
 
         // ============ IMU Initialization ============
         imu = robot.hardwareMap.get(IMU.class, Constants.IMU_NAME);
@@ -116,15 +115,14 @@ public class PedroDrive extends SubsystemBase {
     public void periodic() {
         // Update Pedro's localization system. DO NOT DUPLICATE THIS CALL
         update();
+        // Post basic data
+        addTelemetry();
     }
 
     /**
      * Updates Pedro Pathing's internal localization calculations.
      * This method processes encoder readings and updates the robot's
      * estimated position on the field.
-     *
-     * Note: This is called automatically in periodic() but can also
-     * be called manually if needed for more frequent updates.
      */
     public void update() {
         follower.update();
@@ -135,60 +133,42 @@ public class PedroDrive extends SubsystemBase {
     // ============================================================
 
     /**
-     * Primary drive method for TeleOp control.
-     * Implements mecanum kinematics with optional field-centric control.
+     * Main teleop drive method using mecanum kinematics.
+     * Supports both field-centric and robot-centric control modes.
      *
-     * @param forward Forward/backward motion (-1.0 to 1.0, negative = backward)
-     * @param strafe  Left/right motion (-1.0 to 1.0, negative = left)
-     * @param turn    Rotational motion (-1.0 to 1.0, negative = CCW)
-     *
-     * Field-Centric Mode:
-     *   - Movement is relative to the field (driver's perspective)
-     *   - Forward always moves away from driver regardless of robot orientation
-     *
-     * Robot-Centric Mode:
-     *   - Movement is relative to the robot
-     *   - Forward moves in the direction the robot is facing
+     * @param forward Forward/backward input (-1.0 to 1.0)
+     * @param strafe  Left/right strafe input (-1.0 to 1.0)
+     * @param turn    Rotation input (-1.0 to 1.0)
      */
     public void drive(double forward, double strafe, double turn) {
-        // Get current robot heading for field-centric calculations
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double rotY = forward * driveSpeed;
+        double rotX = strafe * driveSpeed;
+        double rotation = turn * driveSpeed;
 
-        // Initialize movement vectors
-        double rotX = strafe;
-        double rotY = -forward; // Inverted because gamepad Y is reversed
-
-        // Apply field-centric transformation if enabled
+        // Field-centric transformation if enabled
         if (fieldCentric) {
-            // Rotate input vector by negative robot heading to align with field
-            double temp = rotY * Math.cos(-botHeading) - rotX * Math.sin(-botHeading);
-            rotX = rotY * Math.sin(-botHeading) + rotX * Math.cos(-botHeading);
-            rotY = temp;
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+            // Rotate input vector by robot heading
+            double temp = rotY;
+            rotY = rotY * Math.cos(-botHeading) - rotX * Math.sin(-botHeading);
+            rotX = temp * Math.sin(-botHeading) + rotX * Math.cos(-botHeading);
         }
 
-        // Apply global speed modifier for precision control
-        rotX *= driveSpeed;
-        rotY *= driveSpeed;
-        turn *= driveSpeed;
+        // Calculate mecanum wheel powers
+        // Normalize by the maximum possible value to ensure [-1, 1] range
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rotation), 1);
 
-        // ============ Mecanum Kinematics Calculation ============
-        // Calculate individual wheel powers using mecanum equations
-        // Denominator ensures no wheel power exceeds [-1, 1] range
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
-
-        double frontLeftPower = (rotY + rotX + turn) / denominator;
-        double backLeftPower = (rotY - rotX + turn) / denominator;
-        double frontRightPower = (rotY - rotX - turn) / denominator;
-        double backRightPower = (rotY + rotX - turn) / denominator;
+        double frontLeftPower = (rotY + rotX + rotation) / denominator;
+        double backLeftPower = (rotY - rotX + rotation) / denominator;
+        double frontRightPower = (rotY - rotX - rotation) / denominator;
+        double backRightPower = (rotY + rotX - rotation) / denominator;
 
         // Apply calculated powers to motors
         leftFront.setPower(frontLeftPower);
         leftBack.setPower(backLeftPower);
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
-
-        // Update telemetry with current drive state
-        updateTelemetry();
     }
 
     /**
@@ -247,13 +227,12 @@ public class PedroDrive extends SubsystemBase {
      */
     public void toggleFieldCentric() {
         fieldCentric = !fieldCentric;
-        robot.telemetry.addData("Drive Mode", fieldCentric ? "Field-Centric" : "Robot-Centric");
     }
 
     /**
      * Sets the global drive speed multiplier for precision control.
      *
-     * @param speed Desired speed multiplier (clamped to 0.1 - 1.0)
+     * @param speed Desired speed multiplier (clamped to MIN - MAX range from Constants)
      */
     public void setDriveSpeed(double speed) {
         driveSpeed = Math.max(Constants.MIN_DRIVE_SPEED, Math.min(Constants.MAX_DRIVE_SPEED, speed));
@@ -272,10 +251,6 @@ public class PedroDrive extends SubsystemBase {
     public void saveCurrentPose() {
         Pose currentPose = getPose();
         // TODO: Implement actual pose persistence
-        // Options:
-        //   1. SharedPreferences for simple x,y,heading storage
-        //   2. File I/O for more complex data
-        //   3. Network storage for multi-device access
 
         robot.telemetry.addData("Saved Pose", "X:%.1f Y:%.1f H:%.1f°",
                 currentPose.getX(),
@@ -287,7 +262,7 @@ public class PedroDrive extends SubsystemBase {
      * Updates telemetry display with current drive system information.
      * Shows drive mode, speed, pose, and IMU heading for debugging.
      */
-    private void updateTelemetry() {
+    private void addTelemetry() {
         Pose currentPose = getPose();
 
         // Drive configuration

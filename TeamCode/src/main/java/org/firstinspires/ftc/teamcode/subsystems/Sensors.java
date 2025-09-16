@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.seattlesolvers.solverslib.command.Subsystem;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 
-public class Sensors implements Subsystem {
+public class Sensors extends SubsystemBase {
     private Limelight3A limelight;
     private Telemetry telemetry;
     private double x, y, theta;
