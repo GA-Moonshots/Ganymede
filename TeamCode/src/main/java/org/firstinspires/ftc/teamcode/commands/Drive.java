@@ -99,7 +99,7 @@ public class Drive extends CommandBase {
         double turn = applyDeadZone(-player1.getRightX());  // Negative for intuitive turning
 
         // Debug telemetry for input troubleshooting
-        robot.telemetry.addData("═══ Gamepad Input ═══", "");
+        robot.telemetry.addData("══ Drive Command Inputs ══", "");
         robot.telemetry.addData("Left Stick", "X: %.2f Y: %.2f",
                 player1.getLeftX(), player1.getLeftY());
         robot.telemetry.addData("Right Stick", "X: %.2f Y: %.2f",
@@ -161,26 +161,6 @@ public class Drive extends CommandBase {
     private double applyDeadZone(double input) {
         // Zero out small inputs to prevent drift
         return Math.abs(input) <= Constants.INPUT_THRESHOLD ? 0.0 : input;
-    }
-
-    /**
-     * Alternative deadzone implementation with smooth transition.
-     * Provides smoother control near the deadzone boundary.
-     *
-     * @param input Raw gamepad axis value
-     * @return Smoothly scaled input with deadzone
-     */
-    private double applySmoothDeadZone(double input) {
-        if (Math.abs(input) <= Constants.INPUT_THRESHOLD) {
-            return 0.0;
-        }
-
-        // Scale the remaining range to maintain full motion
-        double sign = Math.signum(input);
-        double magnitude = Math.abs(input);
-        double scaled = (magnitude - Constants.INPUT_THRESHOLD) / (1.0 - Constants.INPUT_THRESHOLD);
-
-        return sign * scaled;
     }
 
     // ============================================================

@@ -126,7 +126,7 @@ public class Constants {
             .leftRearMotorName(LEFT_BACK_NAME)
             .leftFrontMotorName(LEFT_FRONT_NAME)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -144,7 +144,6 @@ public class Constants {
     /**
      * Three-wheel odometry with IMU configuration
      * Contains physical measurements and conversion factors
-     *
      * ⚠️ IMPORTANT: Use the Pedro Tuning OpMode to find these values
      */
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()

@@ -116,6 +116,8 @@ public class PedroDrive extends SubsystemBase {
     public void periodic() {
         // Update Pedro's localization system. DO NOT DUPLICATE THIS CALL
         update();
+        // Post basic data
+        addTelemetry();
     }
 
     /**
@@ -176,9 +178,10 @@ public class PedroDrive extends SubsystemBase {
         // Denominator ensures no wheel power exceeds [-1, 1] range
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
 
+        // TODO: Which of these needs to be subtraction?
         double frontLeftPower = (rotY + rotX + turn) / denominator;
-        double backLeftPower = (rotY - rotX + turn) / denominator;
-        double frontRightPower = (rotY - rotX - turn) / denominator;
+        double backLeftPower = (rotY + rotX + turn) / denominator;
+        double frontRightPower = (rotY + rotX - turn) / denominator;
         double backRightPower = (rotY + rotX - turn) / denominator;
 
         // Apply calculated powers to motors
@@ -187,8 +190,6 @@ public class PedroDrive extends SubsystemBase {
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
 
-        // Update telemetry with current drive state
-        updateTelemetry();
     }
 
     /**
@@ -247,7 +248,6 @@ public class PedroDrive extends SubsystemBase {
      */
     public void toggleFieldCentric() {
         fieldCentric = !fieldCentric;
-        robot.telemetry.addData("Drive Mode", fieldCentric ? "Field-Centric" : "Robot-Centric");
     }
 
     /**
@@ -287,7 +287,7 @@ public class PedroDrive extends SubsystemBase {
      * Updates telemetry display with current drive system information.
      * Shows drive mode, speed, pose, and IMU heading for debugging.
      */
-    private void updateTelemetry() {
+    private void addTelemetry() {
         Pose currentPose = getPose();
 
         // Drive configuration
