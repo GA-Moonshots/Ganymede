@@ -153,16 +153,18 @@ public class PedroDrive extends SubsystemBase {
             double temp = rotY;
             rotY = rotY * Math.cos(-botHeading) - rotX * Math.sin(-botHeading);
             rotX = temp * Math.sin(-botHeading) + rotX * Math.cos(-botHeading);
-        }
+        };
 
-        // Calculate mecanum wheel powers
-        // Normalize by the maximum possible value to ensure [-1, 1] range
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rotation), 1);
+        // ============ Mecanum Kinematics Calculation ============
+        // Calculate individual wheel powers using mecanum equations
+        // Denominator ensures no wheel power exceeds [-1, 1] range
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
 
-        double frontLeftPower = (rotY + rotX + rotation) / denominator;
-        double backLeftPower = (rotY - rotX + rotation) / denominator;
-        double frontRightPower = (rotY - rotX - rotation) / denominator;
-        double backRightPower = (rotY + rotX - rotation) / denominator;
+        // TODO: Which of these needs to be subtraction?
+        double frontLeftPower = (rotY + rotX + turn) / denominator;
+        double backLeftPower = (rotY + rotX + turn) / denominator;
+        double frontRightPower = (rotY + rotX - turn) / denominator;
+        double backRightPower = (rotY + rotX - turn) / denominator;
 
         // Apply calculated powers to motors
         leftFront.setPower(frontLeftPower);

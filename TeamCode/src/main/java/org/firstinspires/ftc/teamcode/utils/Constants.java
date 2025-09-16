@@ -155,6 +155,8 @@ public class Constants {
     /**
      * Three-wheel odometry with IMU configuration
      * Contains physical measurements and conversion factors
+     *
+     * ⚠️ IMPORTANT: Use the Pedro Tuning OpMode to find these values
      */
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
             // ============ ENCODER CONVERSION FACTORS ============
