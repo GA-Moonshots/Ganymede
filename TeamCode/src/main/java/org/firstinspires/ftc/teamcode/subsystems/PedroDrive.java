@@ -160,12 +160,12 @@ public class PedroDrive extends SubsystemBase {
         // Denominator ensures no wheel power exceeds [-1, 1] range
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
 
-        // TODO: Which of these needs to be subtraction?
+        // THESE ARE CORRECT
         double frontLeftPower = (rotY + rotX - turn) / denominator;
         double backLeftPower = (rotY - rotX - turn) / denominator;
         double frontRightPower = (rotY - rotX + turn) / denominator;
         double backRightPower = (rotY + rotX + turn) / denominator;
-        
+
         // Apply calculated powers to motors
         leftFront.setPower(frontLeftPower);
         leftBack.setPower(backLeftPower);
