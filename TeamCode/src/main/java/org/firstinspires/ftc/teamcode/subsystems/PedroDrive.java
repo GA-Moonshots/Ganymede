@@ -165,12 +165,7 @@ public class PedroDrive extends SubsystemBase {
         double backLeftPower = (rotY - rotX - turn) / denominator;
         double frontRightPower = (rotY - rotX + turn) / denominator;
         double backRightPower = (rotY + rotX + turn) / denominator;
-
-//        leftFrontPower =  forward + strafe - turn;
-//        rightFrontPower = forward - strafe + turn; // this corresponds to the back right tire
-//        leftBackPower = forward - strafe - turn;
-//        rightBackPower = forward + strafe + turn; // rn this correspond to the front right tire??
-
+        
         // Apply calculated powers to motors
         leftFront.setPower(frontLeftPower);
         leftBack.setPower(backLeftPower);
