@@ -15,6 +15,7 @@ import com.seattlesolvers.solverslib.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
+import org.firstinspires.ftc.teamcode.commands.ForwardByDistance;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Sensors;
 
@@ -79,18 +80,18 @@ public class Ganymede extends Robot {
         if (isRed) {
             if (isLeft) {
                 // Red Left starting position
-                startPose = new Pose(-36, -62, 180);
+                startPose = new Pose(0, 0, 0);
             } else {
                 // Red Right starting position
-                startPose = new Pose(12, -62, 180);
+                startPose = new Pose(0, 0, 0);
             }
         } else {
             if (isLeft) {
                 // Blue Left starting position
-                startPose = new Pose(-12, 62, 0);
+                startPose = new Pose(0, 0, 0);
             } else {
                 // Blue Right starting position
-                startPose = new Pose(36, 62, 0);
+                startPose = new Pose(0, 0, 0);
             }
         }
 
@@ -174,7 +175,7 @@ public class Ganymede extends Robot {
         // TODO: Call autonomous routines here
 
             new SequentialCommandGroup(
-
+                new ForwardByDistance(this,12,10000000 )
 
             ).schedule();
 

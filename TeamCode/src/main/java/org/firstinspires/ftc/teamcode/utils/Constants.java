@@ -121,7 +121,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0))
 
             // Robot mass in kilograms (for centripetal force compensation)
-            .mass(5.0);
+            .mass(9.0);
 
     /**
      * Mecanum drivetrain configuration for Pedro Pathing
@@ -167,9 +167,9 @@ public class Constants {
 
             // ============ ODOMETRY POD POSITIONS ============
             // Physical pod offsets from robot center (inches)
-            .leftPodY(1)
-            .rightPodY(-1)
-            .strafePodX(-2.5)
+            .leftPodY(7.5)
+            .rightPodY(-7.5)
+            .strafePodX(-6.5)
 
             // ============ ENCODER HARDWARE MAPPING ============
             // Map to motor ports (odometry pods share motor ports)

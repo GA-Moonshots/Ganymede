@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.util.Timing;
 
@@ -12,7 +13,9 @@ public class ForwardByDistance extends CommandBase {
     // REFERENCES
     private Ganymede robot;
     private PedroDrive drive;
-    private double distance;
+    private double distance; // in inches ??????????
+    protected boolean finished = false;
+
 
     protected Timing.Timer timer;
 
@@ -29,13 +32,16 @@ public class ForwardByDistance extends CommandBase {
     public void execute() {
         super.execute();
 
-        // if not at distance
-            // move forwards
+
+
+
     }
 
     @Override
     public void initialize() {
         timer.start();
+
+
     }
 
     @Override
@@ -45,6 +51,6 @@ public class ForwardByDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.done();
+        return finished || timer.done();
     }
 }
