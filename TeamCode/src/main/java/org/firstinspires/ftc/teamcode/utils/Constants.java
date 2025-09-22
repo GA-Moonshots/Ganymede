@@ -79,6 +79,8 @@ public class Constants {
 
     public static final double INPUT_THRESHOLD = 0.1;
 
+    public static final double POSE_TOLERANCE = 0.5;
+
     // ============================================================
     //                    🎯 DRIVE MODE DEFAULTS 🎯
     // ============================================================
@@ -121,7 +123,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0))
 
             // Robot mass in kilograms (for centripetal force compensation)
-            .mass(9.0);
+            .mass(6.8);
 
     /**
      * Mecanum drivetrain configuration for Pedro Pathing
@@ -175,7 +177,7 @@ public class Constants {
             // Map to motor ports (odometry pods share motor ports)
             .leftEncoder_HardwareMapName(LEFT_FRONT_NAME)
             .rightEncoder_HardwareMapName(RIGHT_BACK_NAME)
-            .strafeEncoder_HardwareMapName(RIGHT_FRONT_NAME)
+            .strafeEncoder_HardwareMapName(LEFT_BACK_NAME)
 
             // ============ ENCODER DIRECTIONS ============
             // Set based on physical mounting
