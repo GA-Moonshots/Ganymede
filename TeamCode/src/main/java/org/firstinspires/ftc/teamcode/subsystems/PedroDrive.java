@@ -262,7 +262,7 @@ public class PedroDrive extends SubsystemBase {
 
     /**
      * Updates telemetry display with current drive system information.
-     * Shows drive mode, speed, pose, and IMU heading for debugging.
+     * Shows drive mode, speed, pose, IMU heading, and deadwheel encoder readings.
      */
     private void addTelemetry() {
         Pose currentPose = getPose();
@@ -279,6 +279,15 @@ public class PedroDrive extends SubsystemBase {
         robot.telemetry.addData("Heading", "Pedro:%.1f° IMU:%.1f°",
                 Math.toDegrees(currentPose.getHeading()),
                 imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
+        // Deadwheel encoder readings
+        robot.telemetry.addData("═══ Deadwheel Encoders ═══", "");
+        robot.telemetry.addData("Left Parallel (leftFront)", "%d ticks",
+                leftFront.getCurrentPosition());
+        robot.telemetry.addData("Right Parallel (rightBack)", "%d ticks",
+                rightBack.getCurrentPosition());
+        robot.telemetry.addData("Strafe/Perpendicular (rightFront)", "%d ticks",
+                rightFront.getCurrentPosition());
     }
 
     // ============================================================
