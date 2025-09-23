@@ -286,8 +286,8 @@ public class PedroDrive extends SubsystemBase {
                 leftFront.getCurrentPosition());
         robot.telemetry.addData("Right Parallel (rightBack)", "%d ticks",
                 rightBack.getCurrentPosition());
-        robot.telemetry.addData("Strafe/Perpendicular (rightFront)", "%d ticks",
-                rightFront.getCurrentPosition());
+        robot.telemetry.addData("Strafe/Perpendicular (leftBack)", "%d ticks",
+                leftBack.getCurrentPosition());
     }
 
     // ============================================================

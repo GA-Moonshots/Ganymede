@@ -18,7 +18,7 @@ public class Constants {
     /*
      * ╔═══════════════════════════════════════════════════════════════════╗
      * ║                    DRIVE MOTOR CONFIGURATION                      ║
-     * ║                  🔧 Machine-Specific Settings 🔧                  ║
+     * ║                  🔧 Machine-Specific Settings 🔧                 ║
      * ╚═══════════════════════════════════════════════════════════════════╝
      */
 
@@ -183,7 +183,7 @@ public class Constants {
             // Set based on physical mounting
             .leftEncoderDirection(Encoder.FORWARD)
             .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.FORWARD);
+            .strafeEncoderDirection(Encoder.REVERSE);
 
     /**
      * Factory method to create a configured Pedro Pathing Follower
