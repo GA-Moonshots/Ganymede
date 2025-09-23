@@ -99,7 +99,7 @@ public class Constants {
     public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
             RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
-            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+            RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
     /*
      * ╔═══════════════════════════════════════════════════════════════════╗
@@ -163,9 +163,9 @@ public class Constants {
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
             // ============ ENCODER CONVERSION FACTORS ============
             // These convert encoder ticks to inches - MUST BE TUNED!
-            .forwardTicksToInches(0.001989436789)
-            .strafeTicksToInches(0.001989436789)
-            .turnTicksToInches(0.001989436789)
+            .forwardTicksToInches(36.360762)
+            .strafeTicksToInches(36.360762)
+            .turnTicksToInches(36.360762)
 
             // ============ ODOMETRY POD POSITIONS ============
             // Physical pod offsets from robot center (inches)
@@ -191,7 +191,7 @@ public class Constants {
      */
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
-                .pathConstraints(pathConstraints)
+             //   .pathConstraints(pathConstraints) // need to bring those back to adavnce tuning
                 .mecanumDrivetrain(mecanumConstants)
                 .threeWheelIMULocalizer(localizerConstants)
                 .build();
