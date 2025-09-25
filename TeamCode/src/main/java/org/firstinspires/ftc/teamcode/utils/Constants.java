@@ -114,13 +114,13 @@ public class Constants {
      */
     public static FollowerConstants followerConstants = new FollowerConstants()
             // Translational PID - controls forward/backward accuracy
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.05, 0))
 
             // Heading PID - controls rotational accuracy
-            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(2.0, 0, 0.1, 0))
 
             // Drive PID - controls path following accuracy
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0.005, 0.6, 0.01))
 
             // Robot mass in kilograms (for centripetal force compensation)
             .mass(6.8);
@@ -163,9 +163,9 @@ public class Constants {
     public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
             // ============ ENCODER CONVERSION FACTORS ============
             // These convert encoder ticks to inches - MUST BE TUNED!
-            .forwardTicksToInches(36.360762)
-            .strafeTicksToInches(36.360762)
-            .turnTicksToInches(36.360762)
+            .forwardTicksToInches(0.0030986370928518256)
+            .strafeTicksToInches(0.0030986370928518256)
+            .turnTicksToInches(0.0030986370928518256)
 
             // ============ ODOMETRY POD POSITIONS ============
             // Physical pod offsets from robot center (inches)
@@ -181,9 +181,9 @@ public class Constants {
 
             // ============ ENCODER DIRECTIONS ============
             // Set based on physical mounting
-            .leftEncoderDirection(Encoder.FORWARD)
+            .leftEncoderDirection(Encoder.REVERSE)
             .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.REVERSE);
+            .strafeEncoderDirection(Encoder.FORWARD);
 
     /**
      * Factory method to create a configured Pedro Pathing Follower
@@ -191,7 +191,7 @@ public class Constants {
      */
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
-             //   .pathConstraints(pathConstraints) // need to bring those back to adavnce tuning
+                .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(mecanumConstants)
                 .threeWheelIMULocalizer(localizerConstants)
                 .build();

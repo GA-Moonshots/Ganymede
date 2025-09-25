@@ -240,9 +240,9 @@ public class PedroDrive extends SubsystemBase {
         driveSpeed = Math.max(Constants.MIN_DRIVE_SPEED, Math.min(Constants.MAX_DRIVE_SPEED, speed));
     }
 
-    // ============================================================
-    //                    UTILITY METHODS
-    // ============================================================
+    //============================================================//
+    //                    UTILITY METHODS                         //
+    //============================================================//
 
     /**
      * Saves the current robot pose for persistence between OpMode runs.
