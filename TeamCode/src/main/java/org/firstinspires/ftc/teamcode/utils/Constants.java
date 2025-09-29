@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.utils;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
+import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,6 +15,9 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 public class Constants {
 
     /*
@@ -160,30 +165,38 @@ public class Constants {
      *
      * ⚠️ IMPORTANT: Use the Pedro Tuning OpMode to find these values
      */
-    public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
-            // ============ ENCODER CONVERSION FACTORS ============
-            // These convert encoder ticks to inches - MUST BE TUNED!
-            .forwardTicksToInches(0.0030986370928518256)
-            .strafeTicksToInches(0.0030986370928518256)
-            .turnTicksToInches(0.0030986370928518256)
-
-            // ============ ODOMETRY POD POSITIONS ============
-            // Physical pod offsets from robot center (inches)
-            .leftPodY(7.5)
-            .rightPodY(-7.5)
-            .strafePodX(-6.5)
-
-            // ============ ENCODER HARDWARE MAPPING ============
-            // Map to motor ports (odometry pods share motor ports)
-            .leftEncoder_HardwareMapName(LEFT_FRONT_NAME)
-            .rightEncoder_HardwareMapName(RIGHT_BACK_NAME)
-            .strafeEncoder_HardwareMapName(LEFT_BACK_NAME)
-
-            // ============ ENCODER DIRECTIONS ============
-            // Set based on physical mounting
-            .leftEncoderDirection(Encoder.REVERSE)
-            .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.FORWARD);
+//    public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
+//            // ============ ENCODER CONVERSION FACTORS ============
+//            // These convert encoder ticks to inches - MUST BE TUNED!
+//            .forwardTicksToInches(0.0030986370928518256)
+//            .strafeTicksToInches(0.0030986370928518256)
+//            .turnTicksToInches(0.0030986370928518256)
+//
+//            // ============ ODOMETRY POD POSITIONS ============
+//            // Physical pod offsets from robot center (inches)
+//            .leftPodY(7.5)
+//            .rightPodY(-7.5)
+//            .strafePodX(-6.5)
+//
+//            // ============ ENCODER HARDWARE MAPPING ============
+//            // Map to motor ports (odometry pods share motor ports)
+//            .leftEncoder_HardwareMapName(LEFT_FRONT_NAME)
+//            .rightEncoder_HardwareMapName(RIGHT_BACK_NAME)
+//            .strafeEncoder_HardwareMapName(LEFT_BACK_NAME)
+//
+//            // ============ ENCODER DIRECTIONS ============
+//            // Set based on physical mounting
+//            .leftEncoderDirection(Encoder.REVERSE)
+//            .rightEncoderDirection(Encoder.FORWARD)
+//            .strafeEncoderDirection(Encoder.FORWARD);
+    public static PinpointConstants localizerConstants = new PinpointConstants()
+            .forwardPodY(-4)
+            .strafePodX(-4)
+            .distanceUnit(DistanceUnit.INCH)
+            .hardwareMapName("pinpoint")
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     /**
      * Factory method to create a configured Pedro Pathing Follower
@@ -193,7 +206,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(mecanumConstants)
-                .threeWheelIMULocalizer(localizerConstants)
+                .pinpointLocalizer(localizerConstants)
                 .build();
     }
 }
