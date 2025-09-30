@@ -20,13 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════╗
-     * ║                    DRIVE MOTOR CONFIGURATION                      ║
-     * ║                  🔧 Machine-Specific Settings 🔧                 ║
-     * ╚═══════════════════════════════════════════════════════════════════╝
-     */
-
     // ============================================================  //
     //                    🎮 MOTOR HARDWARE MAPPINGS 🎮             //
     // ============================================================ //
@@ -159,41 +152,10 @@ public class Constants {
             1       // Heading tolerance (radians)
     );
 
-    /**
-     * Three-wheel odometry with IMU configuration
-     * Contains physical measurements and conversion factors
-     *
-     * ⚠️ IMPORTANT: Use the Pedro Tuning OpMode to find these values
-     */
-//    public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
-//            // ============ ENCODER CONVERSION FACTORS ============
-//            // These convert encoder ticks to inches - MUST BE TUNED!
-//            .forwardTicksToInches(0.0030986370928518256)
-//            .strafeTicksToInches(0.0030986370928518256)
-//            .turnTicksToInches(0.0030986370928518256)
-//
-//            // ============ ODOMETRY POD POSITIONS ============
-//            // Physical pod offsets from robot center (inches)
-//            .leftPodY(7.5)
-//            .rightPodY(-7.5)
-//            .strafePodX(-6.5)
-//
-//            // ============ ENCODER HARDWARE MAPPING ============
-//            // Map to motor ports (odometry pods share motor ports)
-//            .leftEncoder_HardwareMapName(LEFT_FRONT_NAME)
-//            .rightEncoder_HardwareMapName(RIGHT_BACK_NAME)
-//            .strafeEncoder_HardwareMapName(LEFT_BACK_NAME)
-//
-//            // ============ ENCODER DIRECTIONS ============
-//            // Set based on physical mounting
-//            .leftEncoderDirection(Encoder.REVERSE)
-//            .rightEncoderDirection(Encoder.FORWARD)
-//            .strafeEncoderDirection(Encoder.FORWARD);
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(-4)
             .strafePodX(-4)
             .distanceUnit(DistanceUnit.INCH)
-            .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
