@@ -29,25 +29,13 @@ public class Constants {
     public static final String RIGHT_FRONT_NAME = "rightFront";
     public static final String LEFT_BACK_NAME = "leftBack";
     public static final String RIGHT_BACK_NAME = "rightBack";
-
-    // ============================================================
-    //                    ⚙️ MOTOR DIRECTIONS ⚙️
-    // ============================================================
-
     /**
      * Motor direction configuration for proper mecanum kinematics
-     *
-     * IMPORTANT: These are the actual directions used in PedroDrive.java
-     * Adjust these based on your specific robot's wiring and gearing
      */
     public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.FORWARD;
-    public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
-    public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.FORWARD;
-
-    // ============================================================
-    //                    🛑 MOTOR BEHAVIOR SETTINGS 🛑
-    // ============================================================
+    public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
 
     /**
      * Zero power behavior for all drive motors
@@ -99,13 +87,6 @@ public class Constants {
     public static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
             RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
-    /*
-     * ╔═══════════════════════════════════════════════════════════════════╗
-     * ║                    PEDRO PATHING CONFIGURATION                    ║
-     * ║                    🗺️ Path Following Setup 🗺️                     ║
-     * ╚═══════════════════════════════════════════════════════════════════╝
-     */
-
     /**
      * Pedro Pathing Follower constants
      * Controls path following behavior and correction
@@ -124,10 +105,7 @@ public class Constants {
             .mass(6.8);
 
     /**
-     * Mecanum drivetrain configuration for Pedro Pathing
-     *
-     * NOTE: These directions should match the actual motor directions above
-     * They are used by Pedro Pathing's internal motor control
+     * Setup up our drive using our constants
      */
     public static MecanumConstants mecanumConstants = new MecanumConstants()
             .maxPower(MAX_DRIVE_POWER)
@@ -135,7 +113,6 @@ public class Constants {
             .rightFrontMotorName(RIGHT_FRONT_NAME)
             .leftRearMotorName(LEFT_BACK_NAME)
             .leftFrontMotorName(LEFT_FRONT_NAME)
-            // Use the same directions as defined above for consistency
             .leftFrontMotorDirection(LEFT_FRONT_DIRECTION)
             .leftRearMotorDirection(LEFT_BACK_DIRECTION)
             .rightFrontMotorDirection(RIGHT_FRONT_DIRECTION)
