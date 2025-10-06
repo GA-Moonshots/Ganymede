@@ -102,7 +102,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0.005, 0.6, 0.01))
 
             // Robot mass in kilograms (for centripetal force compensation)
-            .mass(6.8);
+            .mass(4.99);
 
     /**
      * Setup up our drive using our constants

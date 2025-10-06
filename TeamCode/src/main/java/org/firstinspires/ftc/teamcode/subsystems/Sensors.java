@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.telecom.TelecomManager;
+
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -13,6 +17,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
 public class Sensors extends SubsystemBase {
     private Limelight3A limelight;
     private Telemetry telemetry;
+    private TelemetryManager telemetryM;
     private double x, y, theta;
 
     // Flag to enable/disable AprilTag position tracking
@@ -27,6 +32,7 @@ public class Sensors extends SubsystemBase {
 
     public Sensors(Ganymede robot) {
         telemetry = robot.telemetry;
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
         try {
 //            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
@@ -44,9 +50,10 @@ public class Sensors extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        telemetryM.addData("TEST", "123");
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!!
-        telemetry.update();
+        //telemetry.update();
+        telemetryM.update(telemetry);
     }
 
 }
