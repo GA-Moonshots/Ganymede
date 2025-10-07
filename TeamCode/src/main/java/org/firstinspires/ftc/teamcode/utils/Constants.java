@@ -83,9 +83,9 @@ public class Constants {
 
     /** IMU mounting orientation on robot */
     public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
-            RevHubOrientationOnRobot.LogoFacingDirection.UP;
+            RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
     public static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
-            RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
     /**
      * Pedro Pathing Follower constants

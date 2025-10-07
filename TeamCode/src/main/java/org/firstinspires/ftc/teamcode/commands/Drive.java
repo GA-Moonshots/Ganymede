@@ -99,12 +99,12 @@ public class Drive extends CommandBase {
         double turn = applyDeadZone(-player1.getRightX());  // Negative for intuitive turning
 
         // Debug telemetry for input troubleshooting
-        robot.telemetry.addData("══ Drive Command Inputs ══", "");
-        robot.telemetry.addData("Left Stick", "X: %.2f Y: %.2f",
+        robot.sensors.addTelemetry("══ Drive Command Inputs ══", "");
+        robot.sensors.addTelemetry("Left Stick", "X: %.2f Y: %.2f",
                 player1.getLeftX(), player1.getLeftY());
-        robot.telemetry.addData("Right Stick", "X: %.2f Y: %.2f",
+        robot.sensors.addTelemetry("Right Stick", "X: %.2f Y: %.2f",
                 player1.getRightX(), player1.getRightY());
-        robot.telemetry.addData("Speed Mode", speedMod < 1.0 ? "SLOW" : "NORMAL");
+        robot.sensors.addTelemetry("Speed Mode", speedMod < 1.0 ? "SLOW" : "NORMAL");
 
         // ============ SEND DRIVE COMMAND ============
         // Apply speed modifier and send to drive subsystem

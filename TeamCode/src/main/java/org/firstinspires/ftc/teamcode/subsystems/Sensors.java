@@ -40,7 +40,7 @@ public class Sensors extends SubsystemBase {
 //            limelight.start();
 //            limelight.pipelineSwitch(0);
         } catch (Exception e) {
-            telemetry.addData("Limelight Error", e.getMessage());
+            addTelemetry("Limelight Error", e.getMessage());
         }
     }
 
@@ -50,10 +50,19 @@ public class Sensors extends SubsystemBase {
 
     @Override
     public void periodic() {
-        telemetryM.addData("TEST", "123");
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!!
-        //telemetry.update();
         telemetryM.update(telemetry);
+    }
+
+    public void addTelemetry(String key, String value){
+        //telemetry.addData(key, value);
+        telemetryM.addData(key, value);
+    }
+
+    public void addTelemetry(String key, String format, Object... args) {
+        //telemetry.addData(key, format, args);
+        String formattedValue = String.format(format, args); // Manually format for telemetryM
+        telemetryM.addData(key, formattedValue);
     }
 
 }

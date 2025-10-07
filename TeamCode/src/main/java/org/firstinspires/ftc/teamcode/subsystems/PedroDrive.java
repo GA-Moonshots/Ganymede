@@ -268,26 +268,17 @@ public class PedroDrive extends SubsystemBase {
         Pose currentPose = getPose();
 
         // Drive configuration
-        robot.telemetry.addData("═══ Drive Status ═══", "");
-        robot.telemetry.addData("Mode", fieldCentric ? "Field-Centric" : "Robot-Centric");
-        robot.telemetry.addData("Speed", "%.0f%%", driveSpeed * 100);
+        robot.sensors.addTelemetry("═══ Drive Status ═══", "");
+        robot.sensors.addTelemetry("Mode", fieldCentric ? "Field-Centric" : "Robot-Centric");
+        robot.sensors.addTelemetry("Speed", "%.0f%%", driveSpeed * 100);
 
         // Localization data
-        robot.telemetry.addData("═══ Position ═══", "");
-        robot.telemetry.addData("Position", "X:%.1f\" Y:%.1f\"",
+        robot.sensors.addTelemetry("═══ Position ═══", "");
+        robot.sensors.addTelemetry("Position", "X:%.1f\" Y:%.1f\"",
                 currentPose.getX(), currentPose.getY());
-        robot.telemetry.addData("Heading", "Pedro:%.1f° IMU:%.1f°",
+        robot.sensors.addTelemetry("Heading", "Pedro:%.1f° IMU:%.1f°",
                 Math.toDegrees(currentPose.getHeading()),
                 imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-
-        // Deadwheel encoder readings
-        robot.telemetry.addData("═══ Deadwheel Encoders ═══", "");
-        robot.telemetry.addData("Left Parallel (leftFront)", "%d ticks",
-                leftFront.getCurrentPosition());
-        robot.telemetry.addData("Right Parallel (rightBack)", "%d ticks",
-                rightBack.getCurrentPosition());
-        robot.telemetry.addData("Strafe/Perpendicular (leftBack)", "%d ticks",
-                leftBack.getCurrentPosition());
     }
 
     // ============================================================

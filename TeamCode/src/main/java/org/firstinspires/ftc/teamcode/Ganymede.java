@@ -163,10 +163,10 @@ public class Ganymede extends Robot {
         // Register subsystems
         register(drive, sensors);
 
-        telemetry.addData("Status", "Robot initialized for Autonomous");
-        telemetry.addData("Alliance", isRed ? "RED" : "BLUE");
-        telemetry.addData("Starting Side", isLeft ? "LEFT" : "RIGHT");
-        telemetry.addData("Start Pose", startPose.toString());
+        sensors.addTelemetry("Status", "Robot initialized for Autonomous");
+        sensors.addTelemetry("Alliance", isRed ? "RED" : "BLUE");
+        sensors.addTelemetry("Starting Side", isLeft ? "LEFT" : "RIGHT");
+        sensors.addTelemetry("Start Pose", startPose.toString());
 
         // TODO: Call autonomous routines here
 
