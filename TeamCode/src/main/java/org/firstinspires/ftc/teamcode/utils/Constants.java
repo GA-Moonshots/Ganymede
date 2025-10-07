@@ -108,6 +108,8 @@ public class Constants {
      * Setup up our drive using our constants
      */
     public static MecanumConstants mecanumConstants = new MecanumConstants()
+            .xVelocity(26.6083256278451)
+            .yVelocity(22.771138589213216)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
             .rightFrontMotorName(RIGHT_FRONT_NAME)
@@ -130,11 +132,12 @@ public class Constants {
     );
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-4)
+            .forwardPodY(-3.5)
             .strafePodX(-4)
             .distanceUnit(DistanceUnit.INCH)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+            //.customEncoderResolution(8192)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     /**
