@@ -92,8 +92,15 @@ public class Constants {
      * Controls path following behavior and correction
      */
     public static FollowerConstants followerConstants = new FollowerConstants()
+            .useSecondaryTranslationalPIDF(true)
+            .useSecondaryHeadingPIDF(true)
+            .useSecondaryDrivePIDF(true)
+
+            .forwardZeroPowerAcceleration(-65.89931154311324)
+           .lateralZeroPowerAcceleration(-65.69922401646974)
+
             // Translational PID - controls forward/backward accuracy
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.05, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.05))
 
             // Heading PID - controls rotational accuracy
             .headingPIDFCoefficients(new PIDFCoefficients(2.0, 0, 0.1, 0))
@@ -108,8 +115,8 @@ public class Constants {
      * Setup up our drive using our constants
      */
     public static MecanumConstants mecanumConstants = new MecanumConstants()
-            .xVelocity(26.6083256278451)
-            .yVelocity(22.771138589213216)
+            .xVelocity(44.012101301058074)
+            .yVelocity(38.33342712882936)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
             .rightFrontMotorName(RIGHT_FRONT_NAME)
