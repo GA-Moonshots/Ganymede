@@ -135,7 +135,7 @@ public class Constants {
             .forwardPodY(-3.5)
             .strafePodX(-4)
             .distanceUnit(DistanceUnit.INCH)
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
             //.customEncoderResolution(8192)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
