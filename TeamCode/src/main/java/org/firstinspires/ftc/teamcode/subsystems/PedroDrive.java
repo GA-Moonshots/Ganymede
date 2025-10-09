@@ -70,12 +70,12 @@ public class PedroDrive extends SubsystemBase {
 
     /** Style for current robot position (vibrant blue) */
     private static final Style ROBOT_STYLE = new Style(
-            "", "#4CAF50", 0.0  // Green - current position
+            "", "#4CAF50", 3.0  // Green - current position
     );
 
     /** Style for pose history trail (softer green) */
     private static final Style HISTORY_STYLE = new Style(
-            "", "#81C784", 0.0  // Light green - history trail
+            "", "#81C784", 2.0  // Light green - history trail
     );
 
     /** Flag to enable/disable Panels drawing (can be toggled for performance) */

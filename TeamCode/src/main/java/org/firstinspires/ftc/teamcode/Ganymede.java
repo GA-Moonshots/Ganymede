@@ -136,7 +136,7 @@ public class Ganymede extends Robot {
 
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
-                    Pose redBaseZone = new Pose(-63, -63, Math.PI/2); // Center of red BASE, facing blue
+                    Pose redBaseZone = new Pose(33, 33, 0); // Center of red BASE, facing blue
                     drive.setPose(redBaseZone);
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));

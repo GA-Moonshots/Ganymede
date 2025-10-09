@@ -90,23 +90,24 @@ public class Constants {
      * Controls path following behavior and correction
      */
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .useSecondaryTranslationalPIDF(true)
-            .useSecondaryHeadingPIDF(true)
-            .useSecondaryDrivePIDF(true)
+            .useSecondaryTranslationalPIDF(false)
+            .useSecondaryHeadingPIDF(false)
+            .useSecondaryDrivePIDF(false)
 
             // Tune the following with: [TUNING TEST HERE]
             .forwardZeroPowerAcceleration(-65.89931154311324)
             // Tune the following with: [TUNING TEST HERE]
             .lateralZeroPowerAcceleration(-65.69922401646974)
 
-            // Translational PID - controls forward/backward accuracy
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.05))
+            // Tune with Manual -> TranslationalTuner
+            // https://pedropathing.com/docs/pathing/tuning/pids/translational
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.02, 0.03))
 
             // Heading PID - controls rotational accuracy
-            .headingPIDFCoefficients(new PIDFCoefficients(2.0, 0, 0.1, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.0, 0, 0.0, 0))
 
             // Drive PID - controls path following accuracy
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0.005, 0.6, 0.01))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.0))
 
             // Robot mass in kilograms (for centripetal force compensation)
             .mass(4.99);
