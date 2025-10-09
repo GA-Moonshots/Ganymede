@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.utils;
 
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -96,8 +94,10 @@ public class Constants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
 
+            // Tune the following with: [TUNING TEST HERE]
             .forwardZeroPowerAcceleration(-65.89931154311324)
-           .lateralZeroPowerAcceleration(-65.69922401646974)
+            // Tune the following with: [TUNING TEST HERE]
+            .lateralZeroPowerAcceleration(-65.69922401646974)
 
             // Translational PID - controls forward/backward accuracy
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.05))
@@ -115,7 +115,9 @@ public class Constants {
      * Setup up our drive using our constants
      */
     public static MecanumConstants mecanumConstants = new MecanumConstants()
+            // Tune the following with: [TUNING TEST HERE]
             .xVelocity(44.012101301058074)
+            // Tune the following with: [TUNING TEST HERE]
             .yVelocity(38.33342712882936)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
