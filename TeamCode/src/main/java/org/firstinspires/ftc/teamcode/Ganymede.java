@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.geometry.Pose;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
@@ -133,6 +134,12 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
+        new GamepadButton(player1, GamepadKeys.Button.BACK)
+                .whenPressed(new InstantCommand(() -> {
+                    Pose redBaseZone = new Pose(-63, -63, Math.PI/2); // Center of red BASE, facing blue
+                    drive.setPose(redBaseZone);
+                    sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
+                }));
 
         /*
 
