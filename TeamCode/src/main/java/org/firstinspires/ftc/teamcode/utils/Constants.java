@@ -92,6 +92,7 @@ public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .useSecondaryTranslationalPIDF(false)
             .useSecondaryHeadingPIDF(false)
+            .centripetalScaling(0.005)
             .useSecondaryDrivePIDF(false)
 
             // Tune the following with: [TUNING TEST HERE]
@@ -101,7 +102,8 @@ public class Constants {
 
             // Tune with Manual -> TranslationalTuner
             // https://pedropathing.com/docs/pathing/tuning/pids/translational
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.02, 0.03))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
 
             // Heading PID - controls rotational accuracy
             .headingPIDFCoefficients(new PIDFCoefficients(0.0, 0, 0.0, 0))
