@@ -34,7 +34,7 @@ public class Constants {
     public static final String LEFT_BACK_NAME = "leftBack";
     public static final String RIGHT_BACK_NAME = "rightBack";
 
-    /** Motor directions - verify with Localization Test, pushing to see values change correctly */
+    /** Motor directions - verify this first with teleOp driving while propped up on a foam block */
     public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
@@ -82,7 +82,7 @@ public class Constants {
             /** Robot mass in kg - weigh robot BEFORE tuning */
             .mass(4.99)
 
-            /** Dual PID flags - start false, enable for boss-level fine tuning */
+            /** Dual PID flags - start false, enable for boss-level fine tuning (we think) */
             .useSecondaryTranslationalPIDF(false)
             .useSecondaryHeadingPIDF(false)
             .useSecondaryDrivePIDF(false)
