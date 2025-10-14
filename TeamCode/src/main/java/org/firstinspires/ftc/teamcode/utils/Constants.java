@@ -69,6 +69,8 @@ public class Constants {
     /** IMU hardware map name */
     public static final String IMU_NAME = "imu";
 
+    public static final String COLOR_SENSOR = "sensor_color_distance";
+
     /** IMU mounting orientation - update based on REV Hub position */
     public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
             RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
