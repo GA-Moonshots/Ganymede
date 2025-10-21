@@ -61,7 +61,7 @@ public class Sensors extends SubsystemBase {
         addTelemetry("red", String.valueOf(colorSensor.getNormalizedColors().red));
         addTelemetry("blue", String.valueOf(colorSensor.getNormalizedColors().blue));
         addTelemetry("isGreen", String.valueOf(isGreen()));
-        addTelemetry("isGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
+        addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!!
         telemetryM.update(telemetry);
     }

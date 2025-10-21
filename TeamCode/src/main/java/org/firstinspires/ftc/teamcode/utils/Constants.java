@@ -107,7 +107,7 @@ public class Constants {
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.1))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
@@ -154,7 +154,8 @@ public class Constants {
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
             /** Test directions with Localization Test - forward should increase X */
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            // https://pedropathing.com/docs/pathing/tuning/localization/pinpoint#encoder-directions
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     // ============================================================
     //    FOLLOWER FACTORY - WHERE WE PUT ALL THE STUFF TOGETHER
