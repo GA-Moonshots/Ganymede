@@ -107,7 +107,7 @@ public class Constants {
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.1))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.5))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
