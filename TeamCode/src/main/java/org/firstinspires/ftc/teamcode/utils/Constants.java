@@ -155,7 +155,7 @@ public class Constants {
             /** Test directions with Localization Test - forward should increase X */
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             // https://pedropathing.com/docs/pathing/tuning/localization/pinpoint#encoder-directions
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     // ============================================================
     //    FOLLOWER FACTORY - WHERE WE PUT ALL THE STUFF TOGETHER
