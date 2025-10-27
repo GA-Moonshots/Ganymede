@@ -1,19 +1,26 @@
 //
 // build.gradle in TeamCode
 //
-// Most of the definitions for building your module reside in a common, shared
-// file 'build.common.gradle'. Being factored in this way makes it easier to
-// integrate updates to the FTC into your code. If you really need to customize
-// the build definitions, you can place those customizations in this file, but
-// please think carefully as to whether such customizations are really necessary
-// before doing so.
 
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.2.4"
+    }
+}
 
 // Custom definitions may go here
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -39,7 +46,7 @@ repositories {
         url "https://repo.dairy.foundation/releases"
     }
 
-    // Fpr Snapshot/Beta Versions of SolversLib
+    // For Snapshot/Beta Versions of SolversLib
     maven {
         url "https://repo.dairy.foundation/snapshots"
     }
@@ -50,15 +57,23 @@ dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
+    // Sloth - Fast hot code reloading
+    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
+
     // SolversLib
     implementation "org.solverslib:core:0.3.3" // core
     implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
 
-    implementation "com.acmerobotics.dashboard:dashboard:0.4.17" // FTC Dashboard
+    // FTC Dashboard - Sloth-compatible version
+    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.4.17")
 
-    // Pedro Pathing
-    implementation 'com.pedropathing:ftc:2.0.3'
-    implementation 'com.pedropathing:telemetry:1.0.0'
+    // Pedro Pathing - with dashboard exclusion for Sloth compatibility
+    implementation('com.pedropathing:ftc:2.0.3') {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation('com.pedropathing:telemetry:1.0.0') {
+        exclude group: "com.acmerobotics.dashboard"
+    }
 
     // Panels Dashboard
     implementation "com.bylazar:fullpanels:1.0.8"
