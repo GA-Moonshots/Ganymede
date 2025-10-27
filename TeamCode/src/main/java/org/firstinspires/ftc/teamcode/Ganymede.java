@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
+import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Sensors;
@@ -136,10 +137,13 @@ public class Ganymede extends Robot {
 
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
-                    Pose redBaseZone = new Pose(33, 33, 0); // Center of red BASE, facing blue
+                    Pose redBaseZone = new Pose(40, 32, 0); // Center of red BASE, facing blue
                     drive.setPose(redBaseZone);
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));
+
+        new GamepadButton(player1, GamepadKeys.Button.X)
+                .whenPressed(new DriveToBlue(this, 10000));
 
         /*
 
