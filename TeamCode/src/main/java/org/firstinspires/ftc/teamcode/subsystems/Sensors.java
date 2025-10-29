@@ -22,7 +22,7 @@ public class Sensors extends SubsystemBase {
     private TelemetryManager telemetryM;
     private double x, y, theta;
 
-    public NormalizedColorSensor colorSensor;
+   // public NormalizedColorSensor colorSensor;
 
     // Flag to enable/disable AprilTag position tracking
     public boolean aprilTagPositionTracking = false;
@@ -38,7 +38,7 @@ public class Sensors extends SubsystemBase {
     public Sensors(Ganymede robot) {
         telemetry = robot.telemetry;
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
+      //  colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
 
 
         try {
@@ -57,11 +57,11 @@ public class Sensors extends SubsystemBase {
 
     @Override
     public void periodic() {
-        addTelemetry("green", String.valueOf(colorSensor.getNormalizedColors().green));
-        addTelemetry("red", String.valueOf(colorSensor.getNormalizedColors().red));
-        addTelemetry("blue", String.valueOf(colorSensor.getNormalizedColors().blue));
-        addTelemetry("isGreen", String.valueOf(isGreen()));
-        addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
+      //  addTelemetry("green", String.valueOf(colorSensor.getNormalizedColors().green));
+      //  addTelemetry("red", String.valueOf(colorSensor.getNormalizedColors().red));
+      //  addTelemetry("blue", String.valueOf(colorSensor.getNormalizedColors().blue));
+       // addTelemetry("isGreen", String.valueOf(isGreen()));
+     //   addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!!
         telemetryM.update(telemetry);
     }
@@ -77,11 +77,11 @@ public class Sensors extends SubsystemBase {
         telemetryM.addData(key, formattedValue);
     }
 
-    public boolean isGreen(){
+   /* public boolean isGreen(){
         NormalizedRGBA sample = colorSensor.getNormalizedColors();
 
         float normGreen = sample.green / sample.alpha;
 
         return normGreen > 0.009 && sample.green > sample.blue && sample.green > sample.red;
-    }
+    } */
 }

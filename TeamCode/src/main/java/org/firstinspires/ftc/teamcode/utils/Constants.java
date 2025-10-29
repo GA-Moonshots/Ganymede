@@ -34,8 +34,11 @@ public class Constants {
     public static final String LEFT_BACK_NAME = "leftBack";
     public static final String RIGHT_BACK_NAME = "rightBack";
 
+    public static final String LAUNCHER_NAME = "launcher";
+    public static final String INTAKE_NAME = "intake";
+
     /** Motor directions - verify this first with teleOp driving while propped up on a foam block */
-    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
