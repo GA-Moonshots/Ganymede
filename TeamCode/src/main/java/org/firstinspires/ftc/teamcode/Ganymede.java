@@ -14,6 +14,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
+import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
+import org.firstinspires.ftc.teamcode.commands.LauncherOuttake;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Sensors;
 
@@ -34,6 +38,8 @@ public class Ganymede extends Robot {
     // SUBSYSTEMS
     public PedroDrive drive;
     public Sensors sensors;
+    public Intake intake;
+    public Launcher launcher;
 
     // Convenience references
     public Telemetry telemetry;
@@ -105,9 +111,11 @@ public class Ganymede extends Robot {
 
         // Initialize sensor package (mostly unchanged from your original)
         sensors = new Sensors(this);
+        intake = new Intake(this);
+        launcher = new Launcher(this);
 
         // Register subsystems with the command scheduler
-        register(drive, sensors);
+        register(drive, sensors, intake, launcher);
 
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
@@ -141,6 +149,12 @@ public class Ganymede extends Robot {
                     drive.setPose(redBaseZone);
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));
+
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_UP)
+                .whenHeld(new IntakeByDirection(this, true));
+
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT)
+                .whenHeld(new LauncherOuttake(this));
 
         new GamepadButton(player1, GamepadKeys.Button.X)
                 .whenPressed(new DriveToBlue(this, 10000));

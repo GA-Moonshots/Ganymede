@@ -10,20 +10,19 @@ public class Launcher extends SubsystemBase {
     private Ganymede robot;
     // declare motors
 
-    private DcMotorEx launcher;
+    public DcMotorEx launcher;
 
     // CONSTRUCTOR
     public Launcher(Ganymede robot){
         this.robot = robot;
         // load motors from hardware map using Constants.MOTOR_NAME
         launcher  = robot.hardwareMap.get(DcMotorEx.class, Constants.LAUNCHER_NAME);
-
     }
 
     // HAPPENS 30x per second
     @Override
     public void periodic() {
-        robot.sensors.addTelemetry("Launcher" , "Feeling swell");
+        robot.sensors.addTelemetry("Intake" , "Feeling SUPER WELL HOLYYYYY");
     }
 
     public void stop() {
