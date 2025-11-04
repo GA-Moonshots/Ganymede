@@ -1,54 +1,68 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.seattlesolvers.solverslib.command.CommandBase;
-import com.seattlesolvers.solverslib.util.Timing;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
-import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 
-import java.util.concurrent.TimeUnit;
+/**
+ * Command to drive to the blue alliance sample collection area.
+ *
+ * Drives to a specific field coordinate (105, 32) while maintaining
+ * current heading. This is a hardcoded target position for autonomous.
+ *
+ * Typical timeout: 5-10 seconds depending on starting position
+ */
+public class DriveToBlue extends DriveAbstract {
 
-public class DriveToBlue extends CommandBase {
-    private final Ganymede robot;
-    private final PedroDrive drive;
-    private final Follower follower;
+    // ============================================================
+    //                     COMMAND STATE
+    // ============================================================
 
-    public Pose targetPose;
-    public boolean finished = false;
+    private Pose targetPose;
+    private boolean finished = false;
 
-    protected Timing.Timer timer;
+    // ============================================================
+    //                     CONSTRUCTOR
+    // ============================================================
 
-    public DriveToBlue(Ganymede robot, double timeoutMilliseconds) {
-        this.robot = robot;
-        this.drive = robot.drive;
-
-        timer = new Timing.Timer((long)timeoutMilliseconds, TimeUnit.MILLISECONDS);
-        follower = drive.follower;
-
-        addRequirements(drive);
+    /**
+     * Creates a command to drive to the blue collection zone.
+     *
+     * @param robot Main robot object
+     * @param timeoutSeconds Safety timeout in seconds (typically 5-10s)
+     */
+    public DriveToBlue(Ganymede robot, double timeoutSeconds) {
+        super(robot, timeoutSeconds);
     }
+
+    // ============================================================
+    //                     COMMAND LIFECYCLE
+    // ============================================================
 
     @Override
     public void initialize() {
         timer.start();
 
         Pose currentPose = follower.getPose();
-        targetPose = new Pose(105, 32, drive.getPose().getHeading());
 
+        // Target: Blue sample collection area (X=105, Y=32)
+        // Maintain current heading to avoid unnecessary rotation
+        targetPose = new Pose(105, 32, currentPose.getHeading());
+
+        // Create and follow straight-line path
         Path path = new Path(new BezierLine(currentPose, targetPose));
-
         follower.followPath(path);
     }
 
     @Override
     public void execute() {
         super.execute();
-        if(follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)){
+
+        // Check if we've reached the target pose within tolerance
+        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)) {
             finished = true;
         }
     }
@@ -56,8 +70,7 @@ public class DriveToBlue extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        follower.breakFollowing();
-        drive.stop();
+        standardCleanup();
     }
 
     @Override
