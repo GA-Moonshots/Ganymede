@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherOuttake;
+import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
@@ -162,7 +163,7 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.X)
                 .whenPressed(new DriveToBlue(this, 10000));
 
-        /*
+/*
 
                 _                                    __
                (_ )                                /'__`\
@@ -187,29 +188,19 @@ public class Ganymede extends Robot {
                     launcher.stopper.setPosition(0);
                 }));
 
-        // Button A -- moves left
+        // Button A -- Rotate turret to LEFT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.A)
-                .whenPressed(new InstantCommand(() -> {
-                    while(sensors.leftButton.isPressed() == false){
-                        turret.spinServo.setPower(0.5);
-                }
-                }));
+                .whileHeld(new TurretRotate(this, Turret.TurretState.LEFT));
 
-        // Button A -- moves front
+        // Button B -- Rotate turret to FRONT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.B)
-                .whenPressed(new InstantCommand(() -> {
-                    while(sensors.frontButton.isPressed() == false){
-                        turret.spinServo.setPower(-0.5);
-                    }
-                }));
-
-        ;
+                .whileHeld(new TurretRotate(this, Turret.TurretState.FRONT));
 
         // RIGHT TRIGGER -- LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
-        rightTriggerP2.whileActiveContinuous( new LauncherOuttake(this));
+        rightTriggerP2.whileActiveContinuous(new LauncherOuttake(this));
 
-        // RIGHT TRIGGER -- INTAKE
+        // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
         leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
     }
