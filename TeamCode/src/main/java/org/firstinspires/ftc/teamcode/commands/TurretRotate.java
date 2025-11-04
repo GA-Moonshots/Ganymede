@@ -15,9 +15,15 @@ public class TurretRotate extends CommandBase {
         this.robot = robot;
         this.turret = robot.turret;
 
+        // determine the desired direction
+
         addRequirements(turret);
     }
 
+
+
     @Override
-    public void execute() {}
+    public void execute() {
+        // turn the desired direction
+    }
 }

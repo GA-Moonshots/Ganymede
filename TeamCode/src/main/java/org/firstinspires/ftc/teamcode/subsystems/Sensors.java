@@ -25,8 +25,7 @@ public class Sensors extends SubsystemBase {
     private Ganymede robot;
 
    // public NormalizedColorSensor colorSensor;
-    public TouchSensor frontButton;
-    public TouchSensor leftButton;
+
 
     // Flag to enable/disable AprilTag position tracking
     public boolean aprilTagPositionTracking = false;
@@ -44,8 +43,6 @@ public class Sensors extends SubsystemBase {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
       //colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
-        frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
-        leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
 
         try {
 //            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
@@ -61,15 +58,7 @@ public class Sensors extends SubsystemBase {
         return limelight.getLatestResult();
     }
 
-    public boolean ButtonL(){
-        boolean stateL = leftButton.isPressed();
-        return stateL;
-    }
 
-    public boolean ButtonF(){
-        boolean stateF = frontButton.isPressed();
-        return stateF;
-    }
 
     @Override
     public void periodic() {
@@ -81,8 +70,6 @@ public class Sensors extends SubsystemBase {
      //   addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!
         telemetryM.update(telemetry);
-        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
-        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
     }
 
     public void addTelemetry(String key, String value){
