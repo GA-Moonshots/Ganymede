@@ -77,6 +77,9 @@ public class Constants {
     /** Default field-centric mode on startup */
     public static final boolean DEFAULT_FIELD_CENTRIC = true;
 
+    /** Servo power for rotation - adjust as needed for your mechanism */
+    public static final double TURRET_ROTATION_POWER = 0.5;
+
     // ============================================================
     //                    SENSOR MAPPINGS
 
