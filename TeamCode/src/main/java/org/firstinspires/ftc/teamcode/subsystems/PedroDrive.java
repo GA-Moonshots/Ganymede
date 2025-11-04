@@ -437,6 +437,7 @@ public class PedroDrive extends SubsystemBase {
         robot.sensors.addTelemetry("Speed", "%.0f%%", driveSpeed * 100);
         robot.sensors.addTelemetry("Panels", panelsDrawingEnabled ? "✓ Drawing" : "✗ Disabled");
 
+
         // Localization data
         robot.sensors.addTelemetry("═══ Position ═══", "");
         robot.sensors.addTelemetry("Position", "X:%.1f\" Y:%.1f\"",

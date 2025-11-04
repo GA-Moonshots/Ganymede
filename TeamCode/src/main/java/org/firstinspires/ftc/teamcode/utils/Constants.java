@@ -37,8 +37,19 @@ public class Constants {
     public static final String LAUNCHER_NAME = "launcher";
     public static final String INTAKE_NAME = "intake";
 
+    /* Servo */
+    public static final String COLOR_GATE_NAME = "colorGate";
+    public static final String TURRET_SERVO_NAME = "turretServo";
+    public static final String LAUNCHER_SERVO_NAME = "launcherServo";
+    public static final String STOPER_SERVO_NAME = "stoperServo";
+
+
+    /* Sensors */
+    public static final String LEFT_BUTTON_NAME = "leftButton";
+    public static final String FRONT_BUTTON_NAME = "frontButton";
+
     /** Motor directions - verify this first with teleOp driving while propped up on a foam block */
-    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
@@ -57,7 +68,7 @@ public class Constants {
     public static final double MIN_DRIVE_SPEED = 0.2;
     public static final double MAX_DRIVE_SPEED = 1.0;
     public static final double DEFAULT_DRIVE_SPEED = 0.8;
-    public static final double SLOW_MODE_MULTIPLIER = 0.25;
+    public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     /** Input threshold and tolerances */
     public static final double INPUT_THRESHOLD = 0.1;

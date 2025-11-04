@@ -8,6 +8,7 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,12 +22,14 @@ public class Sensors extends SubsystemBase {
     private Telemetry telemetry;
     private TelemetryManager telemetryM;
     private double x, y, theta;
+    private Ganymede robot;
 
    // public NormalizedColorSensor colorSensor;
+    public TouchSensor frontButton;
+    public TouchSensor leftButton;
 
     // Flag to enable/disable AprilTag position tracking
     public boolean aprilTagPositionTracking = false;
-
 
     // Last detection metrics for debugging
     private long lastDetectionTime = 0;
@@ -36,10 +39,13 @@ public class Sensors extends SubsystemBase {
     private int acceptedDetections = 0;
 
     public Sensors(Ganymede robot) {
+        this.robot = robot;
         telemetry = robot.telemetry;
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-      //  colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
 
+      //colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
+        frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
+        leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
 
         try {
 //            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
@@ -55,15 +61,28 @@ public class Sensors extends SubsystemBase {
         return limelight.getLatestResult();
     }
 
+    public boolean ButtonL(){
+        boolean stateL = leftButton.isPressed();
+        return stateL;
+    }
+
+    public boolean ButtonF(){
+        boolean stateF = frontButton.isPressed();
+        return stateF;
+    }
+
     @Override
     public void periodic() {
+
       //  addTelemetry("green", String.valueOf(colorSensor.getNormalizedColors().green));
       //  addTelemetry("red", String.valueOf(colorSensor.getNormalizedColors().red));
       //  addTelemetry("blue", String.valueOf(colorSensor.getNormalizedColors().blue));
        // addTelemetry("isGreen", String.valueOf(isGreen()));
      //   addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
-        // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!!
+        // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!
         telemetryM.update(telemetry);
+        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
+        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
     }
 
     public void addTelemetry(String key, String value){

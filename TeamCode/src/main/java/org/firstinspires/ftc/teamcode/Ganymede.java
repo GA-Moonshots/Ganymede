@@ -4,7 +4,9 @@ import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
+import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Sensors;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 
 /**
  * Main robot class for the 2025 FTC season using SolversLib and Pedro Pathing
@@ -40,6 +43,7 @@ public class Ganymede extends Robot {
     public Sensors sensors;
     public Intake intake;
     public Launcher launcher;
+    public Turret turret;
 
     // Convenience references
     public Telemetry telemetry;
@@ -113,9 +117,10 @@ public class Ganymede extends Robot {
         sensors = new Sensors(this);
         intake = new Intake(this);
         launcher = new Launcher(this);
+        turret = new Turret(this);
 
         // Register subsystems with the command scheduler
-        register(drive, sensors, intake, launcher);
+        register(drive, sensors, intake, launcher,turret);
 
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
@@ -150,11 +155,9 @@ public class Ganymede extends Robot {
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_UP)
-                .whenHeld(new IntakeByDirection(this, true));
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_UP);
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT)
-                .whenHeld(new LauncherOuttake(this));
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
         new GamepadButton(player1, GamepadKeys.Button.X)
                 .whenPressed(new DriveToBlue(this, 10000));
@@ -172,6 +175,43 @@ public class Ganymede extends Robot {
 
         */
 
+        // Button Y -- Launcher Servo (open)
+        new GamepadButton(player2, GamepadKeys.Button.Y)
+                .whenPressed(new InstantCommand(() -> {
+                    launcher.stopper.setPosition(1);
+                }));
+
+        // Button X -- Launcher Servo (close)
+        new GamepadButton(player2, GamepadKeys.Button.X)
+                .whenPressed(new InstantCommand(() -> {
+                    launcher.stopper.setPosition(0);
+                }));
+
+        // Button A -- moves left
+        new GamepadButton(player2, GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(() -> {
+                    while(sensors.leftButton.isPressed() == false){
+                        turret.spinServo.setPower(0.5);
+                }
+                }));
+
+        // Button A -- moves front
+        new GamepadButton(player2, GamepadKeys.Button.B)
+                .whenPressed(new InstantCommand(() -> {
+                    while(sensors.frontButton.isPressed() == false){
+                        turret.spinServo.setPower(-0.5);
+                    }
+                }));
+
+        ;
+
+        // RIGHT TRIGGER -- LAUNCHER
+        Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
+        rightTriggerP2.whileActiveContinuous( new LauncherOuttake(this));
+
+        // RIGHT TRIGGER -- INTAKE
+        Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
+        leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
     }
 
     /**
