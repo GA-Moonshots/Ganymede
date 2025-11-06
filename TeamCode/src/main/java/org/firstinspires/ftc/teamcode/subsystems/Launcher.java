@@ -39,6 +39,14 @@ public class Launcher extends SubsystemBase {
 
     }
 
+    public boolean readyToLaunch(){
+        if (launcher.getVelocity() > 1000) {
+            return true;
+        }
+
+        return false;
+    }
+
     public void stop() {
         // kill power to motors
         launcher.setPower(0);

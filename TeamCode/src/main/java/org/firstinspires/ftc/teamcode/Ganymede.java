@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
+import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherOuttake;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -176,17 +177,13 @@ public class Ganymede extends Robot {
 
         */
 
-        // Button Y -- Launcher Servo (open)
+        // Button Y -- Launcher LAUNCH
         new GamepadButton(player2, GamepadKeys.Button.Y)
-                .whenPressed(new InstantCommand(() -> {
-                    launcher.stopper.setPosition(1);
-                }));
+                .whenPressed(new LauncherLaunch(this));
 
         // Button X -- Launcher Servo (close)
         new GamepadButton(player2, GamepadKeys.Button.X)
-                .whenPressed(new InstantCommand(() -> {
-                    launcher.stopper.setPosition(0);
-                }));
+                .whenPressed(new InstantCommand(() -> {}));
 
         // Button A -- Rotate turret to LEFT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.A)
@@ -199,6 +196,10 @@ public class Ganymede extends Robot {
         // RIGHT TRIGGER -- LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherOuttake(this));
+
+        // RIGHT BUMPER - REJECT BALL
+        new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
+                .whileHeld(new InstantCommand(() -> this.launcher.launcher.setPower(-0.8)));
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);

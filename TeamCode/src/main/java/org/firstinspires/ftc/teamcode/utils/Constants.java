@@ -99,7 +99,7 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             /** Robot mass in kg - weigh robot BEFORE tuning */
-            .mass(4.99)
+            .mass(9.97903)
 
             /** Dual PID flags - start false, enable for boss-level fine tuning (we think) */
             .useSecondaryTranslationalPIDF(false)
@@ -108,10 +108,10 @@ public class Constants {
 
             /** Tune with: Automatic → Forward Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-zero-power-acceleration
-            .forwardZeroPowerAcceleration(-65.89931154311324)
+            .forwardZeroPowerAcceleration(-80.95127679462914)
             /** Tune with: Automatic → Lateral Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#lateral-zero-power-acceleration
-            .lateralZeroPowerAcceleration(-65.69922401646974)
+            .lateralZeroPowerAcceleration(-79.41907763249665)
 
             /** Tune with: Manual → Translational - push sideways, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/translational
@@ -136,9 +136,9 @@ public class Constants {
     public static MecanumConstants mecanumConstants = new MecanumConstants()
             /** Tune with: Automatic → Forward Velocity  */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-velocity-tuner
-            .xVelocity(44.012101301058074)
+            .xVelocity(32.55606703870878)
             /** Tune with: Automatic → Lateral Velocity */
-            .yVelocity(38.33342712882936)
+            .yVelocity(30.41691889725332)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
             .rightFrontMotorName(RIGHT_FRONT_NAME)
@@ -172,7 +172,7 @@ public class Constants {
             /** Test directions with Localization Test - forward should increase X */
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             // https://pedropathing.com/docs/pathing/tuning/localization/pinpoint#encoder-directions
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     // ============================================================
     //    FOLLOWER FACTORY - WHERE WE PUT ALL THE STUFF TOGETHER

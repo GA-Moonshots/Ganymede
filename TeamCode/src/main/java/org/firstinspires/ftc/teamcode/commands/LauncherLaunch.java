@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
  * ║  TIMING: Opens stopper for ~600ms to allow single ball launch             ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
-public class IntakeLaunch extends CommandBase {
+public class LauncherLaunch extends CommandBase {
 
     // ============================================================
     //                    COMMAND COMPONENTS
@@ -48,7 +48,7 @@ public class IntakeLaunch extends CommandBase {
      *
      * @param robot Main robot instance containing subsystems
      */
-    public IntakeLaunch(Ganymede robot) {
+    public LauncherLaunch(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
 
@@ -76,6 +76,7 @@ public class IntakeLaunch extends CommandBase {
 
         // Ensure stopper starts closed
         launcher.stopper.setPosition(0);
+        launcher.launcher.setPower(1);
 
         // Add telemetry for debugging
         robot.telemetry.addData("IntakeLaunch", "Waiting for launcher ready...");

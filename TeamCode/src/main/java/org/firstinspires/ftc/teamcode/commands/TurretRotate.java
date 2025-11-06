@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        TURRET ROTATE COMMAND                              ║
  * ║                                                                           ║
- * ║  Rotates the turret to a specified position (FRONT or LEFT) using          ║
+ * ║  Rotates the turret to a specified position (FRONT or LEFT) using         ║
  * ║  touch sensors as limit switches. Sets state to MOVING during             ║
  * ║  rotation, then to target state when sensor is triggered.                 ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
