@@ -129,6 +129,7 @@ public class LauncherLaunch extends CommandBase {
     public void end(boolean interrupted) {
         // Safety: Always ensure stopper is closed when command ends
         launcher.stopper.setPosition(0);
+        launcher.launcher.setPower(0);
 
         if (interrupted) {
             robot.telemetry.addData("IntakeLaunch", "INTERRUPTED - Stopper closed");
