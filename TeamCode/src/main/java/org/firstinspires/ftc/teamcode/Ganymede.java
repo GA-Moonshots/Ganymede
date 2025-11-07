@@ -178,12 +178,19 @@ public class Ganymede extends Robot {
         */
 
         // Button Y -- Launcher LAUNCH
-        new GamepadButton(player2, GamepadKeys.Button.Y)
-                .whenPressed(new LauncherLaunch(this));
+    //    new GamepadButton(player2, GamepadKeys.Button.Y)
+               // .whenPressed(new LauncherLaunch(this));
 
         // Button X -- Launcher Servo (close)
         new GamepadButton(player2, GamepadKeys.Button.X)
-                .whenPressed(new InstantCommand(() -> {}));
+                .whenPressed(new InstantCommand(() -> {
+                    if(launcher.stopper.getPosition() < 0.5){
+                        launcher.stopper.setPosition(0.6);
+                    }else{
+                        launcher.stopper.setPosition(0.3);
+                    }
+
+                }));
 
         // Button A -- Rotate turret to LEFT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.A)
@@ -197,13 +204,15 @@ public class Ganymede extends Robot {
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherOuttake(this));
 
-        // RIGHT BUMPER - REJECT BALL
-        new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
-                .whileHeld(new InstantCommand(() -> this.launcher.launcher.setPower(-0.8)));
+        // RIGHT BUMPER
+        //new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
+
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
         leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
+
+        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER).whileHeld(new IntakeByDirection(this, false));
     }
 
     /**

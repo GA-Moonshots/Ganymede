@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -32,6 +33,16 @@ public class TeleOpMain extends CommandOpMode {
 
         telemetry.addData("Status", "Ready to run!");
         telemetry.update();
+
+        // if a is pressed, we are red
+        if(robot.player1.gamepad.a) {
+            robot.startPose = new Pose(95.65, -66.93, 0);
+            // if b is pressed, we are blue
+        } else if (robot.player1.gamepad.b) {
+            robot.startPose = new Pose(132.07, -64.38, 0);
+        }
+
+
     }
 
 
