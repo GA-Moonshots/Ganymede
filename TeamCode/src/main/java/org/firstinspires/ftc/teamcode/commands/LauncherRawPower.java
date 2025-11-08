@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
-public class LauncherOuttake extends CommandBase {
+public class LauncherRawPower extends CommandBase {
     private Ganymede robot;
     private Launcher launcher;
 
-    public LauncherOuttake(Ganymede robot) {
+    public LauncherRawPower(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
 

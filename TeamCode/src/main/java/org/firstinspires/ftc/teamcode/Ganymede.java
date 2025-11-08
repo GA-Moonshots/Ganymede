@@ -4,7 +4,6 @@ import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
-import org.firstinspires.ftc.teamcode.commands.LauncherOuttake;
+import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
@@ -66,6 +65,7 @@ public class Ganymede extends Robot {
         player1 = new GamepadEx(opMode.gamepad1);
         player2 = new GamepadEx(opMode.gamepad2);
 
+        // TODO: Hand off the last saved location from autonomous instead of guessing
         // Default starting pose for TeleOp (can be loaded from saved pose)
         startPose = new Pose(0, 0, 0); // Pedro uses degrees for heading
 
@@ -86,6 +86,7 @@ public class Ganymede extends Robot {
         player1 = new GamepadEx(opMode.gamepad1);
         player2 = new GamepadEx(opMode.gamepad2);
 
+        // TODO: Set more accurate starting point coordinates based on the above variables
         // Set starting pose based on alliance and side
         if (isRed) {
             if (isLeft) {
@@ -200,9 +201,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.B)
                 .whileHeld(new TurretRotate(this, Turret.TurretState.FRONT));
 
-        // RIGHT TRIGGER -- LAUNCHER
+        // RIGHT TRIGGER -- POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
-        rightTriggerP2.whileActiveContinuous(new LauncherOuttake(this));
+        rightTriggerP2.whileActiveContinuous(new LauncherRawPower(this));
 
         // RIGHT BUMPER
         //new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
@@ -234,11 +235,10 @@ public class Ganymede extends Robot {
         sensors.addTelemetry("Start Pose", startPose.toString());
 
         // TODO: Call autonomous routines here
+        new SequentialCommandGroup(
+            new FwdByDist(this,24,20 )
 
-            new SequentialCommandGroup(
-                new FwdByDist(this,24,20 )
-
-            ).schedule();
+        ).schedule();
 
     }
 

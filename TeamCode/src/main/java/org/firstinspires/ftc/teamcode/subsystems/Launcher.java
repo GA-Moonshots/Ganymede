@@ -35,7 +35,10 @@ public class Launcher extends SubsystemBase {
         // robot.sensors.addTelemetry("Intake" , "Feeling SUPER WELL HOLYYYYY");
     }
 
-    public boolean readyToLaunch(){ return launcher.getVelocity() > 2000; }
+    public boolean readyToLaunch(){
+        // TODO: dynamically calculate required speed based on location
+        return launcher.getVelocity() > 2100;
+    }
     public void stopperOpen() {
         stopper.setPosition(0.6);
     }

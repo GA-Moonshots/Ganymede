@@ -76,7 +76,7 @@ public class LauncherLaunch extends CommandBase {
 
         // Ensure stopper starts closed
         launcher.stopperClosed();
-        launcher.launcher.setPower(1);
+        launcher.launcher.setPower(0.9);
 
         // Add telemetry for debugging
         robot.telemetry.addData("IntakeLaunch", "Waiting for launcher ready...");
