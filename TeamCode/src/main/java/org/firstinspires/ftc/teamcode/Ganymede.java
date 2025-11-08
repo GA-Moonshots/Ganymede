@@ -194,7 +194,7 @@ public class Ganymede extends Robot {
 
         // Button A -- Rotate turret to LEFT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.A)
-                .whileHeld(new TurretRotate(this, Turret.TurretState.LEFT));
+                .whenPressed(new LauncherLaunch(this));
 
         // Button B -- Rotate turret to FRONT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.B)

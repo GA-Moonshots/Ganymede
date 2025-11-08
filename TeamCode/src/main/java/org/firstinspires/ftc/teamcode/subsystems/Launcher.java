@@ -47,6 +47,14 @@ public class Launcher extends SubsystemBase {
         return false;
     }
 
+    public void stopperOpen() {
+        stopper.setPosition(0.6);
+    }
+
+    public void stopperClosed() {
+        stopper.setPosition(0.3);
+    }
+
     public void stop() {
         // kill power to motors
         launcher.setPower(0);

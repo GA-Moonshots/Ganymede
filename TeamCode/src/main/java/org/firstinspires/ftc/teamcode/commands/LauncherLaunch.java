@@ -75,7 +75,7 @@ public class LauncherLaunch extends CommandBase {
         launchComplete = false;
 
         // Ensure stopper starts closed
-        launcher.stopper.setPosition(0);
+        launcher.stopperClosed();
         launcher.launcher.setPower(1);
 
         // Add telemetry for debugging
@@ -98,7 +98,7 @@ public class LauncherLaunch extends CommandBase {
         // ============ STEP 2: OPEN STOPPER ============
         // First time we detect launcher is ready, open the stopper
         if (!stopperOpened) {
-            launcher.stopper.setPosition(1); // Open stopper
+            launcher.stopperOpen(); // Open stopper
             stopperTimer.reset(); // Start timing
             stopperOpened = true;
             robot.telemetry.addData("IntakeLaunch", "Stopper OPEN - Ball launching!");
@@ -107,7 +107,7 @@ public class LauncherLaunch extends CommandBase {
         // ============ STEP 3: CLOSE STOPPER AFTER DELAY ============
         // After the ball has passed, close the stopper
         else if (stopperTimer.milliseconds() >= STOPPER_OPEN_TIME && !launchComplete) {
-            launcher.stopper.setPosition(0); // Close stopper
+            launcher.stopperClosed(); // Close stopper
             launchComplete = true;
             robot.telemetry.addData("IntakeLaunch", "Stopper CLOSED - Launch complete!");
         }
@@ -128,7 +128,7 @@ public class LauncherLaunch extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // Safety: Always ensure stopper is closed when command ends
-        launcher.stopper.setPosition(0);
+        launcher.stopperClosed();
         launcher.launcher.setPower(0);
 
         if (interrupted) {
