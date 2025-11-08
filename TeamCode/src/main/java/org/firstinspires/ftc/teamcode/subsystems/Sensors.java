@@ -70,7 +70,6 @@ public class Sensors extends SubsystemBase {
      //   addTelemetry("normGreen", String.valueOf(colorSensor.getNormalizedColors().green / colorSensor.getNormalizedColors().alpha));
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!
 
-        addTelemetry("Launcher Velocity", String.valueOf(robot.launcher.launcher.getVelocity()));
         telemetryM.update(telemetry);
     }
 

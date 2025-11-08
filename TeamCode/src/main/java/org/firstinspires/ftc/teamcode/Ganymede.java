@@ -117,10 +117,11 @@ public class Ganymede extends Robot {
         drive = new PedroDrive(this, startPose);
 
         // Initialize sensor package (mostly unchanged from your original)
-        sensors = new Sensors(this);
-        intake = new Intake(this);
         launcher = new Launcher(this);
+        intake = new Intake(this);
         turret = new Turret(this);
+        sensors = new Sensors(this);
+
 
         // Register subsystems with the command scheduler
         register(drive, sensors, intake, launcher,turret);

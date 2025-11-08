@@ -37,7 +37,7 @@ public class Launcher extends SubsystemBase {
 
     public boolean readyToLaunch(){
         // TODO: dynamically calculate required speed based on location
-        return launcher.getVelocity() > 2100;
+        return launcher.getVelocity() > 2000;
     }
     public void stopperOpen() {
         stopper.setPosition(0.6);
