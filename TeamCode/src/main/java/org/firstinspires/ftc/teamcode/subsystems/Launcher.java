@@ -11,11 +11,8 @@ public class Launcher extends SubsystemBase {
 
     private Ganymede robot;
     // declare motors
-
     public DcMotorEx launcher;
-
     public Servo stopper;
-
 
     // CONSTRUCTOR
     public Launcher(Ganymede robot){
@@ -35,30 +32,17 @@ public class Launcher extends SubsystemBase {
     // HAPPENS 30x per second
     @Override
     public void periodic() {
-        robot.sensors.addTelemetry("Intake" , "Feeling SUPER WELL HOLYYYYY");
-
+        // robot.sensors.addTelemetry("Intake" , "Feeling SUPER WELL HOLYYYYY");
     }
 
-    public boolean readyToLaunch(){
-        if (launcher.getVelocity() > 2000) {
-            return true;
-        }
-
-        return false;
-    }
-
+    public boolean readyToLaunch(){ return launcher.getVelocity() > 2000; }
     public void stopperOpen() {
         stopper.setPosition(0.6);
     }
-
     public void stopperClosed() {
         stopper.setPosition(0.3);
     }
-
-    public void stop() {
-        // kill power to motors
-        launcher.setPower(0);
-    }
+    public void stop() { launcher.setPower(0); }
 }
 
 

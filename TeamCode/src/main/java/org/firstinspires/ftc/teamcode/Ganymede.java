@@ -55,7 +55,7 @@ public class Ganymede extends Robot {
     public Pose startPose;
 
     /**
-     * Constructor for TeleOp mode
+     * TELEOP MODE [--Constructor--]
      */
     public Ganymede(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -73,7 +73,7 @@ public class Ganymede extends Robot {
     }
 
     /**
-     * Constructor for Autonomous mode
+     * AUTONOMOUS MODE [--Constructor--]
      */
     public Ganymede(LinearOpMode opMode, boolean isRed, boolean isLeft) {
         this.opMode = opMode;
@@ -109,7 +109,7 @@ public class Ganymede extends Robot {
     }
 
     /**
-     * Initialize robot for TeleOp
+     * TELEOP MODE [--Initialize--]
      */
     public void initTeleOp() {
         // Initialize drive subsystem with Pedro Pathing
@@ -216,7 +216,7 @@ public class Ganymede extends Robot {
     }
 
     /**
-     * Initialize robot for Autonomous
+     * AUTONOMOUS MODE [--Initialize--]
      */
     public void initAuto() {
         // Initialize drive with starting pose
@@ -236,7 +236,7 @@ public class Ganymede extends Robot {
         // TODO: Call autonomous routines here
 
             new SequentialCommandGroup(
-                new FwdByDist(this,24,10000000 )
+                new FwdByDist(this,24,20 )
 
             ).schedule();
 

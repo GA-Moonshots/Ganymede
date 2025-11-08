@@ -37,7 +37,7 @@ public class LauncherLaunch extends CommandBase {
     private boolean launchComplete;
 
     // Timing constants (in milliseconds)
-    private static final double STOPPER_OPEN_TIME = 600; // Time to let one ball through
+    private static final double STOPPER_OPEN_TIME = 300; // Time to let one ball through
 
     // ============================================================
     //                       CONSTRUCTOR
