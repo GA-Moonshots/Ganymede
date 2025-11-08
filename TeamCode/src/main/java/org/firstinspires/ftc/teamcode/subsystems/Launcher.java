@@ -40,7 +40,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public boolean readyToLaunch(){
-        if (launcher.getVelocity() > 1000) {
+        if (launcher.getVelocity() > 2000) {
             return true;
         }
 

@@ -236,7 +236,7 @@ public class Ganymede extends Robot {
         // TODO: Call autonomous routines here
 
             new SequentialCommandGroup(
-                new FwdByDist(this,12,10000000 )
+                new FwdByDist(this,24,10000000 )
 
             ).schedule();
 
