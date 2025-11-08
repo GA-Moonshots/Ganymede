@@ -73,12 +73,40 @@ public class Constants {
     /** Input threshold and tolerances */
     public static final double INPUT_THRESHOLD = 0.1;
     public static final double POSE_TOLERANCE = 0.5;
+    public static final double HEADING_TOLERANCE_DEGREES = 2.0;
 
     /** Default field-centric mode on startup */
     public static final boolean DEFAULT_FIELD_CENTRIC = true;
 
     /** Servo power for rotation - adjust as needed for your mechanism */
     public static final double TURRET_ROTATION_POWER = 0.5;
+
+    // ============================================================
+    //                    FIELD GEOMETRY & SCORING
+
+    /** Field corner coordinates */
+    public static final double FIELD_BOTTOM_LEFT_X = 0;
+    public static final double FIELD_BOTTOM_LEFT_Y = -86;
+    public static final double FIELD_TOP_RIGHT_X = 230;
+    public static final double FIELD_TOP_RIGHT_Y = 144;
+
+    /** Blue alliance scoring target  */
+    public static final double BLUE_TARGET_X = 27;
+    public static final double BLUE_TARGET_Y = 124;
+
+    /** Red alliance scoring target  */
+    public static final double RED_TARGET_X = 207;
+    public static final double RED_TARGET_Y = 123;
+
+    /**
+     * Launcher heading offset in degrees
+     *
+     * When the turret is in LEFT position, the launcher is rotated
+     * 90 degrees from the robot's heading. To aim at the goal, we
+     * need to offset the robot's heading by this amount.
+     */
+    public static final double LAUNCHER_LEFT_HEADING_OFFSET_DEGREES = 90.0;
+
 
     // ============================================================
     //                    SENSOR MAPPINGS
