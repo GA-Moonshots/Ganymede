@@ -71,9 +71,8 @@ public class Drive extends CommandBase {
      */
     @Override
     public void initialize() {
-        // Reset any drive states if needed
-        // Could add initialization telemetry here
-        robot.telemetry.addData("Drive", "Command initialized");
+        // don't fight for control with Pedro
+        drive.follower.breakFollowing();
     }
 
     /**
@@ -83,7 +82,7 @@ public class Drive extends CommandBase {
     @Override
     public void execute() {
 
-        drive.follower.breakFollowing();
+
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
         // - Right bumper is held (for precise movements)

@@ -18,7 +18,6 @@ public class Intake extends SubsystemBase {
 
     // ============================================================
     //                     SUBSYSTEM COMPONENTS
-    // ============================================================
 
     private Ganymede robot;
 
@@ -27,7 +26,6 @@ public class Intake extends SubsystemBase {
 
     // ============================================================
     //                        CONSTRUCTOR
-    // ============================================================
 
     /**
      * Initializes the intake subsystem and loads hardware from config.
@@ -43,7 +41,6 @@ public class Intake extends SubsystemBase {
 
     // ============================================================
     //                     SUBSYSTEM METHODS
-    // ============================================================
 
     /**
      * Stops the intake motor.

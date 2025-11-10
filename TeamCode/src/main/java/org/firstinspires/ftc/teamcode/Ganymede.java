@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Thread.sleep;
-
 import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
@@ -26,6 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Sensors;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.utils.PersistentPoseManager;
 
 /**
  * Main robot class for the 2025 FTC season using SolversLib and Pedro Pathing
@@ -67,9 +66,8 @@ public class Ganymede extends Robot {
         player1 = new GamepadEx(opMode.gamepad1);
         player2 = new GamepadEx(opMode.gamepad2);
 
-        // TODO: Hand off the last saved location from autonomous instead of guessing
-        // Default starting pose for TeleOp (can be loaded from saved pose)
-        startPose = new Pose(0, 0, Math.toRadians(0)); // Pedro uses degrees for heading
+        // Load starting pose from file -
+        startPose = PersistentPoseManager.loadPose();
 
         initTeleOp();
     }
@@ -88,7 +86,6 @@ public class Ganymede extends Robot {
         player1 = new GamepadEx(opMode.gamepad1);
         player2 = new GamepadEx(opMode.gamepad2);
 
-        // TODO: Set more accurate starting point coordinates based on the above variables
         // Set starting pose based on alliance and side
         if (isRed) {
             if (isNearGoal) {
@@ -171,8 +168,7 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.X)
                 .whenPressed(() -> new DriveToBlue(this, 30).schedule());
 
-/*
-
+        /*
                 _                                    __
                (_ )                                /'__`\
          _ _    | |    _ _  _   _    __   _ __    (_)  ) )
@@ -181,7 +177,6 @@ public class Ganymede extends Robot {
         | ,__/'(___)`\__,_)`\__, |`\____)(_)      (_____/'
         | |                ( )_| |
         (_)                `\___/'
-
         */
 
         // Button Y -- Launcher LAUNCH
@@ -228,26 +223,13 @@ public class Ganymede extends Robot {
     public void initAuto() {
         // Initialize drive with starting pose
         drive = new PedroDrive(this, startPose);
-
         // Initialize sensors with April Tag tracking enabled
         sensors = new Sensors(this);
 
         // Register subsystems
         register(drive, sensors);
 
-        sensors.addTelemetry("Status", "Robot initialized for Autonomous");
-        sensors.addTelemetry("Alliance", isRed ? "RED" : "BLUE");
-        sensors.addTelemetry("Starting Side", isNearGoal ? "LEFT" : "RIGHT");
-        sensors.addTelemetry("Start Pose", startPose.toString());
-
-        try {
-            sleep(300);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        // TODO: Call autonomous routines here
+        // OUR WHOLE AUTONOMOUS MODE GOES HERE
         new SequentialCommandGroup(
             new FwdByDist(this,24,20 )
 
