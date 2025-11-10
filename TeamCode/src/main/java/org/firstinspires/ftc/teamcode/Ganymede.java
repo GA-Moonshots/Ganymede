@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
@@ -67,7 +69,7 @@ public class Ganymede extends Robot {
 
         // TODO: Hand off the last saved location from autonomous instead of guessing
         // Default starting pose for TeleOp (can be loaded from saved pose)
-        startPose = new Pose(0, 0, 0); // Pedro uses degrees for heading
+        startPose = new Pose(0, 0, Math.toRadians(0)); // Pedro uses degrees for heading
 
         initTeleOp();
     }
@@ -91,18 +93,18 @@ public class Ganymede extends Robot {
         if (isRed) {
             if (isNearGoal) {
                 // Red Left starting position
-                startPose = new Pose(120.5, 115.4, -135.8);
+                startPose = new Pose(120.5, 115.4, Math.toRadians(-135.8));
             } else {
                 // Red Right starting position
-                startPose = new Pose(84.2, 6.2, 86);
+                startPose = new Pose(84.2, 6.2, Math.toRadians(86));
             }
         } else {
             if (isNearGoal) {
                 // Blue Left starting position
-                startPose = new Pose(17.5, 117.2, -37);
+                startPose = new Pose(17.5, 117.2, Math.toRadians(-37));
             } else {
                 // Blue Right starting position
-                startPose = new Pose(51, 0.7, 90);
+                startPose = new Pose(51, 0.7, Math.toRadians(90));
             }
         }
         initAuto();
@@ -237,6 +239,13 @@ public class Ganymede extends Robot {
         sensors.addTelemetry("Alliance", isRed ? "RED" : "BLUE");
         sensors.addTelemetry("Starting Side", isNearGoal ? "LEFT" : "RIGHT");
         sensors.addTelemetry("Start Pose", startPose.toString());
+
+        try {
+            sleep(300);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         // TODO: Call autonomous routines here
         new SequentialCommandGroup(
