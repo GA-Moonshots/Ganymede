@@ -375,28 +375,48 @@ public class PedroDrive extends SubsystemBase {
     //                    CONFIGURATION METHODS
     // ============================================================
 
+    /**
+     * INPUT TRANSLATOR: Gets robot's heading normalized to [-π, π] radians.
+     * Use this instead of getPose().getHeading() in commands that calculate
+     * forward vectors or heading differences.
+     *
+     * @return Current robot heading in radians, normalized to [-π, π]
+     */
     public double getNormalizedHeading() {
         double heading = follower.getPose().getHeading();
         return normalizeAngle(heading);
     }
 
+    /**
+     * OUTPUT TRANSLATOR: Converts our normalized heading to Pedro's format.
+     * Use this when creating Pose objects for path targets.
+     *
+     * @param normalizedHeading Our heading in radians
+     * @return Heading in Pedro's expected format ([-π, π])
+     */
     public double toPedroHeading(double normalizedHeading) {
-        if (normalizedHeading > 180) {
-            return normalizedHeading - 360;
-        }
-
-        return normalizedHeading;
+        return normalizeAngle(normalizedHeading);
     }
 
+    /**
+     * Core angle normalization - wraps any angle to [-π, π] radians.
+     *
+     * CRITICAL: Pedro Pathing uses RADIANS, not degrees!
+     * - Math.PI = 180°
+     * - -Math.PI = -180°
+     *
+     * @param angle Angle in radians (can be any value)
+     * @return Normalized angle in range [-π, π]
+     */
     private double normalizeAngle(double angle) {
-//        while (angle > Math.PI) angle -= 2 * Math.PI;
-//        while (angle <= -Math.PI) angle += 2 * Math.PI;
-        double normalizedAngle = angle;
-        if (angle < 0 ){
-            normalizedAngle = 180 + (180 - Math.abs(angle));
+        // Keep wrapping until angle is in range [-π, π]
+        while (angle > Math.PI) {
+            angle -= 2 * Math.PI;
         }
-
-        return normalizedAngle;
+        while (angle <= -Math.PI) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
     }
 
     /**
