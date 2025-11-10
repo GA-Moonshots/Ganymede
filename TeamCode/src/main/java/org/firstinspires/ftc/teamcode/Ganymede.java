@@ -37,7 +37,7 @@ public class Ganymede extends Robot {
 
     // Match configuration
     public boolean isRed;
-    public boolean isLeft;
+    public boolean isNearGoal;
 
     // SUBSYSTEMS
     public PedroDrive drive;
@@ -75,12 +75,12 @@ public class Ganymede extends Robot {
     /**
      * AUTONOMOUS MODE [--Constructor--]
      */
-    public Ganymede(LinearOpMode opMode, boolean isRed, boolean isLeft) {
+    public Ganymede(LinearOpMode opMode, boolean isRed, boolean isNearGoal) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
         this.isRed = isRed;
-        this.isLeft = isLeft;
+        this.isNearGoal = isNearGoal;
 
         // Initialize gamepads (may not be used in auto but keeps consistency)
         player1 = new GamepadEx(opMode.gamepad1);
@@ -89,20 +89,20 @@ public class Ganymede extends Robot {
         // TODO: Set more accurate starting point coordinates based on the above variables
         // Set starting pose based on alliance and side
         if (isRed) {
-            if (isLeft) {
+            if (isNearGoal) {
                 // Red Left starting position
-                startPose = new Pose(0, 0, 0);
+                startPose = new Pose(120.5, 115.4, -135.8);
             } else {
                 // Red Right starting position
-                startPose = new Pose(0, 0, 0);
+                startPose = new Pose(84.2, 6.2, 86);
             }
         } else {
-            if (isLeft) {
+            if (isNearGoal) {
                 // Blue Left starting position
-                startPose = new Pose(0, 0, 0);
+                startPose = new Pose(17.5, 117.2, -37);
             } else {
                 // Blue Right starting position
-                startPose = new Pose(0, 0, 0);
+                startPose = new Pose(51, 0.7, 90);
             }
         }
 
@@ -232,7 +232,7 @@ public class Ganymede extends Robot {
 
         sensors.addTelemetry("Status", "Robot initialized for Autonomous");
         sensors.addTelemetry("Alliance", isRed ? "RED" : "BLUE");
-        sensors.addTelemetry("Starting Side", isLeft ? "LEFT" : "RIGHT");
+        sensors.addTelemetry("Starting Side", isNearGoal ? "LEFT" : "RIGHT");
         sensors.addTelemetry("Start Pose", startPose.toString());
 
         // TODO: Call autonomous routines here

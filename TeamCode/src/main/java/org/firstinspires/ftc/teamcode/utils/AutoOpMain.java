@@ -4,6 +4,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
+import org.firstinspires.ftc.teamcode.commands.SavePoseCommand;
 
 /**
  * Main autonomous OpMode with simple alliance and position selection
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Ganymede;
 public class AutoOpMain extends CommandOpMode {
 
     private boolean isRed;
-    private boolean isLeft;
+    private boolean isNearGoal;
     private Ganymede robot;
 
     /**
@@ -28,7 +29,7 @@ public class AutoOpMain extends CommandOpMode {
     public void initialize() {
         // Default starting configuration
         isRed = true;
-        isLeft = true;
+        isNearGoal = true;
 
         // Selection loop - runs until START is pressed
         while (opModeInInit()) {
@@ -41,9 +42,9 @@ public class AutoOpMain extends CommandOpMode {
 
             // Position selection: A for left, Y for right
             if (gamepad1.a || gamepad2.a) {
-                isLeft = true;
+                isNearGoal = true;
             } else if (gamepad1.y || gamepad2.y) {
-                isLeft = false;
+                isNearGoal = false;
             }
 
             // Display current selection
@@ -52,14 +53,16 @@ public class AutoOpMain extends CommandOpMode {
             telemetry.addLine("═══════════════════════════════");
             telemetry.addLine();
             telemetry.addData("Alliance", isRed ? "RED (B)" : "BLUE (X)");
-            telemetry.addData("Position", isLeft ? "LEFT (A)" : "RIGHT (Y)");
+            telemetry.addData("Position", isNearGoal ? "Near Goal (A)" : "Far Goal (Y)");
             telemetry.addLine();
             telemetry.addLine("Press START when ready!");
             telemetry.update();
         }
 
         // Build robot with selected configuration
-        robot = new Ganymede(this, isRed, isLeft);
+        robot = new Ganymede(this, isRed, isNearGoal);
+
+        schedule(new SavePoseCommand(robot));
     }
 
     /**

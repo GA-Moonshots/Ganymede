@@ -76,7 +76,7 @@ public class Constants {
     public static final double HEADING_TOLERANCE_DEGREES = 2.0;
 
     /** Default field-centric mode on startup */
-    public static final boolean DEFAULT_FIELD_CENTRIC = true;
+    public static final boolean DEFAULT_FIELD_CENTRIC = false;
 
     /** Servo power for rotation - adjust as needed for your mechanism */
     public static final double TURRET_ROTATION_POWER = 0.5;

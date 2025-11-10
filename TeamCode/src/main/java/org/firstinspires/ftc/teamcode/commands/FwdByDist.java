@@ -50,7 +50,7 @@ public class FwdByDist extends DriveAbstract {
     public void initialize() {
         timer.start();
 
-        Pose currentPose = follower.getPose();
+        Pose currentPose = robot.drive.getPose();
 
         // Calculate target pose based on current heading and distance
         double currentHeading = currentPose.getHeading();
