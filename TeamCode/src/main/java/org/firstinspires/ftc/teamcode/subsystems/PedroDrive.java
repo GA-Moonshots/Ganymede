@@ -55,33 +55,38 @@ public class PedroDrive extends SubsystemBase {
     /** Toggle between field-centric (true) and robot-centric (false) drive modes */
     private boolean fieldCentric = Constants.DEFAULT_FIELD_CENTRIC;
 
-    /** Speed multiplier for drive controls (0.0 - 1.0) */
+    /** Speed multiplier for fine control (0.0 to 1.0) */
     private double driveSpeed = Constants.DEFAULT_DRIVE_SPEED;
 
     // ============================================================
-    //                    PANELS FIELD DRAWING
+    //                    PANELS DRAWING SETUP
     // ============================================================
 
-    /** Panels field manager for drawing robot position */
-    private FieldManager panelsField;
-
-    /** Toggle for Panels drawing */
-    private boolean panelsDrawingEnabled = true;
-
-    /** Drawing styles for robot visualization */
-    private static final Style ROBOT_STYLE = new Style("", "#3F51B5", 0.0);
-    private static final Style HISTORY_STYLE = new Style("", "#4CAF50", 0.0);
+    /** Robot radius for drawing on field (in inches) */
     private static final double ROBOT_RADIUS = 9.0;
 
-    // ============================================================
-    //                        CONSTRUCTOR
-    // ============================================================
+    /** Panels field manager for drawing */
+    private static FieldManager panelsField;
+
+    /** Style for current robot position (vibrant blue) */
+    private static final Style ROBOT_STYLE = new Style(
+            "", "#4CAF50", 3.0  // Green - current position
+    );
+
+    /** Style for pose history trail (softer green) */
+    private static final Style HISTORY_STYLE = new Style(
+            "", "#81C784", 2.0  // Light green - history trail
+    );
+
+    /** Flag to enable/disable Panels drawing (can be toggled for performance) */
+    private boolean panelsDrawingEnabled = true;
 
     /**
      * ┌─────────────────────────────────────────────────────────────────────┐
-     * │                     PEDRO DRIVE CONSTRUCTOR                         │
+     * │                         CONSTRUCTOR                                 │
      * │                                                                     │
-     * │  Initializes all motors, IMU, Pedro Follower, and Panels drawing.   │
+     * │  Initializes the Pedro Drive subsystem with motor configuration,     │
+     * │  IMU setup, and Pedro Pathing follower initialization.              │
      * │  Also sets up Panels field drawing for live visualization.          │
      * │                                                                     │
      * │  All motor configuration is now pulled from Constants.java          │
@@ -168,6 +173,27 @@ public class PedroDrive extends SubsystemBase {
 
         // Post basic data to driver station
         addTelemetry();
+
+        double distance = 24;
+        Pose currentPose = this.getPose();
+
+        // Get normalized heading to handle ±180° wrap-around correctly
+        double currentHeading = this.getNormalizedHeading();
+
+        // CRITICAL: Calculate forward vector components
+        // cos(θ) gives X component, sin(θ) gives Y component
+        // DO NOT swap these or robot will drive sideways!
+        double deltaX = distance * Math.cos(currentPose.getHeading());  // ← Horizontal
+        double deltaY = distance * Math.sin(currentPose.getHeading());  // ← Vertical
+
+        // Create target pose by adding forward vector to current position
+        Pose targetPose = new Pose(
+                currentPose.getX() + deltaX,
+                currentPose.getY() + deltaY,
+                currentPose.getHeading()  // Maintain heading
+        );
+
+        robot.telemetry.addData("Target Pose", targetPose.getPose());
     }
 
     /**
@@ -219,27 +245,27 @@ public class PedroDrive extends SubsystemBase {
 
     /**
      * Draws the robot at a specified pose with heading indicator.
+     * The heading is represented as a line showing robot orientation.
      *
-     * @param pose  Pose to draw the robot at
-     * @param style Drawing style parameters
+     * @param pose Pose to draw the robot at
+     * @param style Drawing style (color, stroke, etc.)
      */
     private void drawRobot(Pose pose, Style style) {
-        if (pose == null || Double.isNaN(pose.getX()) ||
-                Double.isNaN(pose.getY()) || Double.isNaN(pose.getHeading())) {
-            return;
-        }
+        if (pose == null || panelsField == null) return;
 
+        // Draw robot body (circle)
         panelsField.setStyle(style);
         panelsField.moveCursor(pose.getX(), pose.getY());
         panelsField.circle(ROBOT_RADIUS);
 
-        // Draw heading line
-        Vector v = pose.getHeadingAsUnitVector();
-        v.setMagnitude(v.getMagnitude() * ROBOT_RADIUS);
-        double x1 = pose.getX() + v.getXComponent() / 2;
-        double y1 = pose.getY() + v.getYComponent() / 2;
-        double x2 = pose.getX() + v.getXComponent();
-        double y2 = pose.getY() + v.getYComponent();
+        // Draw heading indicator (line showing front of robot)
+        Vector headingVector = pose.getHeadingAsUnitVector();
+        headingVector.setMagnitude(headingVector.getMagnitude() * ROBOT_RADIUS);
+
+        double x1 = pose.getX() + headingVector.getXComponent() / 2;
+        double y1 = pose.getY() + headingVector.getYComponent() / 2;
+        double x2 = pose.getX() + headingVector.getXComponent();
+        double y2 = pose.getY() + headingVector.getYComponent();
 
         panelsField.setStyle(style);
         panelsField.moveCursor(x1, y1);
@@ -247,31 +273,37 @@ public class PedroDrive extends SubsystemBase {
     }
 
     /**
-     * Draws the pose history trail.
+     * Draws the robot's pose history as a trail on the field.
+     * Shows where the robot has been during the match.
      *
-     * @param poseTracker PoseHistory object with robot's past positions
-     * @param style       Drawing style parameters
+     * @param poseHistory PoseHistory object containing position trail
+     * @param style Drawing style for the trail
      */
-    private void drawPoseHistory(PoseHistory poseTracker, Style style) {
+    private void drawPoseHistory(PoseHistory poseHistory, Style style) {
+        if (poseHistory == null || panelsField == null) return;
+
         panelsField.setStyle(style);
 
-        int size = poseTracker.getXPositionsArray().length;
+        double[] xPositions = poseHistory.getXPositionsArray();
+        double[] yPositions = poseHistory.getYPositionsArray();
+
+        if (xPositions == null || yPositions == null) return;
+
+        int size = Math.min(xPositions.length, yPositions.length);
+
+        // Draw lines connecting each position in the history
         for (int i = 0; i < size - 1; i++) {
-            panelsField.moveCursor(poseTracker.getXPositionsArray()[i],
-                    poseTracker.getYPositionsArray()[i]);
-            panelsField.line(poseTracker.getXPositionsArray()[i + 1],
-                    poseTracker.getYPositionsArray()[i + 1]);
+            panelsField.moveCursor(xPositions[i], yPositions[i]);
+            panelsField.line(xPositions[i + 1], yPositions[i + 1]);
         }
     }
 
     /**
-     * Toggles Panels drawing on/off.
-     * Useful for debugging if drawing causes performance issues.
+     * Toggles Panels drawing on/off for performance tuning if needed.
      */
     public void togglePanelsDrawing() {
         panelsDrawingEnabled = !panelsDrawingEnabled;
-        robot.sensors.addTelemetry("Panels Drawing", panelsDrawingEnabled ?
-                "ENABLED" : "DISABLED");
+        robot.sensors.addTelemetry("Panels Drawing", panelsDrawingEnabled ? "ENABLED" : "DISABLED");
     }
 
     /**
@@ -361,13 +393,11 @@ public class PedroDrive extends SubsystemBase {
     }
 
     // ============================================================
-    //                 ANGLE NORMALIZATION METHODS
-    //            (FIXED - These are the corrected versions!)
+    //                    CONFIGURATION METHODS
     // ============================================================
 
     /**
      * INPUT TRANSLATOR: Gets robot's heading normalized to [-π, π] radians.
-     *
      * Use this instead of getPose().getHeading() in commands that calculate
      * forward vectors or heading differences.
      *
@@ -380,7 +410,6 @@ public class PedroDrive extends SubsystemBase {
 
     /**
      * OUTPUT TRANSLATOR: Converts our normalized heading to Pedro's format.
-     *
      * Use this when creating Pose objects for path targets.
      *
      * @param normalizedHeading Our heading in radians
@@ -393,7 +422,7 @@ public class PedroDrive extends SubsystemBase {
     /**
      * Core angle normalization - wraps any angle to [-π, π] radians.
      *
-     * CRITICAL: Pedro Pathing documentation says it uses RADIANS, not degrees!
+     * CRITICAL: Pedro Pathing uses RADIANS, not degrees!
      * - Math.PI = 180°
      * - -Math.PI = -180°
      *
@@ -410,10 +439,6 @@ public class PedroDrive extends SubsystemBase {
         }
         return angle;
     }
-
-    // ============================================================
-    //                    CONFIGURATION METHODS
-    // ============================================================
 
     /**
      * Resets the robot's heading to 0 degrees (facing forward).
@@ -467,18 +492,9 @@ public class PedroDrive extends SubsystemBase {
     /**
      * Updates telemetry display with current drive system information.
      * Shows drive mode, speed, pose, IMU heading, and Panels drawing status.
-     *
-     * *** ENHANCED WITH DEBUGGING INFO ***
-     * Now shows BOTH raw and normalized heading values to verify units!
      */
     private void addTelemetry() {
         Pose currentPose = getPose();
-
-        // Get raw heading directly from Pedro
-        double rawHeading = currentPose.getHeading();
-
-        // Get normalized heading through our method
-        double normalizedHeading = getNormalizedHeading();
 
         // Drive configuration
         robot.sensors.addTelemetry("═══ Drive Status ═══", "");
@@ -486,18 +502,13 @@ public class PedroDrive extends SubsystemBase {
         robot.sensors.addTelemetry("Speed", "%.0f%%", driveSpeed * 100);
         robot.sensors.addTelemetry("Panels", panelsDrawingEnabled ? "✓ Drawing" : "✗ Disabled");
 
+
         // Localization data
         robot.sensors.addTelemetry("═══ Position ═══", "");
         robot.sensors.addTelemetry("Position", "X:%.1f\" Y:%.1f\"",
                 currentPose.getX(), currentPose.getY());
-
-        // *** DEBUGGING TELEMETRY - Shows both raw and normalized ***
-        robot.sensors.addTelemetry("─── Heading Debug ───", "");
-        robot.sensors.addTelemetry("RAW from Pedro", "%.4f", rawHeading);
-        robot.sensors.addTelemetry("RAW as degrees", "%.1f°", Math.toDegrees(rawHeading));
-        robot.sensors.addTelemetry("NORMALIZED", "%.4f", normalizedHeading);
-        robot.sensors.addTelemetry("NORMALIZED as °", "%.1f°", Math.toDegrees(normalizedHeading));
-        robot.sensors.addTelemetry("IMU Heading", "%.1f°",
+        robot.sensors.addTelemetry("Heading", "Pedro:%.1f° IMU:%.1f°",
+                Math.toDegrees(currentPose.getHeading()),
                 imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
     }
 

@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathBuilder;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
@@ -20,7 +22,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ║    • 180° (±π rad) = Robot facing LEFT (toward red alliance)              ║
  * ║    • -90° (-π/2 rad) = Robot facing BACKWARD                              ║
  * ║                                                                           ║
- * ║  FIXED: For heading θ, the forward vector components are:                 ║
+ * ║  For heading θ, the forward vector components are:                        ║
  * ║    • ΔX = distance × cos(θ)  (horizontal component)                       ║
  * ║    • ΔY = distance × sin(θ)  (vertical component)                         ║
  * ║                                                                           ║
@@ -62,47 +64,36 @@ public class FwdByDist extends DriveAbstract {
 
         Pose currentPose = drive.getPose();
 
-        // Get BOTH raw and normalized heading for debugging
-        double rawHeading = currentPose.getHeading();
-        double normalizedHeading = drive.getNormalizedHeading();
+        // Get normalized heading to handle ±180° wrap-around correctly
+        double currentHeading = drive.getNormalizedHeading();
 
-        // *** CRITICAL FIX: Use cos for X, sin for Y ***
-        // Previous bug had these swapped, causing 90° rotation!
-        double deltaX = distance * Math.cos(normalizedHeading);  // ← cos for X (horizontal)
-        double deltaY = distance * Math.sin(normalizedHeading);  // ← sin for Y (vertical)
+        // CRITICAL: Calculate forward vector components
+        // cos(θ) gives X component, sin(θ) gives Y component
+        // DO NOT swap these or robot will drive sideways!
+        double deltaX = distance * Math.cos(currentPose.getHeading());  // ← Horizontal
+        double deltaY = distance * Math.sin(currentPose.getHeading());  // ← Vertical
 
         // Create target pose by adding forward vector to current position
         targetPose = new Pose(
                 currentPose.getX() + deltaX,
                 currentPose.getY() + deltaY,
-                drive.toPedroHeading(normalizedHeading)  // Maintain heading
+                currentPose.getHeading()  // Maintain heading
         );
 
         // Create and follow straight-line path
-        Path path = new Path(new BezierLine(currentPose, targetPose));
-        follower.followPath(path);
+//        Path path = new Path(new BezierLine(currentPose, targetPose));
+        PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierCurve(currentPose, targetPose));
+        follower.followPath(builder.build());
 
-        // *** ENHANCED DEBUGGING TELEMETRY ***
-        robot.telemetry.addData("═══ FwdByDist Debug ═══", "");
-        robot.telemetry.addData("Distance Cmd", "%.1f inches", distance);
-
-        robot.telemetry.addData("─── Heading Values ───", "");
-        robot.telemetry.addData("RAW Heading", "%.4f", rawHeading);
-        robot.telemetry.addData("RAW as degrees", "%.1f°", Math.toDegrees(rawHeading));
-        robot.telemetry.addData("NORMALIZED", "%.4f", normalizedHeading);
-        robot.telemetry.addData("NORMALIZED °", "%.1f°", Math.toDegrees(normalizedHeading));
-
-        robot.telemetry.addData("─── Vector Math ───", "");
-        robot.telemetry.addData("cos(heading)", "%.4f", Math.cos(normalizedHeading));
-        robot.telemetry.addData("sin(heading)", "%.4f", Math.sin(normalizedHeading));
-        robot.telemetry.addData("Delta X", "%.2f inches", deltaX);
-        robot.telemetry.addData("Delta Y", "%.2f inches", deltaY);
-
-        robot.telemetry.addData("─── Positions ───", "");
+        // Telemetry for debugging
+        robot.telemetry.addData("FwdByDist", "Initialized");
+        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeading));
+        robot.telemetry.addData("Distance", "%.1f inches", distance);
         robot.telemetry.addData("Current Pos", "(%.1f, %.1f)",
                 currentPose.getX(), currentPose.getY());
         robot.telemetry.addData("Target Pos", "(%.1f, %.1f)",
                 targetPose.getX(), targetPose.getY());
+        robot.telemetry.addData("Delta", "ΔX=%.1f, ΔY=%.1f", deltaX, deltaY);
     }
 
     @Override
@@ -114,7 +105,7 @@ public class FwdByDist extends DriveAbstract {
             finished = true;
         }
 
-        // Update telemetry with distance remaining
+        // Update telemetry
         Pose current = drive.getPose();
         double distanceRemaining = Math.hypot(
                 targetPose.getX() - current.getX(),
@@ -122,8 +113,6 @@ public class FwdByDist extends DriveAbstract {
         );
 
         robot.telemetry.addData("Distance Remaining", "%.1f inches", distanceRemaining);
-        robot.telemetry.addData("Current Pos", "(%.1f, %.1f)",
-                current.getX(), current.getY());
     }
 
     @Override

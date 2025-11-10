@@ -153,7 +153,7 @@ public class Ganymede extends Robot {
 
         // Y Button - Toggle field-centric mode
         new GamepadButton(player1, GamepadKeys.Button.Y)
-                .whenPressed(new FwdByDist(this, 24,20));
+                .whenPressed(() -> new FwdByDist(this, 24,20).schedule());
 
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
@@ -167,7 +167,7 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
         new GamepadButton(player1, GamepadKeys.Button.X)
-                .whenPressed(new DriveToBlue(this, 10000));
+                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
 
 /*
 

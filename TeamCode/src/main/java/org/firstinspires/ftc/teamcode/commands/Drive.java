@@ -82,6 +82,8 @@ public class Drive extends CommandBase {
      */
     @Override
     public void execute() {
+
+        drive.follower.breakFollowing();
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
         // - Right bumper is held (for precise movements)
@@ -105,6 +107,7 @@ public class Drive extends CommandBase {
         robot.sensors.addTelemetry("Right Stick", "X: %.2f Y: %.2f",
                 player1.getRightX(), player1.getRightY());
         robot.sensors.addTelemetry("Speed Mode", speedMod < 1.0 ? "SLOW" : "NORMAL");
+
 
         // ============ SEND DRIVE COMMAND ============
         // Apply speed modifier and send to drive subsystem

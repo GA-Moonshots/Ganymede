@@ -193,8 +193,8 @@ public class Constants {
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             /** Pod offsets from robot center in inches */
-            .forwardPodY(-3.5)  // Negative = behind center
-            .strafePodX(-4)     // Negative = left of center
+            .forwardPodY(3)  // Negative = behind center
+            .strafePodX(-9)     // Negative = left of center
             .distanceUnit(DistanceUnit.INCH)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
             /** Test directions with Localization Test - forward should increase X */
