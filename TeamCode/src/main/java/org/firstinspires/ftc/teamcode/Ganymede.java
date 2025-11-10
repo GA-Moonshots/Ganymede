@@ -93,7 +93,7 @@ public class Ganymede extends Robot {
                 startPose = new Pose(120.5, 115.4, Math.toRadians(-135.8));
             } else {
                 // Red Right starting position
-                startPose = new Pose(84.2, 6.2, Math.toRadians(86));
+                startPose = new Pose(84.2, 6.2, Math.toRadians(90));
             }
         } else {
             if (isNearGoal) {

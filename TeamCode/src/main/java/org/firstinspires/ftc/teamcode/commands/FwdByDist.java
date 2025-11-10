@@ -40,7 +40,6 @@ public class FwdByDist extends DriveAbstract {
 
     // ============================================================
     //                     CONSTRUCTOR
-    // ============================================================
 
     /**
      * Creates a command to move forward/backward by distance.
@@ -56,7 +55,6 @@ public class FwdByDist extends DriveAbstract {
 
     // ============================================================
     //                     COMMAND LIFECYCLE
-    // ============================================================
 
     @Override
     public void initialize() {

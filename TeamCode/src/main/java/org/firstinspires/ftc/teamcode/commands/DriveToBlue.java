@@ -17,16 +17,11 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  */
 public class DriveToBlue extends DriveAbstract {
 
-    // ============================================================
-    //                     COMMAND STATE
-    // ============================================================
-
     private Pose targetPose;
     private boolean finished = false;
 
     // ============================================================
     //                     CONSTRUCTOR
-    // ============================================================
 
     /**
      * Creates a command to drive to the blue collection zone.
@@ -40,7 +35,6 @@ public class DriveToBlue extends DriveAbstract {
 
     // ============================================================
     //                     COMMAND LIFECYCLE
-    // ============================================================
 
     @Override
     public void initialize() {

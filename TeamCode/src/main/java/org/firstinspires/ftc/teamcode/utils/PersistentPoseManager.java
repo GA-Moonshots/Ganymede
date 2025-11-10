@@ -3,16 +3,20 @@ package org.firstinspires.ftc.teamcode.utils;
 import android.os.Environment;
 
 import com.pedropathing.geometry.Pose;
+
 import java.io.*;
 
+/**
+ * Handles persistent storage of robot pose between OpMode runs.
+ * Saves pose to file at end of autonomous, loads at start of teleop.
+ */
 public class PersistentPoseManager {
-    //TODO: Make file path variable
-    private static final String POSE_FILE_PATH = Environment.getExternalStorageDirectory().getPath()+"/FIRST/pose.txt"; // Save file location
+    private static final String POSE_FILE_PATH = Environment.getExternalStorageDirectory().getPath()+"/FIRST/pose.txt";
 
     /**
      * Saves the robot's pose to a file.
      *
-     * @param pose The robot's current pose (x, y, heading).
+     * @param pose The robot's current pose (x, y, heading in radians).
      */
     public static void savePose(Pose pose) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(POSE_FILE_PATH))) {
@@ -26,7 +30,7 @@ public class PersistentPoseManager {
     /**
      * Loads the robot's pose from a file.
      *
-     * @return The saved pose, or (0, 0, 0) if the file does not exist or an error occurs.
+     * @return The saved pose, or (105, 32, 0) if the file does not exist or an error occurs.
      */
     public static Pose loadPose() {
         try (BufferedReader reader = new BufferedReader(new FileReader(POSE_FILE_PATH))) {
@@ -42,7 +46,7 @@ public class PersistentPoseManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Default pose if loading fails
-        return new Pose(0, 0, 0);
+        // Default pose if loading fails - center of red observation zone
+        return new Pose(105, 32, 0);
     }
 }

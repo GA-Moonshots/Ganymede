@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ║    • Variable speed control for precision movements                       ║
  * ║    • IMU-based heading correction                                         ║
  * ║    • Live Panels dashboard visualization (TeleOp + Tuning)                ║
- * ║    • All motor configuration centralized in Constants.java                ║
+ * ║    • All motor configuration centralized in Constants.java                 ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 public class PedroDrive extends SubsystemBase {
@@ -156,7 +156,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    PERIODIC UPDATES
-    // ============================================================
 
     /**
      * Called automatically by the command scheduler every loop iteration.
@@ -173,27 +172,6 @@ public class PedroDrive extends SubsystemBase {
 
         // Post basic data to driver station
         addTelemetry();
-
-        double distance = 24;
-        Pose currentPose = this.getPose();
-
-        // Get normalized heading to handle ±180° wrap-around correctly
-        double currentHeading = this.getNormalizedHeading();
-
-        // CRITICAL: Calculate forward vector components
-        // cos(θ) gives X component, sin(θ) gives Y component
-        // DO NOT swap these or robot will drive sideways!
-        double deltaX = distance * Math.cos(currentPose.getHeading());  // ← Horizontal
-        double deltaY = distance * Math.sin(currentPose.getHeading());  // ← Vertical
-
-        // Create target pose by adding forward vector to current position
-        Pose targetPose = new Pose(
-                currentPose.getX() + deltaX,
-                currentPose.getY() + deltaY,
-                currentPose.getHeading()  // Maintain heading
-        );
-
-        robot.telemetry.addData("Target Pose", targetPose.getPose());
     }
 
     /**
@@ -207,7 +185,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    PANELS DRAWING
-    // ============================================================
 
     /**
      * Draws the robot and its pose history to Panels dashboard.
@@ -315,7 +292,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    DRIVE CONTROL
-    // ============================================================
 
     /**
      * Main teleop drive method using mecanum kinematics.
@@ -371,7 +347,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    LOCALIZATION
-    // ============================================================
 
     /**
      * Returns the robot's current pose from Pedro's localization system.
@@ -392,9 +367,8 @@ public class PedroDrive extends SubsystemBase {
         follower.setPose(newPose);
     }
 
-    // ============================================================
-    //                    CONFIGURATION METHODS
-    // ============================================================
+    //============================================================//
+    //                    UTILITY METHODS                         //
 
     /**
      * INPUT TRANSLATOR: Gets robot's heading normalized to [-π, π] radians.
@@ -469,26 +443,6 @@ public class PedroDrive extends SubsystemBase {
         driveSpeed = Math.max(Constants.MIN_DRIVE_SPEED, Math.min(Constants.MAX_DRIVE_SPEED, speed));
     }
 
-    //============================================================//
-    //                    UTILITY METHODS                         //
-    //============================================================//
-
-    /**
-     * Saves the current robot pose for persistence between OpMode runs.
-     * This allows maintaining position across multiple autonomous/teleop sessions.
-     *
-     * TODO: Implement actual persistence using SharedPreferences or file I/O
-     */
-    public void saveCurrentPose() {
-        Pose currentPose = getPose();
-        // TODO: Implement actual pose persistence
-
-        robot.telemetry.addData("Saved Pose", "X:%.1f Y:%.1f H:%.1f°",
-                currentPose.getX(),
-                currentPose.getY(),
-                Math.toDegrees(currentPose.getHeading()));
-    }
-
     /**
      * Updates telemetry display with current drive system information.
      * Shows drive mode, speed, pose, IMU heading, and Panels drawing status.
@@ -500,8 +454,6 @@ public class PedroDrive extends SubsystemBase {
         robot.sensors.addTelemetry("═══ Drive Status ═══", "");
         robot.sensors.addTelemetry("Mode", fieldCentric ? "Field-Centric" : "Robot-Centric");
         robot.sensors.addTelemetry("Speed", "%.0f%%", driveSpeed * 100);
-        robot.sensors.addTelemetry("Panels", panelsDrawingEnabled ? "✓ Drawing" : "✗ Disabled");
-
 
         // Localization data
         robot.sensors.addTelemetry("═══ Position ═══", "");
@@ -514,7 +466,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    GETTERS AND SETTERS
-    // ============================================================
 
     /**
      * @return Current field-centric mode state

@@ -36,7 +36,6 @@ public abstract class DriveAbstract extends CommandBase {
 
     // ============================================================
     //                     CONSTRUCTOR
-    // ============================================================
 
     /**
      * Creates a new Moon command with timeout safety.

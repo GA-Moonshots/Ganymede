@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
@@ -20,7 +19,6 @@ public class Drive extends CommandBase {
 
     // ============================================================
     //                     COMMAND COMPONENTS
-    // ============================================================
 
     /** Reference to the drive subsystem */
     private final PedroDrive drive;
@@ -30,22 +28,6 @@ public class Drive extends CommandBase {
 
     /** Reference to main robot for accessing other subsystems */
     private final Ganymede robot;
-
-    /** FTC Dashboard for real-time telemetry (optional) */
-    private final FtcDashboard dashboard;
-
-    // ============================================================
-    //                     DRIVE PARAMETERS
-    // ============================================================
-
-    /** Current strafe (left/right) speed */
-    private double strafeSpeed;
-
-    /** Current forward/backward speed */
-    private double forwardSpeed;
-
-    /** Current turning speed */
-    private double turnSpeed;
 
     /**
      * Constructor - Initializes the drive command with required subsystems
@@ -60,9 +42,6 @@ public class Drive extends CommandBase {
 
         // Register subsystem requirements for command scheduler
         addRequirements(robot.drive);
-
-        // Initialize FTC Dashboard for advanced telemetry
-        dashboard = FtcDashboard.getInstance();
     }
 
     /**
@@ -81,7 +60,6 @@ public class Drive extends CommandBase {
      */
     @Override
     public void execute() {
-
 
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
@@ -115,11 +93,6 @@ public class Drive extends CommandBase {
                 strafe * speedMod,
                 turn * speedMod
         );
-
-        // Store values for potential telemetry or logging
-        this.forwardSpeed = forward * speedMod;
-        this.strafeSpeed = strafe * speedMod;
-        this.turnSpeed = turn * speedMod;
     }
 
     /**
@@ -151,7 +124,6 @@ public class Drive extends CommandBase {
 
     // ============================================================
     //                     HELPER METHODS
-    // ============================================================
 
     /**
      * Applies deadzone to gamepad input to prevent drift from stick noise.
@@ -165,16 +137,4 @@ public class Drive extends CommandBase {
         return Math.abs(input) <= Constants.INPUT_THRESHOLD ? 0.0 : input;
     }
 
-    // ============================================================
-    //                     GETTERS (for telemetry/logging)
-    // ============================================================
-
-    /** @return Current forward/backward speed after modifiers */
-    public double getForwardSpeed() { return forwardSpeed; }
-
-    /** @return Current strafe speed after modifiers */
-    public double getStrafeSpeed() { return strafeSpeed; }
-
-    /** @return Current turning speed after modifiers */
-    public double getTurnSpeed() { return turnSpeed; }
 }

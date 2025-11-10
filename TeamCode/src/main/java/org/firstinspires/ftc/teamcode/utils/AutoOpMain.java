@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -80,9 +81,10 @@ public class AutoOpMain extends CommandOpMode {
     public void reset() {
         super.reset();
 
-        // Save final pose for TeleOp if needed
+        // Save final pose for TeleOp
         if (robot != null && robot.drive != null) {
-            robot.drive.saveCurrentPose();
+            Pose finalPose = robot.drive.getPose();
+            PersistentPoseManager.savePose(finalPose);
         }
     }
 }
