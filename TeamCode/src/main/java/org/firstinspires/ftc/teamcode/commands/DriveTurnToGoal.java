@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ║  Heading calculation accounts for turret position:                        ║
  * ║    • FRONT position: Aim directly at goal                                 ║
  * ║    • LEFT position:  Aim with 90° offset (launcher is rotated)            ║
+ * ║                                                                           ║
+ * ║  Uses PedroDrive's angle translators for proper ±180° wrap-around.        ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 public class DriveTurnToGoal extends DriveAbstract {
@@ -77,6 +79,7 @@ public class DriveTurnToGoal extends DriveAbstract {
         double headingToGoal = Math.atan2(deltaY, deltaX);
 
         // Apply heading offset based on launcher/turret position
+        // This uses PedroDrive's toPedroHeading() to normalize the result
         targetHeading = calculateTargetHeading(headingToGoal);
 
         // ============================================================
@@ -86,13 +89,13 @@ public class DriveTurnToGoal extends DriveAbstract {
         // a very short path (0.1 inches) with linear heading interpolation.
         // This causes the robot to turn while barely moving forward.
 
-        double currentHeading = currentPose.getHeading();
+        double currentHeading = drive.getNormalizedHeading();
 
         // Create target pose: Same position + tiny forward offset + new heading
         Pose targetPose = new Pose(
                 currentPose.getX() + 0.1 * Math.cos(currentHeading),
                 currentPose.getY() + 0.1 * Math.sin(currentHeading),
-                targetHeading
+                targetHeading  // Already normalized by calculateTargetHeading()
         );
 
         // Build path with linear heading interpolation
@@ -119,11 +122,11 @@ public class DriveTurnToGoal extends DriveAbstract {
     public void execute() {
         super.execute();
 
-        // Get current heading
-        double currentHeading = follower.getPose().getHeading();
+        // Get current heading using PedroDrive's normalized method
+        double currentHeading = drive.getNormalizedHeading();
 
-        // Calculate heading error
-        double headingError = normalizeAngle(targetHeading - currentHeading);
+        // Calculate heading error (shortest angular distance)
+        double headingError = angleDifference(targetHeading, currentHeading);
         double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
 
         // Check if we're within tolerance
@@ -166,6 +169,8 @@ public class DriveTurnToGoal extends DriveAbstract {
      * - If turret is in FRONT position: Aim directly at goal
      * - If turret is in LEFT position: Add 90° offset (launcher is rotated)
      *
+     * Uses PedroDrive.toPedroHeading() to normalize the result.
+     *
      * @param headingToGoal The direct heading from robot to goal (in radians)
      * @return The adjusted target heading accounting for launcher position (in radians)
      */
@@ -174,29 +179,44 @@ public class DriveTurnToGoal extends DriveAbstract {
         if (robot.turret.state == Turret.TurretState.LEFT) {
             // Launcher is rotated 90° left, so robot needs to face 90° right of goal
             double offsetRadians = Math.toRadians(Constants.LAUNCHER_LEFT_HEADING_OFFSET_DEGREES);
-            return normalizeAngle(headingToGoal - offsetRadians);
+            double adjustedHeading = headingToGoal - offsetRadians;
+
+            // Normalize through PedroDrive's output translator
+            return drive.toPedroHeading(adjustedHeading);
         } else {
             // FRONT position or MOVING: Aim directly at goal
-            return headingToGoal;
+            // Still normalize to ensure it's in correct range
+            return drive.toPedroHeading(headingToGoal);
         }
     }
 
     /**
-     * Normalizes an angle to the range [-π, π].
+     * Calculates the shortest angular difference between two angles.
      *
-     * This ensures angle differences are calculated correctly,
-     * handling the wraparound at ±180°.
+     * This properly handles the wrap-around at ±180°. For example:
+     * - angleDifference(170°, -170°) = 20° (not 340°)
+     * - angleDifference(-170°, 170°) = -20° (not -340°)
      *
-     * @param angle Angle in radians
-     * @return Normalized angle in range [-π, π]
+     * The result is positive for counter-clockwise rotation,
+     * negative for clockwise rotation.
+     *
+     * NOTE: This could also be moved to PedroDrive if used in other commands.
+     *
+     * @param targetAngle Target angle in radians
+     * @param currentAngle Current angle in radians
+     * @return Shortest difference in radians, range [-π, π]
      */
-    private double normalizeAngle(double angle) {
-        while (angle > Math.PI) {
-            angle -= 2 * Math.PI;
+    private double angleDifference(double targetAngle, double currentAngle) {
+        double difference = targetAngle - currentAngle;
+
+        // Normalize the difference to [-π, π]
+        while (difference > Math.PI) {
+            difference -= 2 * Math.PI;
         }
-        while (angle < -Math.PI) {
-            angle += 2 * Math.PI;
+        while (difference <= -Math.PI) {
+            difference += 2 * Math.PI;
         }
-        return angle;
+
+        return difference;
     }
 }

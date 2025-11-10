@@ -105,7 +105,6 @@ public class Ganymede extends Robot {
                 startPose = new Pose(51, 0.7, 90);
             }
         }
-
         initAuto();
     }
 

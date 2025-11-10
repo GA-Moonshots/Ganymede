@@ -375,6 +375,21 @@ public class PedroDrive extends SubsystemBase {
     //                    CONFIGURATION METHODS
     // ============================================================
 
+    public double getNormalizedHeading() {
+        double heading = follower.getPose().getHeading();
+        return normalizeAngle(heading);
+    }
+
+    public double toPedroHeading(double normalizedHeading) {
+        return normalizeAngle(normalizedHeading);
+    }
+
+    private double normalizeAngle(double angle) {
+        while (angle > Math.PI) angle -= 2 * Math.PI;
+        while (angle <= -Math.PI) angle += 2 * Math.PI;
+        return angle;
+    }
+
     /**
      * Resets the robot's heading to 0 degrees (facing forward).
      * Updates both IMU and Pedro Pathing's heading reference.
