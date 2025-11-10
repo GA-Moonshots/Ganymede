@@ -32,8 +32,8 @@ public class FwdByDist extends DriveAbstract {
         double currentHeading = drive.getNormalizedHeading();
 
         // Calculate forward vector
-        double deltaX = distance * Math.cos(currentHeading);
-        double deltaY = distance * Math.sin(currentHeading);
+        double deltaX = distance * Math.sin(currentHeading);
+        double deltaY = distance * Math.cos(currentHeading);
 
         targetPose = new Pose(
                 currentPose.getX() + deltaX,

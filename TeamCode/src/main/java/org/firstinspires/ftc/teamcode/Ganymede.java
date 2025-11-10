@@ -151,6 +151,10 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
+        // Y Button - Toggle field-centric mode
+        new GamepadButton(player1, GamepadKeys.Button.Y)
+                .whenPressed(new FwdByDist(this, 24,20));
+
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
                     Pose redBaseZone = new Pose(40, 32, 0); // Center of red BASE, facing blue

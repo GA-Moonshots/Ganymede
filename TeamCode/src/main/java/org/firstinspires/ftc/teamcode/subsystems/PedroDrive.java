@@ -381,13 +381,22 @@ public class PedroDrive extends SubsystemBase {
     }
 
     public double toPedroHeading(double normalizedHeading) {
-        return normalizeAngle(normalizedHeading);
+        if (normalizedHeading > 180) {
+            return normalizedHeading - 360;
+        }
+
+        return normalizedHeading;
     }
 
     private double normalizeAngle(double angle) {
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        while (angle <= -Math.PI) angle += 2 * Math.PI;
-        return angle;
+//        while (angle > Math.PI) angle -= 2 * Math.PI;
+//        while (angle <= -Math.PI) angle += 2 * Math.PI;
+        double normalizedAngle = angle;
+        if (angle < 0 ){
+            normalizedAngle = 180 + (180 - Math.abs(angle));
+        }
+
+        return normalizedAngle;
     }
 
     /**
