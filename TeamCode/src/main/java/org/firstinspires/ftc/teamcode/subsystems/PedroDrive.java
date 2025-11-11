@@ -288,7 +288,20 @@ public class PedroDrive extends SubsystemBase {
      * @param strafe  Left/right strafe input (-1.0 to 1.0)
      * @param turn    Rotation input (-1.0 to 1.0)
      */
+
     public void drive(double forward, double strafe, double turn) {
+        // Note: Pedro uses opposite convention for robotCentric parameter
+        follower.setTeleOpDrive(
+                forward * driveSpeed,
+                strafe * driveSpeed,
+                turn * driveSpeed,
+                !fieldCentric  // Inverted: fieldCentric=true means robotCentric=false
+        );
+    }
+
+
+
+    /* public void drive(double forward, double strafe, double turn) {
         double rotY = forward * driveSpeed;
         double rotX = strafe * driveSpeed;
         double rotation = turn * driveSpeed;
@@ -319,7 +332,7 @@ public class PedroDrive extends SubsystemBase {
         leftBack.setPower(backLeftPower);
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
-    }
+    } */
 
     /**
      * Emergency stop - immediately halts all drive motors.
