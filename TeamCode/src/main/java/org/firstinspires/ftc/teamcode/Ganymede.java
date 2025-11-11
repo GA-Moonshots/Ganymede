@@ -229,6 +229,8 @@ public class Ganymede extends Robot {
         // Register subsystems
         register(drive, sensors);
 
+        drive.update(); // make sure we update our localization before we start moving
+
         // OUR WHOLE AUTONOMOUS MODE GOES HERE
         new SequentialCommandGroup(
             new FwdByDist(this,24,20 )

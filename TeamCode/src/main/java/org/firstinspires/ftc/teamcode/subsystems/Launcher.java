@@ -26,7 +26,7 @@ public class Launcher extends SubsystemBase {
     //get state of servo
     public double  stopperState(){
         double state = stopper.getPosition();
-        return state;   
+        return state;
     }
 
     // HAPPENS 30x per second
