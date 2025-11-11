@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ║    • Variable speed control for precision movements                       ║
  * ║    • IMU-based heading correction                                         ║
  * ║    • Live Panels dashboard visualization (TeleOp + Tuning)                ║
- * ║    • All motor configuration centralized in Constants.java                 ║
+ * ║    • All motor configuration centralized in Constants.java                ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 public class PedroDrive extends SubsystemBase {
@@ -38,13 +38,10 @@ public class PedroDrive extends SubsystemBase {
 
     /** Reference to main robot object for hardware access */
     private final Ganymede robot;
-
     /** Pedro Pathing Follower - handles all path following and localization */
     public final Follower follower;
-
     /** Individual motor controllers for mecanum drive */
     private final DcMotorEx leftFront, leftBack, rightFront, rightBack;
-
     /** IMU sensor for field-centric calculations and heading tracking */
     private final IMU imu;
 
@@ -61,18 +58,13 @@ public class PedroDrive extends SubsystemBase {
     // ============================================================
     //                    PANELS DRAWING SETUP
     // ============================================================
-
     /** Robot radius for drawing on field (in inches) */
     private static final double ROBOT_RADIUS = 9.0;
-
     /** Panels field manager for drawing */
     private static FieldManager panelsField;
-
-    /** Style for current robot position (vibrant blue) */
     private static final Style ROBOT_STYLE = new Style(
             "", "#4CAF50", 3.0  // Green - current position
     );
-
     /** Style for pose history trail (softer green) */
     private static final Style HISTORY_STYLE = new Style(
             "", "#81C784", 2.0  // Light green - history trail
@@ -156,7 +148,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    PERIODIC UPDATES
-
     /**
      * Called automatically by the command scheduler every loop iteration.
      * Updates Pedro Pathing's localization system, posts telemetry,
@@ -185,7 +176,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    PANELS DRAWING
-
     /**
      * Draws the robot and its pose history to Panels dashboard.
      * This provides live field visualization during both TeleOp and tuning.
@@ -195,7 +185,6 @@ public class PedroDrive extends SubsystemBase {
         if (!panelsDrawingEnabled || panelsField == null) {
             return;
         }
-
         try {
             Pose currentPose = follower.getPose();
 
@@ -213,7 +202,6 @@ public class PedroDrive extends SubsystemBase {
 
             // Send all drawing commands to Panels
             panelsField.update();
-
         } catch (Exception e) {
             // Silently catch any drawing errors to not interfere with robot operation
             panelsDrawingEnabled = false;
@@ -292,7 +280,6 @@ public class PedroDrive extends SubsystemBase {
 
     // ============================================================
     //                    DRIVE CONTROL
-
     /**
      * Main teleop drive method using mecanum kinematics.
      * Supports both field-centric and robot-centric control modes.

@@ -120,16 +120,13 @@ public class Ganymede extends Robot {
         turret = new Turret(this);
         sensors = new Sensors(this);
 
-
         // Register subsystems with the command scheduler
         register(drive, sensors, intake, launcher,turret);
 
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
 
-        // Configure button bindings for TeleOp
         /*
-
                 .__                                      ____
         ______  |  |  _____   ___.__.  ____ _______     /_   |
         \____ \ |  |  \__  \ <   |  |_/ __ \\_  __ \     |   |

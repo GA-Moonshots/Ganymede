@@ -22,11 +22,8 @@ public class Drive extends CommandBase {
 
     /** Reference to the drive subsystem */
     private final PedroDrive drive;
-
     /** Gamepad for driver controls */
     private final GamepadEx player1;
-
-    /** Reference to main robot for accessing other subsystems */
     private final Ganymede robot;
 
     /**
@@ -50,9 +47,8 @@ public class Drive extends CommandBase {
      */
     @Override
     public void initialize() {
-        // don't fight for control with Pedro
-        drive.follower.breakFollowing();
-    }
+
+     }
 
     /**
      * Main execution method - called repeatedly while command is scheduled.
@@ -60,6 +56,8 @@ public class Drive extends CommandBase {
      */
     @Override
     public void execute() {
+        // break follower so we don't fight with Pedro
+        drive.follower.breakFollowing();
 
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
@@ -84,7 +82,6 @@ public class Drive extends CommandBase {
         robot.sensors.addTelemetry("Right Stick", "X: %.2f Y: %.2f",
                 player1.getRightX(), player1.getRightY());
         robot.sensors.addTelemetry("Speed Mode", speedMod < 1.0 ? "SLOW" : "NORMAL");
-
 
         // ============ SEND DRIVE COMMAND ============
         // Apply speed modifier and send to drive subsystem
