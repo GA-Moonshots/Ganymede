@@ -47,7 +47,7 @@ public class Drive extends CommandBase {
      */
     @Override
     public void initialize() {
-
+        drive.follower.startTeleopDrive();
      }
 
     /**
@@ -56,9 +56,6 @@ public class Drive extends CommandBase {
      */
     @Override
     public void execute() {
-        // break follower so we don't fight with Pedro
-        drive.follower.breakFollowing();
-
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
         // - Right bumper is held (for precise movements)
@@ -72,7 +69,7 @@ public class Drive extends CommandBase {
         // Left stick: forward/strafe movement
         // Right stick: rotation
         double forward = applyDeadZone(player1.getLeftY());
-        double strafe = applyDeadZone(player1.getLeftX());
+        double strafe = applyDeadZone(-player1.getLeftX());
         double turn = applyDeadZone(-player1.getRightX());  // Negative for intuitive turning
 
         // Debug telemetry for input troubleshooting

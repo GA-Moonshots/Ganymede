@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
  * ║  TIMING: Opens stopper for ~600ms to allow single ball launch             ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
+/*
 public class LauncherLaunch extends CommandBase {
 
     // ============================================================
@@ -48,6 +49,8 @@ public class LauncherLaunch extends CommandBase {
      *
      * @param robot Main robot instance containing subsystems
      */
+
+/*
     public LauncherLaunch(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
@@ -68,14 +71,14 @@ public class LauncherLaunch extends CommandBase {
      * Called once when the command is first scheduled.
      * Resets state variables and prepares for launch sequence.
      */
-    @Override
+  /*  @Override
     public void initialize() {
         // Reset state flags
         stopperOpened = false;
         launchComplete = false;
 
         // Ensure stopper starts closed
-        launcher.stopperClosed();
+      //  launcher.stopperClosed();
         launcher.launcher.setPower(0.9);
 
         // Add telemetry for debugging
@@ -86,7 +89,7 @@ public class LauncherLaunch extends CommandBase {
      * Called repeatedly while the command is scheduled.
      * Handles the launch sequence timing.
      */
-    @Override
+   /* @Override
     public void execute() {
         // ============ STEP 1: WAIT FOR LAUNCHER READY ============
         // Don't proceed until the launcher wheel is at speed
@@ -125,7 +128,7 @@ public class LauncherLaunch extends CommandBase {
      *
      * @param interrupted True if command was interrupted, false if finished normally
      */
-    @Override
+   /* @Override
     public void end(boolean interrupted) {
         // Safety: Always ensure stopper is closed when command ends
         launcher.stopperClosed();
@@ -143,9 +146,9 @@ public class LauncherLaunch extends CommandBase {
      *
      * @return True when launch sequence is complete (stopper opened and closed)
      */
-    @Override
+  /*  @Override
     public boolean isFinished() {
         // Command finishes after stopper has been opened and closed
         return launchComplete;
     }
-}
+}*/

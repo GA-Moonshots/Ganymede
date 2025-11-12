@@ -288,7 +288,6 @@ public class PedroDrive extends SubsystemBase {
      * @param strafe  Left/right strafe input (-1.0 to 1.0)
      * @param turn    Rotation input (-1.0 to 1.0)
      */
-
     public void drive(double forward, double strafe, double turn) {
         // Note: Pedro uses opposite convention for robotCentric parameter
         follower.setTeleOpDrive(
@@ -299,40 +298,6 @@ public class PedroDrive extends SubsystemBase {
         );
     }
 
-
-
-    /* public void drive(double forward, double strafe, double turn) {
-        double rotY = forward * driveSpeed;
-        double rotX = strafe * driveSpeed;
-        double rotation = turn * driveSpeed;
-
-        // Field-centric transformation if enabled
-        if (fieldCentric) {
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-            // Rotate input vector by robot heading
-            double temp = rotY;
-            rotY = rotY * Math.cos(-botHeading) - rotX * Math.sin(-botHeading);
-            rotX = temp * Math.sin(-botHeading) + rotX * Math.cos(-botHeading);
-        }
-
-        // ============ Mecanum Kinematics Calculation ============
-        // Calculate individual wheel powers using mecanum equations
-        // Denominator ensures no wheel power exceeds [-1, 1] range
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
-
-        // THESE ARE CORRECT
-        double frontLeftPower = (rotY + rotX - turn) / denominator;
-        double backLeftPower = (rotY - rotX - turn) / denominator;
-        double frontRightPower = (rotY - rotX + turn) / denominator;
-        double backRightPower = (rotY + rotX + turn) / denominator;
-
-        // Apply calculated powers to motors
-        leftFront.setPower(frontLeftPower);
-        leftBack.setPower(backLeftPower);
-        rightFront.setPower(frontRightPower);
-        rightBack.setPower(backRightPower);
-    } */
 
     /**
      * Emergency stop - immediately halts all drive motors.
@@ -345,6 +310,7 @@ public class PedroDrive extends SubsystemBase {
         rightBack.setPower(0);
     }
 
+    // ============================================================
     // ============================================================
     //                    LOCALIZATION
 

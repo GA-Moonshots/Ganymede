@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
-import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
+//import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -181,7 +181,7 @@ public class Ganymede extends Robot {
                // .whenPressed(new LauncherLaunch(this));
 
         // Button X -- Launcher Servo (close)
-        new GamepadButton(player2, GamepadKeys.Button.X)
+       /* new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenPressed(new InstantCommand(() -> {
                     if(launcher.stopper.getPosition() < 0.5){
                         launcher.stopper.setPosition(0.6);
@@ -189,11 +189,19 @@ public class Ganymede extends Robot {
                         launcher.stopper.setPosition(0.3);
                     }
 
-                }));
+                })); */
+
+        new GamepadButton(player2, GamepadKeys.Button.X)
+                .whenHeld(new InstantCommand (() -> {
+                    launcher.stopper.setPower(1);} ));
+
+        new GamepadButton(player2, GamepadKeys.Button.X)
+                .whenReleased(new InstantCommand (() -> {
+                    launcher.stopper.setPower(0);}   ));
 
         // Button A -- Rotate turret to LEFT (only while held)
-        new GamepadButton(player2, GamepadKeys.Button.A)
-                .whenPressed(new LauncherLaunch(this));
+     //   new GamepadButton(player2, GamepadKeys.Button.A)
+            //    .whenPressed(new LauncherLaunch(this));
 
         // Button B -- Rotate turret to FRONT (only while held)
         new GamepadButton(player2, GamepadKeys.Button.B)
