@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 //import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
+import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -147,6 +148,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
+        new GamepadButton(player1, GamepadKeys.Button.X)
+                .whenPressed(new LauncherLaunch(this));
+
         // Y Button - Toggle field-centric mode
         new GamepadButton(player1, GamepadKeys.Button.Y)
                 .whenPressed(() -> new FwdByDist(this, 24,20).schedule());
@@ -162,8 +166,8 @@ public class Ganymede extends Robot {
 
         new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
-        new GamepadButton(player1, GamepadKeys.Button.X)
-                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
+//        new GamepadButton(player1, GamepadKeys.Button.X)
+//                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
 
         /*
                 _                                    __
