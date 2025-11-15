@@ -181,19 +181,10 @@ public class Ganymede extends Robot {
         */
 
         // Button Y -- Launcher LAUNCH
-    //    new GamepadButton(player2, GamepadKeys.Button.Y)
-               // .whenPressed(new LauncherLaunch(this));
+        new GamepadButton(player2, GamepadKeys.Button.Y)
+                .whenPressed(new LauncherLaunch(this));
 
-        // Button X -- Launcher Servo (close)
-       /* new GamepadButton(player2, GamepadKeys.Button.X)
-                .whenPressed(new InstantCommand(() -> {
-                    if(launcher.stopper.getPosition() < 0.5){
-                        launcher.stopper.setPosition(0.6);
-                    }else{
-                        launcher.stopper.setPosition(0.3);
-                    }
 
-                })); */
 
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenHeld(new InstantCommand (() -> {
