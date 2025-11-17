@@ -69,6 +69,7 @@ public class Ganymede extends Robot {
 
         // Load starting pose from file -
         startPose = PersistentPoseManager.loadPose();
+        isRed = PersistentPoseManager.loadIsRed();
 
         initTeleOp();
     }
@@ -114,6 +115,7 @@ public class Ganymede extends Robot {
     public void initTeleOp() {
         // Initialize drive subsystem with Pedro Pathing
         drive = new PedroDrive(this, startPose);
+        drive.follower.startTeleopDrive();
 
         // Initialize sensor package (mostly unchanged from your original)
         launcher = new Launcher(this);

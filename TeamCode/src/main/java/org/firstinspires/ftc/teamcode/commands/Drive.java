@@ -47,7 +47,7 @@ public class Drive extends CommandBase {
      */
     @Override
     public void initialize() {
-        drive.follower.startTeleopDrive();
+
      }
 
     /**

@@ -84,7 +84,6 @@ public class DriveTurnToGoal extends DriveAbstract {
 
         // ============================================================
         // PEDRO PATHING IN-PLACE TURN TECHNIQUE
-        // ============================================================
         // Pedro doesn't have a direct "turn to heading" method, so we create
         // a very short path (0.1 inches) with linear heading interpolation.
         // This causes the robot to turn while barely moving forward.

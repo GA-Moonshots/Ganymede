@@ -76,15 +76,16 @@ public class AutoOpMain extends CommandOpMode {
 
     /**
      * Cleanup when OpMode stops
+     * SAVES BOTH POSE AND ALLIANCE COLOR for TeleOp
      */
     @Override
     public void reset() {
         super.reset();
 
-        // Save final pose for TeleOp
+        // Save final pose AND alliance color for TeleOp
         if (robot != null && robot.drive != null) {
             Pose finalPose = robot.drive.getPose();
-            PersistentPoseManager.savePose(finalPose);
+            PersistentPoseManager.savePose(finalPose, isRed);
         }
     }
 }
