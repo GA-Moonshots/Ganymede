@@ -72,6 +72,12 @@ public class Drive extends CommandBase {
         double strafe = applyDeadZone(-player1.getLeftX());
         double turn = applyDeadZone(-player1.getRightX());  // Negative for intuitive turning
 
+        if(drive.isFieldCentric() && !robot.isRed){ // if BLUE alliance
+            forward = -forward;
+            strafe = -strafe;
+            //don't flip turn
+        }
+
         // Debug telemetry for input troubleshooting
         robot.sensors.addTelemetry("══ Drive Command Inputs ══", "");
         robot.sensors.addTelemetry("Left Stick", "X: %.2f Y: %.2f",

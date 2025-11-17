@@ -153,6 +153,7 @@ public class PedroDrive extends SubsystemBase {
      * Updates Pedro Pathing's localization system, posts telemetry,
      * and draws robot position to Panels dashboard.
      */
+
     @Override
     public void periodic() {
         // Update Pedro's localization system. DO NOT DUPLICATE THIS CALL
@@ -170,6 +171,7 @@ public class PedroDrive extends SubsystemBase {
      * This method processes encoder readings and updates the robot's
      * estimated position on the field.
      */
+
     public void update() {
         follower.update();
     }

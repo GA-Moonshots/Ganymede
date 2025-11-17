@@ -34,11 +34,11 @@ public class Turret extends SubsystemBase {
     public TouchSensor frontButton;
     public TouchSensor leftButton;
 
-    // Motors
+    // Servos
     public CRServo spinServo;
 
     // State tracking - public for direct access from commands
-    public TurretState state = TurretState.FRONT;  // Default to FRONT position
+    public TurretState state = TurretState.FRONT ;  // Default to FRONT position
 
     // ============================================================
     //                        CONSTRUCTOR

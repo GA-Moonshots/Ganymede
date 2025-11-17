@@ -137,9 +137,6 @@ public class Ganymede extends Robot {
 
         */
 
-        // Right bumper - Slow mode (handled in Drive command)
-        // Already handled by checking gamepad1.right_bumper in Drive command
-
         // A Button - Reset heading
         new GamepadButton(player1, GamepadKeys.Button.A)
                 .whenPressed(() -> drive.resetHeading());
@@ -148,8 +145,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
-        new GamepadButton(player1, GamepadKeys.Button.X)
-                .whenPressed(new LauncherLaunch(this));
+        // X Button - Drive to blue zone
+      //   new GamepadButton(player1, GamepadKeys.Button.X)
+//                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
 
         // Y Button - Toggle field-centric mode
         new GamepadButton(player1, GamepadKeys.Button.Y)
@@ -166,9 +164,6 @@ public class Ganymede extends Robot {
 
         new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
-//        new GamepadButton(player1, GamepadKeys.Button.X)
-//                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
-
         /*
                 _                                    __
                (_ )                                /'__`\
@@ -180,12 +175,19 @@ public class Ganymede extends Robot {
         (_)                `\___/'
         */
 
+
+        // Button A and B -- Turret
+        new GamepadButton(player2, GamepadKeys.Button.A)
+                .whenPressed(new TurretRotate(this, Turret.TurretState.LEFT ));
+
+        new GamepadButton(player2, GamepadKeys.Button.B)
+                .whenPressed(new TurretRotate(this, Turret.TurretState.FRONT ));
+
         // Button Y -- Launcher LAUNCH
         new GamepadButton(player2, GamepadKeys.Button.Y)
                 .whenPressed(new LauncherLaunch(this));
 
-
-
+        // Button X -- STOPPER
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenHeld(new InstantCommand (() -> {
                     launcher.stopper.setPower(1);} ));
@@ -194,26 +196,19 @@ public class Ganymede extends Robot {
                 .whenReleased(new InstantCommand (() -> {
                     launcher.stopper.setPower(0);}   ));
 
-        // Button A -- Rotate turret to LEFT (only while held)
-     //   new GamepadButton(player2, GamepadKeys.Button.A)
-            //    .whenPressed(new LauncherLaunch(this));
-
-        // Button B -- Rotate turret to FRONT (only while held)
-        new GamepadButton(player2, GamepadKeys.Button.B)
-                .whileHeld(new TurretRotate(this, Turret.TurretState.FRONT));
-
         // RIGHT TRIGGER -- POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherRawPower(this));
 
         // RIGHT BUMPER
-        //new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
-
+        new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new LauncherLaunch(this));
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
         leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
 
+        // LEFT BUMPER -- OUTTAKE
         new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER).whileHeld(new IntakeByDirection(this, false));
     }
 
@@ -233,7 +228,7 @@ public class Ganymede extends Robot {
 
         // OUR WHOLE AUTONOMOUS MODE GOES HERE
         new SequentialCommandGroup(
-            new FwdByDist(this,24,20 )
+           new FwdByDist(this,24,20 )
 
         ).schedule();
 
