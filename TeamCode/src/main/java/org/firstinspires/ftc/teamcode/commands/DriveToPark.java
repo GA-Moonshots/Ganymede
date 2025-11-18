@@ -77,11 +77,6 @@ public class DriveToPark extends DriveAbstract {
         // Create target pose (maintain current heading to avoid unnecessary rotation)
         targetPose = new Pose(parkX, parkY, 0);
 
-        // Log which alliance we're parking for (helpful for debugging)
-        robot.telemetry.addData("Parking", robot.isRed ? "RED zone" : "BLUE zone");
-        robot.telemetry.addData("Target", String.format("(%.1f, %.1f)", parkX, parkY));
-        robot.telemetry.update();
-
         // Create and follow straight-line path to parking spot
         Path path = new Path(new BezierLine(currentPose, targetPose));
         follower.followPath(path);
@@ -102,11 +97,6 @@ public class DriveToPark extends DriveAbstract {
         super.end(interrupted);
         standardCleanup();
 
-        // Let drivers know we're parked
-        if (!interrupted) {
-            robot.telemetry.addData("Status", "Parked successfully!");
-            robot.telemetry.update();
-        }
     }
 
     @Override

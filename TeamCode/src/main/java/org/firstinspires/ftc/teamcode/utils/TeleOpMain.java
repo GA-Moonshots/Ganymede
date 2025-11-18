@@ -48,11 +48,9 @@ public class TeleOpMain extends CommandOpMode {
 
     @Override
     public void run() {
-        super.run(); // This runs the command scheduler
         robot.player1.readButtons();
         robot.player2.readButtons();
-        // Add any additional per-loop code here if needed
-        // But usually you don't need anything here
+        super.run();
     }
 
     @Override

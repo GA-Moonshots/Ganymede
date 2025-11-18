@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                      FORWARD BY DISTANCE COMMAND                          ║
  * ║                                                                           ║
- * ║  Moves the robot forward or backward by a specified distance while         ║
+ * ║  Moves the robot forward or backward by a specified distance while        ║
  * ║  maintaining its current heading.                                         ║
  * ║                                                                           ║
  * ║  COORDINATE SYSTEM (Pedro Pathing standard):                              ║
@@ -67,7 +67,6 @@ public class FwdByDist extends DriveAbstract {
 
         // CRITICAL: Calculate forward vector components
         // cos(θ) gives X component, sin(θ) gives Y component
-        // DO NOT swap these or robot will drive sideways!
         double deltaX = distance * Math.cos(currentPose.getHeading());  // ← Horizontal
         double deltaY = distance * Math.sin(currentPose.getHeading());  // ← Vertical
 
@@ -78,8 +77,6 @@ public class FwdByDist extends DriveAbstract {
                 currentPose.getHeading()  // Maintain heading
         );
 
-        // Create and follow straight-line path
-//        Path path = new Path(new BezierLine(currentPose, targetPose));
         PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
 
@@ -117,6 +114,7 @@ public class FwdByDist extends DriveAbstract {
     public void end(boolean interrupted) {
         super.end(interrupted);
         standardCleanup();
+        drive.follower.breakFollowing();
 
         if (interrupted) {
             robot.telemetry.addData("FwdByDist", "INTERRUPTED");
