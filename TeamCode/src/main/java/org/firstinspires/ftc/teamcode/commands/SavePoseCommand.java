@@ -10,9 +10,11 @@ import org.firstinspires.ftc.teamcode.utils.PersistentPoseManager;
 
 public class SavePoseCommand extends CommandBase {
     private final PedroDrive driveSubsystem;
+    private Ganymede robot;
 
     public SavePoseCommand(Ganymede robot) {
         this.driveSubsystem = robot.drive;
+        this.robot = robot;
     }
 
     @Override
@@ -23,6 +25,6 @@ public class SavePoseCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         Pose finalPose = driveSubsystem.getPose();
-        PersistentPoseManager.savePose(finalPose);
+        PersistentPoseManager.savePose(finalPose, robot.isRed);
     }
 }

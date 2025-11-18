@@ -76,5 +76,5 @@ dependencies {
     }
 
     // Panels Dashboard
-    implementation "com.bylazar:fullpanels:1.0.9"
+    implementation "com.bylazar:fullpanels:1.0.10"
 }
