@@ -218,9 +218,7 @@ public class Ganymede extends Robot {
      * AUTONOMOUS MODE [--Initialize--]
      */
     public void initAuto() {
-        // Initialize drive with starting pose
         drive = new PedroDrive(this, startPose);
-        // Initialize sensors with April Tag tracking enabled
         sensors = new Sensors(this);
 
         // Register subsystems

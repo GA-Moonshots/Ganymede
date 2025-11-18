@@ -16,16 +16,6 @@ import com.pedropathing.control.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-/**
- * Pedro Pathing Configuration
- *
- * TUNING ORDER (use Tuning OpMode):
- * 1. Setup: Configure hardware mappings below
- * 2. Localization: Test → Forward → Lateral → Turn Tuners
- * 3. Automatic: Forward Velocity → Lateral Velocity → Zero Power Tuners
- * 4. Manual PIDs: Translational → Heading → Drive (optional)
- * 5. Centripetal: For high-speed curves
- */
 public class Constants {
 
     /** Drive motor names - must match hardware map exactly */
@@ -42,7 +32,6 @@ public class Constants {
     public static final String TURRET_SERVO_NAME = "turretServo";
     public static final String LAUNCHER_SERVO_NAME = "launcherServo";
     public static final String STOPER_SERVO_NAME = "stoperServo";
-
 
     /* Sensors */
     public static final String LEFT_BUTTON_NAME = "leftButton";
@@ -76,7 +65,7 @@ public class Constants {
     public static final double HEADING_TOLERANCE_DEGREES = 2.0;
 
     /** Default field-centric mode on startup */
-    public static final boolean DEFAULT_FIELD_CENTRIC = false;
+    public static final boolean DEFAULT_FIELD_CENTRIC = true;
 
     /** Servo power for rotation - adjust as needed for your mechanism */
     public static final double TURRET_ROTATION_POWER = 1;
