@@ -2,25 +2,9 @@
 // build.gradle in TeamCode
 //
 
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url "https://repo.dairy.foundation/releases"
-        }
-    }
-    dependencies {
-        classpath "dev.frozenmilk:Load:0.2.4"
-    }
-}
-
-// Custom definitions may go here
-
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
-apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -57,23 +41,13 @@ dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
-    // Sloth - Fast hot code reloading
-    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
-
     // SolversLib
     implementation "org.solverslib:core:0.3.3" // core
     implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
 
-    // FTC Dashboard - Sloth-compatible version
-    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.4.17")
-
-    // Pedro Pathing - with dashboard exclusion for Sloth compatibility
-    implementation('com.pedropathing:ftc:2.0.3') {
-        exclude group: "com.acmerobotics.dashboard"
-    }
-    implementation('com.pedropathing:telemetry:1.0.0') {
-        exclude group: "com.acmerobotics.dashboard"
-    }
+    // Pedro Pathing - updated to 2.0.4
+    implementation 'com.pedropathing:ftc:2.0.4'
+    implementation 'com.pedropathing:telemetry:1.0.0'
 
     // Panels Dashboard
     implementation "com.bylazar:fullpanels:1.0.10"
