@@ -47,7 +47,8 @@ public class Drive extends CommandBase {
      */
     @Override
     public void initialize() {
-
+        drive.follower.breakFollowing();
+        drive.follower.startTeleopDrive();
      }
 
     /**
@@ -57,10 +58,9 @@ public class Drive extends CommandBase {
     @Override
     public void execute() {
 
-        if(drive.follower.isBusy()){
-            drive.follower.breakFollowing();
-            drive.follower.startTeleopDrive();
-        }
+
+
+
         // ============ SPEED MODIFIERS ============
         // Slow mode is activated when:
         // - Right bumper is held (for precise movements)

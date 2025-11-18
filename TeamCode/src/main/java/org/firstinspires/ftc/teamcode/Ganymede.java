@@ -163,7 +163,9 @@ public class Ganymede extends Robot {
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_UP);
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_UP)
+                .whenPressed(() -> {this.drive.follower.breakFollowing();
+                    this.drive.follower.startTeleopDrive();});
 
         new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
