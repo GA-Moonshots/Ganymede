@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
+import org.firstinspires.ftc.teamcode.commands.DriveToPark;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 //import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
@@ -147,9 +148,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.B)
                 .whenPressed(() -> drive.toggleFieldCentric());
 
-        // X Button - Drive to blue zone
-      //   new GamepadButton(player1, GamepadKeys.Button.X)
-//                .whenPressed(() -> new DriveToBlue(this, 30).schedule());
+        // X Button - Drive to the parking zone for your team
+        new GamepadButton(player1, GamepadKeys.Button.X)
+                .whenPressed(() -> new DriveToPark(this, 30).schedule());
 
         // Y Button - Toggle field-centric mode
         new GamepadButton(player1, GamepadKeys.Button.Y)

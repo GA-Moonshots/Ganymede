@@ -75,7 +75,7 @@ public class DriveToPark extends DriveAbstract {
         double parkY = robot.isRed ? RED_PARK_Y : BLUE_PARK_Y;
 
         // Create target pose (maintain current heading to avoid unnecessary rotation)
-        targetPose = new Pose(parkX, parkY, currentPose.getHeading());
+        targetPose = new Pose(parkX, parkY, 0);
 
         // Log which alliance we're parking for (helpful for debugging)
         robot.telemetry.addData("Parking", robot.isRed ? "RED zone" : "BLUE zone");
