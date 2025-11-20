@@ -32,6 +32,7 @@ public class Constants {
     public static final String TURRET_SERVO_NAME = "turretServo";
     public static final String LAUNCHER_SERVO_NAME = "launcherServo";
     public static final String STOPER_SERVO_NAME = "stoperServo";
+    public static final String   SORTER_NAME = "sorterServo";
 
     /* Sensors */
     public static final String LEFT_BUTTON_NAME = "leftButton";
@@ -103,7 +104,7 @@ public class Constants {
     /** IMU hardware map name */
     public static final String IMU_NAME = "imu";
 
-    public static final String COLOR_SENSOR = "sensor_color_distance";
+    public static final String COLOR_SENSOR = "colorSensor";
 
     /** IMU mounting orientation - update based on REV Hub position */
     public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =

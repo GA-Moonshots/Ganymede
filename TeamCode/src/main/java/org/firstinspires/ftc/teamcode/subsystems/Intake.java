@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
@@ -24,6 +25,7 @@ public class Intake extends SubsystemBase {
     /** Main intake motor */
     public DcMotorEx intakeMotor;
 
+    public Servo sorterServo;
     // ============================================================
     //                        CONSTRUCTOR
 
@@ -37,6 +39,10 @@ public class Intake extends SubsystemBase {
 
         // Load motor from hardware map
         this.intakeMotor = robot.hardwareMap.get(DcMotorEx.class, Constants.INTAKE_NAME);
+
+        this.sorterServo = robot.hardwareMap.get(Servo.class, Constants.SORTER_NAME);
+
+
     }
 
     // ============================================================
@@ -46,6 +52,13 @@ public class Intake extends SubsystemBase {
      * Stops the intake motor.
      * Called when subsystem needs to halt all movement.
      */
+    
+    @Override
+
+    public void periodic(){
+        robot.sensors.addTelemetry("isGreen", String.valueOf(robot.sensors.isGreen()));
+
+    }
     public void stop() {
         intakeMotor.setPower(0);
     }

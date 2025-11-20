@@ -24,7 +24,7 @@ public class Sensors extends SubsystemBase {
     private double x, y, theta;
     private Ganymede robot;
 
-   // public NormalizedColorSensor colorSensor;
+    public NormalizedColorSensor colorSensor;
 
 
     // Flag to enable/disable AprilTag position tracking
@@ -42,7 +42,7 @@ public class Sensors extends SubsystemBase {
         telemetry = robot.telemetry;
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-      //colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
+      colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
 
         try {
 //            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
@@ -78,11 +78,11 @@ public class Sensors extends SubsystemBase {
         telemetryM.addData(key, formattedValue);
     }
 
-   /* public boolean isGreen(){
+     public boolean isGreen(){
         NormalizedRGBA sample = colorSensor.getNormalizedColors();
 
         float normGreen = sample.green / sample.alpha;
 
         return normGreen > 0.009 && sample.green > sample.blue && sample.green > sample.red;
-    } */
+    }
 }
