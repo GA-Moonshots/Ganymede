@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
      * Stops the intake motor.
      * Called when subsystem needs to halt all movement.
      */
-    
+
     @Override
 
     public void periodic(){

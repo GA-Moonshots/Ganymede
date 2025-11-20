@@ -6,6 +6,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -18,18 +19,17 @@ import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 
 public class Sensors extends SubsystemBase {
-    private Limelight3A limelight;
     private Telemetry telemetry;
     private TelemetryManager telemetryM;
     private Ganymede robot;
 
-    public NormalizedColorSensor colorSensor;
+    public RevColorSensorV3 colorSensor;
 
     // Color detection thresholds - tune these based on testing
-    private static final float GREEN_HUE_MIN = 80f;   // Degrees
+    private static final float GREEN_HUE_MIN = 145f;   // Degrees
     private static final float GREEN_HUE_MAX = 160f;  // Degrees
-    private static final float PURPLE_HUE_MIN = 260f; // Degrees
-    private static final float PURPLE_HUE_MAX = 310f; // Degrees
+    private static final float PURPLE_HUE_MIN = 200f; // Degrees
+    private static final float PURPLE_HUE_MAX = 2300f; // Degrees
     private static final float MIN_SATURATION = 0.3f; // Minimum color intensity
     private static final float MIN_VALUE = 0.15f;     // Minimum brightness
 
@@ -54,7 +54,7 @@ public class Sensors extends SubsystemBase {
         telemetry = robot.telemetry;
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        colorSensor = robot.hardwareMap.get(NormalizedColorSensor.class, Constants.COLOR_SENSOR);
+        colorSensor = robot.hardwareMap.get(RevColorSensorV3.class, Constants.COLOR_SENSOR);
 
         // Set gain for better color detection
         colorSensor.setGain(COLOR_SENSOR_GAIN);
