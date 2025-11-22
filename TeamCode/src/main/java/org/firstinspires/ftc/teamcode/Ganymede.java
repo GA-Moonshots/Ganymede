@@ -94,24 +94,20 @@ public class Ganymede extends Robot {
         if (isRed) {
             if (isNearGoal) {
                 // Red Left starting position
-                // should be 195, 120
-                // TODO: fix heading
-                startPose = new Pose(120.5, 115.4, Math.toRadians(-135.8));
+                // TODO: fix heading - we're starting with shooter facing goal now
+                startPose = new Pose(195, 120, Math.toRadians(-135.8));
             } else {
                 // Red Right starting position
-                // should be 135, -66
-                startPose = new Pose(84.2, 6.2, Math.toRadians(90));
+                startPose = new Pose(135, -66, Math.toRadians(90));
             }
         } else {
             if (isNearGoal) {
                 // Blue Left starting position
-                // should be 30, 120
-                // TODO: fix heading
-                startPose = new Pose(17.5, 117.2, Math.toRadians(-37));
+                // TODO: fix heading - we're starting with shooter facing goal now
+                startPose = new Pose(30, 120, Math.toRadians(-37));
             } else {
                 // Blue Right starting position
-                // should be 90, -66
-                startPose = new Pose(51, 0.7, Math.toRadians(90));
+                startPose = new Pose(90, -66, Math.toRadians(90));
             }
         }
         initAuto();
@@ -251,21 +247,21 @@ public class Ganymede extends Robot {
         // BLUE SHOOT
         if(!isRed && isNearGoal) {
             new SequentialCommandGroup(
-                    // should be 98, 55
-                    new DriveToPose(this, new Pose(78, 78, this.drive.follower.getHeading()), 5),
+                    new DriveToPose(this,
+                            new Pose(98, 55, this.drive.follower.getHeading()), 5),
                     new LauncherLaunch(this),
-                    // should be 98, 0
-                    new DriveToPose(this, new Pose(78, 26, this.drive.follower.getHeading()), 5)
+                    new DriveToPose(this,
+                            new Pose(98, 0, this.drive.follower.getHeading()), 5)
             ).schedule();
         }
         // RED SHOOT
         else if(isRed && isNearGoal) {
             new SequentialCommandGroup(
-                    // should be 125, 55
-                    new DriveToPose(this, new Pose(154, 78, this.drive.follower.getHeading()), 5),
+                    new DriveToPose(this,
+                            new Pose(125, 55, this.drive.follower.getHeading()), 5),
                     new LauncherLaunch(this),
-                    // should be 125, 0
-                    new DriveToPose(this, new Pose(154, 26, this.drive.follower.getHeading()), 5)
+                    new DriveToPose(this,
+                            new Pose(125, 0, this.drive.follower.getHeading()), 5)
             ).schedule();
         }
         // MOVE FORWARD
