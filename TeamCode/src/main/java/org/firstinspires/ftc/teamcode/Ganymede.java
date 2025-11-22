@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.DriveToPark;
+import org.firstinspires.ftc.teamcode.commands.DriveToPose;
 import org.firstinspires.ftc.teamcode.commands.FwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 //import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
@@ -93,17 +94,23 @@ public class Ganymede extends Robot {
         if (isRed) {
             if (isNearGoal) {
                 // Red Left starting position
+                // should be 195, 120
+                // TODO: fix heading
                 startPose = new Pose(120.5, 115.4, Math.toRadians(-135.8));
             } else {
                 // Red Right starting position
+                // should be 135, -66
                 startPose = new Pose(84.2, 6.2, Math.toRadians(90));
             }
         } else {
             if (isNearGoal) {
                 // Blue Left starting position
+                // should be 30, 120
+                // TODO: fix heading
                 startPose = new Pose(17.5, 117.2, Math.toRadians(-37));
             } else {
                 // Blue Right starting position
+                // should be 90, -66
                 startPose = new Pose(51, 0.7, Math.toRadians(90));
             }
         }
@@ -209,19 +216,16 @@ public class Ganymede extends Robot {
                 .whenPressed(new InstantCommand (() -> {
                     intake.sorterServo.setPosition(1); } ));
 
-
-
         // RIGHT TRIGGER -- POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherRawPower(this));
 
-        // RIGHT BUMPER
+        // RIGHT BUMPER - Launcher launch
         new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new LauncherLaunch(this));
 
         // LEFT BUMPER
-      //  new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER)
-         //       .whenPressed(new InstantCommand(() -> intake.sorterServo.setPosition(1)));
+        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER);
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
@@ -237,18 +241,39 @@ public class Ganymede extends Robot {
     public void initAuto() {
         drive = new PedroDrive(this, startPose);
         sensors = new Sensors(this);
+        launcher = new Launcher(this);
 
         // Register subsystems
-        register(drive, sensors);
+        register(drive, sensors, launcher);
 
         drive.update(); // make sure we update our localization before we start moving
 
-        // OUR WHOLE AUTONOMOUS MODE GOES HERE
-        new SequentialCommandGroup(
-           new FwdByDist(this,24,20 )
-
-        ).schedule();
-
+        // BLUE SHOOT
+        if(!isRed && isNearGoal) {
+            new SequentialCommandGroup(
+                    // should be 98, 55
+                    new DriveToPose(this, new Pose(78, 78, this.drive.follower.getHeading()), 5),
+                    new LauncherLaunch(this),
+                    // should be 98, 0
+                    new DriveToPose(this, new Pose(78, 26, this.drive.follower.getHeading()), 5)
+            ).schedule();
+        }
+        // RED SHOOT
+        else if(isRed && isNearGoal) {
+            new SequentialCommandGroup(
+                    // should be 125, 55
+                    new DriveToPose(this, new Pose(154, 78, this.drive.follower.getHeading()), 5),
+                    new LauncherLaunch(this),
+                    // should be 125, 0
+                    new DriveToPose(this, new Pose(154, 26, this.drive.follower.getHeading()), 5)
+            ).schedule();
+        }
+        // MOVE FORWARD
+        else {
+            new SequentialCommandGroup(
+                    new FwdByDist(this,24,20 )
+            ).schedule();
+        }
     }
 
 }
