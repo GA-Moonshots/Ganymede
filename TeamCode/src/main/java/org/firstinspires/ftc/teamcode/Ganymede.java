@@ -199,15 +199,16 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenHeld(new InstantCommand (() -> {
                     launcher.stopper.setPower(1);} ));
-
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenReleased(new InstantCommand (() -> {
                     launcher.stopper.setPower(0);}   ));
 
+        // D-PAD LEFT -- INTAKE SERVO
         new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new InstantCommand (() -> {
                     intake.sorterServo.setPosition(0); } ));
 
+        // D-PAD RIGHT - INTAKE SERVO
         new GamepadButton(player2, GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new InstantCommand (() -> {
                     intake.sorterServo.setPosition(1); } ));
@@ -218,7 +219,7 @@ public class Ganymede extends Robot {
 
         // RIGHT BUMPER - Launcher launch
         new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new LauncherLaunch(this));
+                .whenPressed(() -> new LauncherLaunch(this).schedule());
 
         // LEFT BUMPER
         new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER);
