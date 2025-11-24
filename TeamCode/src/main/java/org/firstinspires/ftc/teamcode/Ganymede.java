@@ -13,12 +13,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
-import org.firstinspires.ftc.teamcode.commands.DriveToBlue;
 import org.firstinspires.ftc.teamcode.commands.DriveToPark;
 import org.firstinspires.ftc.teamcode.commands.DriveToPose;
-import org.firstinspires.ftc.teamcode.commands.FwdByDist;
+import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
-//import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
@@ -94,20 +92,18 @@ public class Ganymede extends Robot {
         if (isRed) {
             if (isNearGoal) {
                 // Red Left starting position
-                // TODO: fix heading - we're starting with shooter facing goal now
-                startPose = new Pose(195, 120, Math.toRadians(-135.8));
+                startPose = new Pose(121, 127, Math.toRadians(42));
             } else {
-                // Red Right starting position
-                startPose = new Pose(135, -66, Math.toRadians(90));
+                // Red small triangle starting position
+                startPose = new Pose(80, 12, Math.toRadians(90));
             }
         } else {
             if (isNearGoal) {
                 // Blue Left starting position
-                // TODO: fix heading - we're starting with shooter facing goal now
-                startPose = new Pose(30, 120, Math.toRadians(-37));
+                startPose = new Pose(15, 125, Math.toRadians(133));
             } else {
-                // Blue Right starting position
-                startPose = new Pose(90, -66, Math.toRadians(90));
+                // Blue small triangle starting position
+                startPose = new Pose(50, 12, Math.toRadians(90));
             }
         }
         initAuto();
@@ -157,7 +153,7 @@ public class Ganymede extends Robot {
 
         // Y Button - Toggle field-centric mode
         new GamepadButton(player1, GamepadKeys.Button.Y)
-                .whenPressed(() -> new FwdByDist(this, 24,20).schedule());
+                .whenPressed(() -> new DriveFwdByDist(this, 24,20).schedule());
 
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
@@ -198,10 +194,10 @@ public class Ganymede extends Robot {
         // Button X -- STOPPER
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenHeld(new InstantCommand (() -> {
-                    launcher.stopper.setPower(1);} ));
+                    launcher.greenFeeder.setPower(1);} ));
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenReleased(new InstantCommand (() -> {
-                    launcher.stopper.setPower(0);}   ));
+                    launcher.greenFeeder.setPower(0);}   ));
 
         // D-PAD LEFT -- INTAKE SERVO
         new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
@@ -229,7 +225,7 @@ public class Ganymede extends Robot {
         leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
 
         // LEFT BUMPER -- OUTTAKE
-       // new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER).whileHeld(new IntakeByDirection(this, false));
+        //new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER).whileHeld(new IntakeByDirection(this, false));
     }
 
     /**
@@ -249,26 +245,26 @@ public class Ganymede extends Robot {
         if(!isRed && isNearGoal) {
             new SequentialCommandGroup(
                     new DriveToPose(this,
-                            new Pose(98, 55, this.drive.follower.getHeading()), 5),
+                            new Pose(60, 88, this.drive.follower.getHeading()), 5),
                     new LauncherLaunch(this),
                     new DriveToPose(this,
-                            new Pose(98, 0, this.drive.follower.getHeading()), 5)
+                            new Pose(60, 55, this.drive.follower.getHeading()), 5)
             ).schedule();
         }
         // RED SHOOT
         else if(isRed && isNearGoal) {
             new SequentialCommandGroup(
                     new DriveToPose(this,
-                            new Pose(125, 55, this.drive.follower.getHeading()), 5),
+                            new Pose(77, 88, this.drive.follower.getHeading()), 5),
                     new LauncherLaunch(this),
                     new DriveToPose(this,
-                            new Pose(125, 0, this.drive.follower.getHeading()), 5)
+                            new Pose(77, 55, this.drive.follower.getHeading()), 5)
             ).schedule();
         }
         // MOVE FORWARD
         else {
             new SequentialCommandGroup(
-                    new FwdByDist(this,24,20 )
+                    new DriveFwdByDist(this,24,20 )
             ).schedule();
         }
     }

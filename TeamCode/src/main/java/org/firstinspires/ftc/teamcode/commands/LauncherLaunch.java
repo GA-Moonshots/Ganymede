@@ -42,11 +42,11 @@ public class LauncherLaunch extends CommandBase {
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
         // TODO: Use timer as well as checking for motor speeds
         if (timer.elapsedTime() >= 2.5) {
-            launcher.stopper.setPower(1);
+            launcher.greenFeeder.setPower(1);
         }
 
         if (timer.elapsedTime() >= 7) {
-            launcher.stopper.setPower(0);
+            launcher.greenFeeder.setPower(0);
         }
 
         if (timer.elapsedTime() >= 9) {

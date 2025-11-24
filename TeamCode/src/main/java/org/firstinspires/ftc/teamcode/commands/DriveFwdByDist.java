@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathBuilder;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
@@ -28,7 +26,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ║                                                                           ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
-public class FwdByDist extends DriveAbstract {
+public class DriveFwdByDist extends DriveAbstract {
 
     // ============================================================
     //                     COMMAND STATE
@@ -48,7 +46,7 @@ public class FwdByDist extends DriveAbstract {
      * @param distance Distance to move (positive = forward, negative = backward) in inches
      * @param timeoutSeconds Safety timeout in seconds
      */
-    public FwdByDist(Ganymede robot, double distance, double timeoutSeconds) {
+    public DriveFwdByDist(Ganymede robot, double distance, double timeoutSeconds) {
         super(robot, timeoutSeconds);
         this.distance = distance;
     }

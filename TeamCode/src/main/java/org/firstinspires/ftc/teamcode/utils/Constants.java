@@ -31,7 +31,8 @@ public class Constants {
     public static final String COLOR_GATE_NAME = "colorGate";
     public static final String TURRET_SERVO_NAME = "turretServo";
     public static final String LAUNCHER_SERVO_NAME = "launcherServo";
-    public static final String STOPER_SERVO_NAME = "stoperServo";
+    public static final String GREEN_FEEDER_SERVO_NAME = "stoperServo";
+    public static final String PURPLE_FEEDER_SERVO_NAME = "purpleServo";
     public static final String   SORTER_NAME = "sorterServo";
 
     /* Sensors */

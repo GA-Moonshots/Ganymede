@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 //import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 
@@ -15,13 +14,16 @@ public class Launcher extends SubsystemBase {
     private Ganymede robot;
     // declare motors
     public DcMotorEx launcher;
-    public CRServo stopper;
+    public CRServo greenFeeder;
+    public CRServo purpleFeeder;
+
 
     // CONSTRUCTOR
     public Launcher(Ganymede robot){
         this.robot = robot;
         launcher  = robot.hardwareMap.get(DcMotorEx.class, Constants.LAUNCHER_NAME);
-        stopper = robot.hardwareMap.get(CRServo.class, Constants.STOPER_SERVO_NAME);
+        greenFeeder = robot.hardwareMap.get(CRServo.class, Constants.GREEN_FEEDER_SERVO_NAME);
+        //purpleFeeder = robot.hardwareMap.get(CRServo.class, Constants.PURPLE_FEEDER_SERVO_NAME);
     }
 
     // HAPPENS 30x per second
@@ -35,12 +37,27 @@ public class Launcher extends SubsystemBase {
         return launcher.getVelocity() > 2000;
     }
 
-    public void spinServo(){
-        stopper.setPower(1);
-
+    public void feedGreen(){
+        greenFeeder.setPower(1);
     }
 
-    public void stop() { launcher.setPower(0); }
+    public void stopFeedingGreen() {
+        greenFeeder.setPower(0);
+    }
+
+    public void feedPurple(){
+        //purpleFeeder.setPower(1);
+    }
+
+    public void stopFeedingPurple() {
+        //purpleFeeder.setPower(0);
+    }
+
+    public void stopAll() {
+        launcher.setPower(0);
+        greenFeeder.setPower(0);
+        //purpleFeeder.setPower(0);
+    }
 }
 
 
