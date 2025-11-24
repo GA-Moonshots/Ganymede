@@ -20,9 +20,7 @@ public class LauncherLaunch extends CommandBase {
         this.robot = robot;
         this.launcher = robot.launcher;
 
-        // Convert seconds to milliseconds for the timer
-        long timeoutMillis = (long)(3 * 1000);
-        this.timer = new Timing.Timer(timeoutMillis, TimeUnit.SECONDS);
+        this.timer = new Timing.Timer(15, TimeUnit.SECONDS);
 
         addRequirements(launcher);
     }
@@ -34,21 +32,23 @@ public class LauncherLaunch extends CommandBase {
         timer.start();
     }
 
-    // TODO: FIx threshold and reset variables
     @Override
     public void execute() {
 
         launcher.launcher.setPower(0.9);
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
-        // TODO: Use timer as well as checking for motor speeds
+
+        // START FEEDING
         if (timer.elapsedTime() >= 2.5) {
-            launcher.greenFeeder.setPower(1);
+            launcher.feedGreen();
         }
 
+        // STOP FEEDING
         if (timer.elapsedTime() >= 7) {
-            launcher.greenFeeder.setPower(0);
+            launcher.stopFeedingGreen();
         }
 
+        // GIVE TIME FOR BALL TO GET THROUGH
         if (timer.elapsedTime() >= 9) {
             ballOutputted = true;
         }
@@ -56,13 +56,12 @@ public class LauncherLaunch extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return ballOutputted;
+        return ballOutputted || timer.done();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-
-        launcher.launcher.setPower(0);
+        launcher.stopAll();
     }
 }

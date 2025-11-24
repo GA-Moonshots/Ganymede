@@ -58,7 +58,7 @@ public class Constants {
     /** Drive speed multipliers for teleop */
     public static final double MIN_DRIVE_SPEED = 0.2;
     public static final double MAX_DRIVE_SPEED = 1.0;
-    public static final double DEFAULT_DRIVE_SPEED = 0.8;
+    public static final double DEFAULT_DRIVE_SPEED = 0.9;
     public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     /** Input threshold and tolerances */

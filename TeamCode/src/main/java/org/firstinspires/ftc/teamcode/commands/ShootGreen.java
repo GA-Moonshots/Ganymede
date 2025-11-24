@@ -67,9 +67,7 @@ public class ShootGreen extends CommandBase {
     public ShootGreen(Ganymede robot) {
         this.robot = robot;
 
-        // Create timer for launch sequence (similar to LauncherLaunch)
-        long timeoutMillis = (long)(10 * 1000);  // 10 second timeout
-        this.launchTimer = new Timing.Timer(timeoutMillis, TimeUnit.MILLISECONDS);
+        this.launchTimer = new Timing.Timer(15, TimeUnit.SECONDS);
 
         // We'll require the launcher subsystem
         addRequirements(robot.launcher);
@@ -144,7 +142,7 @@ public class ShootGreen extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return hasLaunched;
+        return hasLaunched || launchTimer.done();
     }
 
     @Override
