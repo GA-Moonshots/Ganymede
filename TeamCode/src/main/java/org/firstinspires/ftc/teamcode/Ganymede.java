@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
+import org.firstinspires.ftc.teamcode.commands.ShootGreen;
+import org.firstinspires.ftc.teamcode.commands.ShootPurple;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
@@ -166,7 +168,11 @@ public class Ganymede extends Robot {
                 .whenPressed(() -> {this.drive.follower.breakFollowing();
                     this.drive.follower.startTeleopDrive();});
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new ShootPurple(this));
+
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new ShootGreen(this));
 
         /*
                 _                                    __

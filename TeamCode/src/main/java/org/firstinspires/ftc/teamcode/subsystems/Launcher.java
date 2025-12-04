@@ -23,7 +23,7 @@ public class Launcher extends SubsystemBase {
         this.robot = robot;
         launcher  = robot.hardwareMap.get(DcMotorEx.class, Constants.LAUNCHER_NAME);
         greenFeeder = robot.hardwareMap.get(CRServo.class, Constants.GREEN_FEEDER_SERVO_NAME);
-        //purpleFeeder = robot.hardwareMap.get(CRServo.class, Constants.PURPLE_FEEDER_SERVO_NAME);
+        purpleFeeder = robot.hardwareMap.get(CRServo.class, Constants.PURPLE_FEEDER_SERVO_NAME);
     }
 
     // HAPPENS 30x per second
@@ -46,17 +46,17 @@ public class Launcher extends SubsystemBase {
     }
 
     public void feedPurple(){
-        //purpleFeeder.setPower(1);
+        purpleFeeder.setPower(1);
     }
 
     public void stopFeedingPurple() {
-        //purpleFeeder.setPower(0);
+        purpleFeeder.setPower(0);
     }
 
     public void stopAll() {
         launcher.setPower(0);
         greenFeeder.setPower(0);
-        //purpleFeeder.setPower(0);
+        purpleFeeder.setPower(0);
     }
 }
 

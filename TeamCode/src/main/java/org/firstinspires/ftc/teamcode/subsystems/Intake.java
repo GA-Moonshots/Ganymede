@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
         // Load motor from hardware map
         this.intakeMotor = robot.hardwareMap.get(DcMotorEx.class, Constants.INTAKE_NAME);
 
-        this.sorterServo = robot.hardwareMap.get(Servo.class, Constants.SORTER_NAME);
+      //  this.sorterServo = robot.hardwareMap.get(Servo.class, Constants.SORTER_NAME);
 
 
     }
