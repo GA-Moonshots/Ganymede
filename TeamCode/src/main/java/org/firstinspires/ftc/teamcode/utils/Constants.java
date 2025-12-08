@@ -33,7 +33,7 @@ public class Constants {
     public static final String LAUNCHER_SERVO_NAME = "launcherServo";
     public static final String GREEN_FEEDER_SERVO_NAME = "stoperServo";
     public static final String PURPLE_FEEDER_SERVO_NAME = "purpleServo";
-    public static final String   SORTER_NAME = "sorterServo";
+    public static final String SORTER_NAME = "sorterServo";
 
     /* Sensors */
     public static final String LEFT_BUTTON_NAME = "leftButton";

@@ -215,6 +215,12 @@ public class Ganymede extends Robot {
                 .whenPressed(new InstantCommand (() -> {
                     intake.sorterServo.setPosition(1); } ));
 
+        new GamepadButton(player2, GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(() -> {intake.sorterServo.setPosition(0.5);}));
+
+        new GamepadButton(player2, GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(new InstantCommand(() -> {intake.sorterServo.setPosition(0);}));
+
         // RIGHT TRIGGER -- POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherRawPower(this));
