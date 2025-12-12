@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.util.Timing;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 
 import java.util.concurrent.TimeUnit;
 
 public class LauncherLaunch extends CommandBase {
     private Ganymede robot;
     private Launcher launcher;
+    private CRServo feeder; // we'll use this for green or purple
+    int runFeeder;
 
     private Timing.Timer timer;
 
@@ -29,27 +33,38 @@ public class LauncherLaunch extends CommandBase {
     public void initialize() {
         super.initialize();
         ballOutputted = false;
+
+        // determine the correct feeder
+        if(robot.turret.state == Turret.TurretState.LEFT) {
+            feeder = robot.launcher.greenFeeder;
+            runFeeder = 1;
+        }
+        else {
+            feeder = robot.launcher.purpleFeeder;
+            runFeeder = -1;
+        }
+
         timer.start();
     }
 
     @Override
     public void execute() {
 
-        launcher.launcher.setPower(0.9);
+        launcher.launcher.setPower(1); // LAUNCHER POWER
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
 
         // START FEEDING
-        if (timer.elapsedTime() >= 2.5) {
-            launcher.feedGreen();
+        if (timer.elapsedTime() >= 2) {
+            feeder.setPower(runFeeder);
         }
 
         // STOP FEEDING
-        if (timer.elapsedTime() >= 7) {
-            launcher.stopFeedingGreen();
+        if (timer.elapsedTime() >= 5) {
+            feeder.setPower(0);
         }
 
         // GIVE TIME FOR BALL TO GET THROUGH
-        if (timer.elapsedTime() >= 9) {
+        if (timer.elapsedTime() >= 7) {
             ballOutputted = true;
         }
     }

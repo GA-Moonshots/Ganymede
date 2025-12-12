@@ -31,9 +31,11 @@ public class Constants {
     public static final String COLOR_GATE_NAME = "colorGate";
     public static final String TURRET_SERVO_NAME = "turretServo";
     public static final String LAUNCHER_SERVO_NAME = "launcherServo";
-    public static final String GREEN_FEEDER_SERVO_NAME = "stoperServo";
+    public static final String GREEN_FEEDER_SERVO_NAME = "greenServo";
     public static final String PURPLE_FEEDER_SERVO_NAME = "purpleServo";
-    public static final String SORTER_NAME = "sorterServo";
+    public static final String GREEN_SORTER_NAME = "stopperG";
+    public static final String PURPLE_SORTER_NAME = "stopperP";
+
 
     /* Sensors */
     public static final String LEFT_BUTTON_NAME = "leftButton";
@@ -118,7 +120,7 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             /** Robot mass in kg - weigh robot BEFORE tuning */
-            .mass(9.97903)
+            .mass(13.607)
 
             /** Dual PID flags - start false, enable for boss-level fine tuning (we think) */
             .useSecondaryTranslationalPIDF(false)
@@ -134,12 +136,12 @@ public class Constants {
 
             /** Tune with: Manual → Translational - push sideways, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/translational
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.001))
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
 
             /** Tune with: Manual → Heading - rotate robot, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/heading
-            .headingPIDFCoefficients(new PIDFCoefficients(0.0, 0, 0.0, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.0, 0, 0.0, 0.005))
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive

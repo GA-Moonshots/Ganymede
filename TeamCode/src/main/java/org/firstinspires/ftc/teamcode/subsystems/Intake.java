@@ -25,7 +25,8 @@ public class Intake extends SubsystemBase {
     /** Main intake motor */
     public DcMotorEx intakeMotor;
 
-    public Servo sorterServo;
+    public Servo stopperG;
+    public Servo stopperP;
     // ============================================================
     //                        CONSTRUCTOR
 
@@ -40,9 +41,8 @@ public class Intake extends SubsystemBase {
         // Load motor from hardware map
         this.intakeMotor = robot.hardwareMap.get(DcMotorEx.class, Constants.INTAKE_NAME);
 
-        this.sorterServo = robot.hardwareMap.get(Servo.class, Constants.SORTER_NAME);
-
-
+        this.stopperG = robot.hardwareMap.get(Servo.class, Constants.GREEN_SORTER_NAME);
+        this.stopperP = robot.hardwareMap.get(Servo.class, Constants.PURPLE_SORTER_NAME);
     }
 
     // ============================================================
@@ -57,6 +57,14 @@ public class Intake extends SubsystemBase {
 
     public void periodic(){
         robot.sensors.addTelemetry("isGreen", String.valueOf(robot.sensors.isGreen()));
+
+        if (robot.sensors.isGreen()) {
+            stopperG.setPosition(0);
+            stopperP.setPosition(0.5);
+        } else if (robot.sensors.isPurple()) {
+            stopperG.setPosition(0.5);
+            stopperP.setPosition(0);
+        }
 
     }
     public void stop() {

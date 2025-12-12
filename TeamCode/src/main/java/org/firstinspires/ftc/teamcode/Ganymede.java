@@ -188,24 +188,24 @@ public class Ganymede extends Robot {
 
         // Button A and B -- Turret
         new GamepadButton(player2, GamepadKeys.Button.A)
-                .whenPressed(new TurretRotate(this, Turret.TurretState.LEFT ));
+                .whenPressed(new TurretRotate(this, Turret.TurretState.FRONT ));
 
         new GamepadButton(player2, GamepadKeys.Button.B)
-                .whenPressed(new TurretRotate(this, Turret.TurretState.FRONT ));
+                .whenPressed(new TurretRotate(this, Turret.TurretState.LEFT ));
 
         // Button Y -- Launcher LAUNCH
         new GamepadButton(player2, GamepadKeys.Button.Y)
                 .whenPressed(new LauncherLaunch(this));
 
-        // Button X -- STOPPER
-        new GamepadButton(player2, GamepadKeys.Button.X)
-                .whenHeld(new InstantCommand (() -> {
-                    launcher.greenFeeder.setPower(1);} ));
-        new GamepadButton(player2, GamepadKeys.Button.X)
-                .whenReleased(new InstantCommand (() -> {
-                    launcher.greenFeeder.setPower(0);}   ));
+        // Button Y
+        new GamepadButton(player2, GamepadKeys.Button.Y);
 
-        // D-PAD LEFT -- INTAKE SERVO
+        // Button X
+        new GamepadButton(player2, GamepadKeys.Button.X)
+                .whenPressed(new InstantCommand (() -> {
+                            launcher.greenFeeder.setPower(1); } ));
+
+     /*   // D-PAD LEFT -- INTAKE SERVO
         new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new InstantCommand (() -> {
                     intake.sorterServo.setPosition(0); } ));
@@ -213,13 +213,19 @@ public class Ganymede extends Robot {
         // D-PAD RIGHT - INTAKE SERVO
         new GamepadButton(player2, GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new InstantCommand (() -> {
-                    intake.sorterServo.setPosition(1); } ));
+                    intake.stopperG.setPosition(1); } ));*/
 
         new GamepadButton(player2, GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new InstantCommand(() -> {intake.sorterServo.setPosition(0.5);}));
+                .whenPressed(new InstantCommand(() -> {intake.stopperG.setPosition(0.5);}));
 
         new GamepadButton(player2, GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(new InstantCommand(() -> {intake.sorterServo.setPosition(0);}));
+                .whenPressed(new InstantCommand(() -> {intake.stopperG.setPosition(0);}));
+
+        new GamepadButton(player2, GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new InstantCommand(() -> {intake.stopperP.setPosition(0.5);}));
+
+        new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new InstantCommand(() -> {intake.stopperP.setPosition(0);}));
 
         // RIGHT TRIGGER -- POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
