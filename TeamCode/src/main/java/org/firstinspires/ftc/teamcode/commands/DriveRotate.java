@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        ROTATE COMMAND                                     ║
  * ║                                                                           ║
- * ║  Rotates the robot by a specified angle while maintaining position.       ║
+ * ║  Rotates the robot by a specified angle while maintaining position.        ║
  * ║                                                                           ║
  * ║  IMPORTANT: Pedro Pathing uses RADIANS, not degrees!                      ║
  * ║  This command accepts degrees for convenience and converts internally.    ║
@@ -85,7 +85,9 @@ public class DriveRotate extends DriveAbstract {
         // We don't call it here to avoid double-updating
 
         // Check if we've reached target within tolerance
-        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)) {
+        // Position tolerance in inches, heading tolerance in radians
+        double headingToleranceRad = Math.toRadians(Constants.HEADING_TOLERANCE_DEGREES);
+        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, headingToleranceRad)) {
             finished = true;
         }
 
