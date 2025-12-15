@@ -66,7 +66,7 @@ public class Constants {
     /** Input threshold and tolerances */
     public static final double INPUT_THRESHOLD = 0.1;
     public static final double POSE_TOLERANCE = 0.5;
-    public static final double HEADING_TOLERANCE_DEGREES = 2.0;
+    public static final double HEADING_TOLERANCE_DEGREES = 10.0;
 
     /** Default field-centric mode on startup */
     public static final boolean DEFAULT_FIELD_CENTRIC = true;

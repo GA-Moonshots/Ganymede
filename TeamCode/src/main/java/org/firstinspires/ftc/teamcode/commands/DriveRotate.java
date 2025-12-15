@@ -72,6 +72,8 @@ public class DriveRotate extends DriveAbstract {
                 .addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
 
+        finished = true;
+
         // Debug telemetry
         robot.telemetry.addData("DriveRotate", "Initialized");
         robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeadingRad));
@@ -87,16 +89,12 @@ public class DriveRotate extends DriveAbstract {
         // Check if we've reached target within tolerance
         // Position tolerance in inches, heading tolerance in radians
         double headingToleranceRad = Math.toRadians(Constants.HEADING_TOLERANCE_DEGREES);
-        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, headingToleranceRad)) {
-            finished = true;
-        }
+        double headingDifference = Math.abs(follower.getHeading() - targetPose.getHeading() );
 
-        // Debug telemetry
-        Pose currentPose = drive.getPose();
-        double headingError = Math.toDegrees(
-                Math.abs(targetPose.getHeading() - currentPose.getHeading())
-        );
-        robot.telemetry.addData("Heading Error", "%.1f°", headingError);
+//        if (follower.) {
+//            robot.telemetry.addData("Reach finished", "lol");
+//            finished = true;
+//        }
     }
 
     @Override
