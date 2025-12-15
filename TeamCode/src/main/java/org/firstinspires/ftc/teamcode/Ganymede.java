@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
-import org.firstinspires.ftc.teamcode.commands.ShootGreen;
-import org.firstinspires.ftc.teamcode.commands.ShootPurple;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
@@ -153,10 +151,10 @@ public class Ganymede extends Robot {
         new GamepadButton(player1, GamepadKeys.Button.X)
                 .whenPressed(() -> new DriveToPark(this, 30).schedule());
 
-        // Y Button - Toggle field-centric mode
-        new GamepadButton(player1, GamepadKeys.Button.Y)
-                .whenPressed(() -> new DriveFwdByDist(this, 24,20).schedule());
+        // Y Button
+        new GamepadButton(player1, GamepadKeys.Button.Y);
 
+        // BACK button
         new GamepadButton(player1, GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(() -> {
                     Pose redBaseZone = new Pose(40, 32, 0); // Center of red BASE, facing blue
@@ -164,15 +162,14 @@ public class Ganymede extends Robot {
                     sensors.addTelemetry("✓ Relocalized", "Red BASE ZONE");
                 }));
 
+        // D-PAD UP - break follower
         new GamepadButton(player1, GamepadKeys.Button.DPAD_UP)
                 .whenPressed(() -> {this.drive.follower.breakFollowing();
                     this.drive.follower.startTeleopDrive();});
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new ShootPurple(this));
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new ShootGreen(this));
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT);
 
         /*
                 _                                    __
@@ -205,16 +202,7 @@ public class Ganymede extends Robot {
                 .whenPressed(new InstantCommand (() -> {
                             launcher.greenFeeder.setPower(1); } ));
 
-     /*   // D-PAD LEFT -- INTAKE SERVO
-        new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new InstantCommand (() -> {
-                    intake.sorterServo.setPosition(0); } ));
-
-        // D-PAD RIGHT - INTAKE SERVO
-        new GamepadButton(player2, GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new InstantCommand (() -> {
-                    intake.stopperG.setPosition(1); } ));*/
-
+        // D-PAD intake servos
         new GamepadButton(player2, GamepadKeys.Button.DPAD_UP)
                 .whenPressed(new InstantCommand(() -> {intake.stopperG.setPosition(0.5);}));
 
@@ -242,8 +230,6 @@ public class Ganymede extends Robot {
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
         leftTriggerP2.whileActiveContinuous(new IntakeByDirection(this, true));
 
-        // LEFT BUMPER -- OUTTAKE
-        //new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER).whileHeld(new IntakeByDirection(this, false));
     }
 
     /**
