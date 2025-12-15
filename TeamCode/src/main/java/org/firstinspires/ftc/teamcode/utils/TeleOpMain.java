@@ -26,22 +26,8 @@ public class TeleOpMain extends CommandOpMode {
         // Create the robot - this initializes all subsystems
         robot = new Ganymede(this);
 
-        // The command scheduler is now active and will:
-        // 1. Run the default Drive command continuously
-        // 2. Handle all button bindings
-        // 3. Call periodic() on all subsystems each loop
-
         telemetry.addData("Status", "Ready to run!");
         telemetry.update();
-
-        // if a is pressed, we are red
-        if(robot.player1.gamepad.a) {
-            robot.startPose = new Pose(95.65, -66.93, 0);
-            // if b is pressed, we are blue
-        } else if (robot.player1.gamepad.b) {
-            robot.startPose = new Pose(132.07, -64.38, 0);
-        }
-
 
     }
 

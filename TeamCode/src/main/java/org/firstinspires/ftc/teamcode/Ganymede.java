@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToPark;
 import org.firstinspires.ftc.teamcode.commands.DriveToPose;
+import org.firstinspires.ftc.teamcode.commands.DriveRotate;
 import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
@@ -40,6 +41,7 @@ public class Ganymede extends Robot {
     // Match configuration
     public boolean isRed;
     public boolean isNearGoal;
+    public String motif;
 
     // SUBSYSTEMS
     public PedroDrive drive;
@@ -77,12 +79,13 @@ public class Ganymede extends Robot {
     /**
      * AUTONOMOUS MODE [--Constructor--]
      */
-    public Ganymede(LinearOpMode opMode, boolean isRed, boolean isNearGoal) {
+    public Ganymede(LinearOpMode opMode, boolean isRed, boolean isNearGoal, String motif) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
         this.isRed = isRed;
         this.isNearGoal = isNearGoal;
+        this.motif = motif;
 
         // Initialize gamepads (may not be used in auto but keeps consistency)
         player1 = new GamepadEx(opMode.gamepad1);
@@ -194,9 +197,6 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.Y)
                 .whenPressed(new LauncherLaunch(this));
 
-        // Button Y
-        new GamepadButton(player2, GamepadKeys.Button.Y);
-
         // Button X
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenPressed(new InstantCommand (() -> {
@@ -223,8 +223,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(() -> new LauncherLaunch(this).schedule());
 
-        // LEFT BUMPER
-        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER);
+        // LEFT BUMPER - DELETE THIS TEST
+        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(() -> new DriveRotate(this, 90, 10).schedule());
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);
@@ -247,13 +248,25 @@ public class Ganymede extends Robot {
 
         // BLUE SHOOT
         if(!isRed && isNearGoal) {
-            new SequentialCommandGroup(
-                    new DriveToPose(this,
-                            new Pose(60, 88, this.drive.follower.getHeading()), 5),
-                    new LauncherLaunch(this),
-                    new DriveToPose(this,
-                            new Pose(60, 55, this.drive.follower.getHeading()), 5)
-            ).schedule();
+            // DUMB SHOOT - NO MOTIF
+            if(motif == null || motif.equals("")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        new LauncherLaunch(this),
+                        new DriveToPose(this,
+                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            } else if(motif.equals("GPP")){
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        new TurretRotate(this, Turret.TurretState.LEFT),
+                        new LauncherLaunch(this),
+                        new DriveToPose(this,
+                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
         }
         // RED SHOOT
         else if(isRed && isNearGoal) {
