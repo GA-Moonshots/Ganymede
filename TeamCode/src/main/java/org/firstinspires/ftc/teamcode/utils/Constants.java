@@ -141,11 +141,11 @@ public class Constants {
 
             /** Tune with: Manual → Heading - rotate robot, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/heading
-            .headingPIDFCoefficients(new PIDFCoefficients(0.0, 0, 0.0, 0.005))
+            .headingPIDFCoefficients(new PIDFCoefficients(2.0, 0, 0.1, 0.005))
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0, 0, 0.00, 0.0, 0.5))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.02, 0, 0.001, 0.0, 0.5))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal

@@ -46,7 +46,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public void feedPurple(){
-        purpleFeeder.setPower(1);
+        purpleFeeder.setPower(-1);
     }
 
     public void stopFeedingPurple() {

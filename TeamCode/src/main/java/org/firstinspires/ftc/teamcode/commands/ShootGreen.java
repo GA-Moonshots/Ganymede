@@ -16,15 +16,16 @@ import java.util.concurrent.TimeUnit;
  * ║                        SHOOT GREEN COMMAND                                ║
  * ║                                                                           ║
  * ║  Alliance-aware command that shoots green balls into the goal.            ║
- * ║  Automatically handles:                                                   ║
- * ║    1. Moving to the correct shooting position for your alliance           ║
- * ║    2. Turning to face the correct shooting angle                          ║
- * ║    3. Positioning the turret to LEFT (for green ball launching)           ║
- * ║    4. Launching the green ball with proper timing                         ║
  * ║                                                                           ║
  * ║  Shooting Positions:                                                      ║
  * ║    • RED alliance:  (77, 88) facing 130°                                  ║
  * ║    • BLUE alliance: (60, 88) facing -132°                                 ║
+ * ║                                                                           ║
+ * ║  Timing Sequence (aligned with LauncherLaunch):                           ║
+ * ║    0.0s - 2.0s : Launcher spins up                                        ║
+ * ║    2.0s - 5.0s : Feed green ball                                          ║
+ * ║    5.0s - 7.0s : Stop feeding, let ball clear                             ║
+ * ║    7.0s+       : Complete                                                 ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 public class ShootGreen extends CommandBase {
@@ -44,33 +45,48 @@ public class ShootGreen extends CommandBase {
     private static final double BLUE_SHOOT_HEADING_DEGREES = -132.0;
 
     // ============================================================
+    //                     TIMING CONSTANTS
+    // ============================================================
+    // Aligned with LauncherLaunch timing
+
+    /** Time to spin up launcher before feeding (seconds) */
+    private static final double SPINUP_TIME = 2.0;
+    /** Time to stop feeding (seconds after sequence complete) */
+    private static final double FEED_STOP_TIME = 5.0;
+    /** Time when command is complete (seconds after sequence complete) */
+    private static final double COMPLETE_TIME = 7.0;
+    /** Overall safety timeout (seconds) */
+    private static final long SAFETY_TIMEOUT = 15;
+
+    // ============================================================
     //                     COMMAND COMPONENTS
     // ============================================================
 
-    private Ganymede robot;
-    private Timing.Timer launchTimer;
+    private final Ganymede robot;
+    private final Timing.Timer safetyTimer;
     private SequentialCommandGroup commandSequence;
-    private boolean hasLaunched = false;
+
+    // ============================================================
+    //                     STATE TRACKING
+    // ============================================================
+
+    /** Tracks when the drive/turret sequence has completed */
+    private boolean sequenceComplete = false;
+    /** Timestamp when the sequence completed (milliseconds) */
+    private long sequenceCompleteTime = 0;
+    /** Tracks when the full launch cycle is done */
+    private boolean launchComplete = false;
 
     // ============================================================
     //                     CONSTRUCTOR
     // ============================================================
 
-    /**
-     * Creates a command to shoot a green ball.
-     *
-     * Automatically determines the correct shooting position and angle
-     * based on robot.isRed alliance color.
-     *
-     * @param robot Main robot object
-     */
     public ShootGreen(Ganymede robot) {
         this.robot = robot;
+        this.safetyTimer = new Timing.Timer(SAFETY_TIMEOUT, TimeUnit.SECONDS);
 
-        this.launchTimer = new Timing.Timer(15, TimeUnit.SECONDS);
-
-        // We'll require the launcher subsystem
-        addRequirements(robot.launcher);
+        // Require both subsystems since we drive AND launch
+        addRequirements(robot.launcher, robot.drive);
     }
 
     // ============================================================
@@ -79,80 +95,99 @@ public class ShootGreen extends CommandBase {
 
     @Override
     public void initialize() {
-        hasLaunched = false;
-        launchTimer.start();
+        // Reset state
+        sequenceComplete = false;
+        sequenceCompleteTime = 0;
+        launchComplete = false;
+
+        // Start safety timer
+        safetyTimer.start();
 
         // Determine shooting position based on alliance color
         double shootX = robot.isRed ? RED_SHOOT_X : BLUE_SHOOT_X;
         double shootY = robot.isRed ? RED_SHOOT_Y : BLUE_SHOOT_Y;
         double shootHeadingDegrees = robot.isRed ? RED_SHOOT_HEADING_DEGREES : BLUE_SHOOT_HEADING_DEGREES;
-
-        // Convert heading to radians for Pedro
         double shootHeadingRadians = Math.toRadians(shootHeadingDegrees);
 
-        // Create target pose
         Pose shootingPose = new Pose(shootX, shootY, shootHeadingRadians);
 
-        // Build command sequence:
-        // 1. Drive to shooting position with correct heading
-        // 2. Rotate turret to LEFT position (for green ball)
-        // 3. Small wait to ensure turret is in position
+        // Build command sequence
         commandSequence = new SequentialCommandGroup(
                 new DriveToPose(robot, shootingPose, 5.0),
                 new TurretRotate(robot, Turret.TurretState.LEFT),
-                new WaitCommand(500)  // 500ms pause to ensure turret is stable
+                new WaitCommand(500)
         );
 
-        // Start the sequence
         commandSequence.schedule();
     }
 
     @Override
     public void execute() {
-        // Telemetry
+        // Telemetry header
         robot.sensors.addTelemetry("═══ Shoot Green ═══", "");
         robot.sensors.addTelemetry("Alliance", robot.isRed ? "RED" : "BLUE");
 
-        // Once the movement and turret rotation sequence is complete, start launching
-        if (commandSequence.isFinished() && !hasLaunched) {
-            // Start launcher motor
-            robot.launcher.launcher.setPower(0.9);
-
-            robot.sensors.addTelemetry("Launcher Status", "Spinning up...");
-            robot.sensors.addTelemetry("Motor Speed", String.valueOf(robot.launcher.launcher.getVelocity()));
+        // Check if sequence just completed
+        if (!sequenceComplete && commandSequence.isFinished()) {
+            sequenceComplete = true;
+            sequenceCompleteTime = System.currentTimeMillis();
         }
 
-        // After launcher spins up for 2.5 seconds, start feeding green
-        if (commandSequence.isFinished() && launchTimer.elapsedTime() >= 2.5 && launchTimer.elapsedTime() < 7.0) {
+        // If sequence isn't done yet, show waiting status
+        if (!sequenceComplete) {
+            robot.sensors.addTelemetry("Status", "Positioning...");
+            return;
+        }
+
+        // Calculate time since sequence completed (in seconds)
+        double timeSinceReady = (System.currentTimeMillis() - sequenceCompleteTime) / 1000.0;
+        robot.sensors.addTelemetry("Launch Timer", "%.1f s", timeSinceReady);
+
+        // Always run launcher at full power once positioned
+        robot.launcher.launcher.setPower(1.0);
+
+        // Phase 1: Spin up only (0 to SPINUP_TIME)
+        if (timeSinceReady < SPINUP_TIME) {
+            robot.sensors.addTelemetry("Launcher Status", "Spinning up...");
+            robot.sensors.addTelemetry("Motor Speed", "%.0f", robot.launcher.launcher.getVelocity());
+        }
+        // Phase 2: Feed green ball (SPINUP_TIME to FEED_STOP_TIME)
+        else if (timeSinceReady < FEED_STOP_TIME) {
             robot.launcher.feedGreen();
             robot.sensors.addTelemetry("Launcher Status", "Feeding green ball");
+            robot.sensors.addTelemetry("Motor Speed", "%.0f", robot.launcher.launcher.getVelocity());
         }
-
-        // Stop feeding at 7 seconds
-        if (launchTimer.elapsedTime() >= 7.0 && launchTimer.elapsedTime() < 9.0) {
+        // Phase 3: Stop feeding, let ball clear (FEED_STOP_TIME to COMPLETE_TIME)
+        else if (timeSinceReady < COMPLETE_TIME) {
             robot.launcher.stopFeedingGreen();
-            robot.sensors.addTelemetry("Launcher Status", "Feed complete");
+            robot.sensors.addTelemetry("Launcher Status", "Ball clearing...");
         }
-
-        // Mark as complete at 9 seconds
-        if (launchTimer.elapsedTime() >= 9.0) {
-            hasLaunched = true;
+        // Phase 4: Complete
+        else {
+            launchComplete = true;
+            robot.sensors.addTelemetry("Launcher Status", "Complete!");
         }
     }
 
     @Override
     public boolean isFinished() {
-        return hasLaunched || launchTimer.done();
+        return launchComplete || safetyTimer.done();
     }
 
     @Override
     public void end(boolean interrupted) {
+        // Cancel the command sequence if still running
+        if (!commandSequence.isFinished()) {
+            commandSequence.cancel();
+        }
+
         // Stop all launcher operations
-        robot.launcher.launcher.setPower(0);
-        robot.launcher.stopFeedingGreen();
+        robot.launcher.stopAll();
 
         if (interrupted) {
             robot.sensors.addTelemetry("Shoot Green", "INTERRUPTED");
+        } else if (safetyTimer.done() && !launchComplete) {
+            robot.sensors.addTelemetry("Shoot Green", "TIMEOUT");
         } else {
             robot.sensors.addTelemetry("Shoot Green", "Complete!");
         }

@@ -253,9 +253,9 @@ public class Ganymede extends Robot {
         drive = new PedroDrive(this, startPose);
         sensors = new Sensors(this);
         launcher = new Launcher(this);
-
-        // Register subsystems
-        register(drive, sensors, launcher);
+        turret = new Turret(this);
+        intake = new Intake(this);
+        register(drive, sensors, launcher, turret, intake);
 
         drive.update(); // make sure we update our localization before we start moving
 

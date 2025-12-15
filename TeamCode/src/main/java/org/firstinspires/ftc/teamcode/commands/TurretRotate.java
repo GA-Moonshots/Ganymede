@@ -101,21 +101,17 @@ public class TurretRotate extends CommandBase {
      * Direction depends on current and target positions.
      */
     private void startRotation() {
-        // Determine which direction to rotate
         double power = 0;
 
         if (targetState == TurretState.FRONT) {
             // Rotate toward front position
-            // Adjust sign (+/-) based on your mechanism's direction
             power = -Constants.TURRET_ROTATION_POWER;
-            turret.state = TurretState.LEFT;
         } else if (targetState == TurretState.LEFT) {
             // Rotate toward left position
-            // Adjust sign (+/-) based on your mechanism's direction
             power = Constants.TURRET_ROTATION_POWER;
-            turret.state = TurretState.FRONT;
         }
 
+        // State remains MOVING (set in initialize()) until end() is called
         turret.spinServo.setPower(power);
     }
 
