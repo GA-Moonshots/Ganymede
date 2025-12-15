@@ -7,14 +7,23 @@ import com.pedropathing.paths.PathBuilder;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 
-
+/**
+ * ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║                        ROTATE COMMAND                                     ║
+ * ║                                                                           ║
+ * ║  Rotates the robot by a specified angle while maintaining position.        ║
+ * ║                                                                           ║
+ * ║  IMPORTANT: Pedro Pathing uses RADIANS, not degrees!                      ║
+ * ║  This command accepts degrees for convenience and converts internally.    ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝
+ */
 public class DriveRotate extends DriveAbstract {
 
     // ============================================================
     //                     COMMAND STATE
     // ============================================================
 
-    private final double rotation;
+    private final double rotationDegrees;
     private Pose targetPose;
     private boolean finished = false;
 
@@ -22,15 +31,17 @@ public class DriveRotate extends DriveAbstract {
     //                     CONSTRUCTOR
 
     /**
-     * Creates a command to rotate.
+     * Creates a command to rotate the robot by a specified angle.
      *
      * @param robot Main robot object containing all subsystems
-     * @param rotation degree to move (positive = clockwise, negative = counter clockwise) in inches
+     * @param rotationDegrees Angle to rotate in degrees
+     *                        Positive = counter-clockwise (left)
+     *                        Negative = clockwise (right)
      * @param timeoutSeconds Safety timeout in seconds
      */
-    public DriveRotate(Ganymede robot, double rotation, double timeoutSeconds) {
+    public DriveRotate(Ganymede robot, double rotationDegrees, double timeoutSeconds) {
         super(robot, timeoutSeconds);
-        this.rotation = rotation;
+        this.rotationDegrees = rotationDegrees;
     }
 
     // ============================================================
@@ -42,36 +53,59 @@ public class DriveRotate extends DriveAbstract {
 
         Pose currentPose = drive.getPose();
 
-        // Get normalized heading to handle ±180° wrap-around correctly
-        double targetHeading = drive.getNormalizedHeading() + rotation;
+        // Get current heading in radians
+        double currentHeadingRad = drive.getNormalizedHeading();
 
-        // Create target pose by adding forward vector to current position
+        // Convert rotation from degrees to radians, then add to current heading
+        double rotationRad = Math.toRadians(rotationDegrees);
+        double targetHeadingRad = drive.toPedroHeading(currentHeadingRad + rotationRad);
+
+        // Create target pose with same position but new heading
         targetPose = new Pose(
                 currentPose.getX(),
                 currentPose.getY(),
-                Math.toRadians(targetHeading)
+                targetHeadingRad  // Already in radians, already normalized
         );
 
-        PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierCurve(currentPose, targetPose));
+        // Build and follow the path
+        PathBuilder builder = new PathBuilder(follower)
+                .addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
+
+        // Debug telemetry
+        robot.telemetry.addData("DriveRotate", "Initialized");
+        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeadingRad));
+        robot.telemetry.addData("Rotation", "%.1f°", rotationDegrees);
+        robot.telemetry.addData("Target Heading", "%.1f°", Math.toDegrees(targetHeadingRad));
     }
 
     @Override
     public void execute() {
-        super.execute();
+        // Note: follower.update() is called by PedroDrive.periodic()
+        // We don't call it here to avoid double-updating
 
         // Check if we've reached target within tolerance
         if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)) {
             finished = true;
         }
 
+        // Debug telemetry
+        Pose currentPose = drive.getPose();
+        double headingError = Math.toDegrees(
+                Math.abs(targetPose.getHeading() - currentPose.getHeading())
+        );
+        robot.telemetry.addData("Heading Error", "%.1f°", headingError);
     }
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
         standardCleanup();
-        drive.follower.breakFollowing();
+
+        if (interrupted) {
+            robot.telemetry.addData("DriveRotate", "INTERRUPTED");
+        } else {
+            robot.telemetry.addData("DriveRotate", "Complete!");
+        }
     }
 
     @Override
