@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        ROTATE COMMAND                                     ║
  * ║                                                                           ║
- * ║  Rotates the robot by a specified angle while maintaining position.        ║
+ * ║  Rotates the robot by a specified angle while maintaining position.       ║
  * ║                                                                           ║
  * ║  IMPORTANT: Pedro Pathing uses RADIANS, not degrees!                      ║
  * ║  This command accepts degrees for convenience and converts internally.    ║

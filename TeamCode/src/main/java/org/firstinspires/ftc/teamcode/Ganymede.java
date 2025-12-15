@@ -257,7 +257,9 @@ public class Ganymede extends Robot {
                         new DriveToPose(this,
                                 new Pose(60, 55, this.drive.follower.getHeading()), 5)
                 ).schedule();
-            } else if(motif.equals("GPP")){
+            }
+            // GREEN - PURPLE - PURPLE
+            else if(motif.equals("GPP")){
                 new SequentialCommandGroup(
                         new DriveToPose(this,
                                 new Pose(60, 88, this.drive.follower.getHeading()), 5),
