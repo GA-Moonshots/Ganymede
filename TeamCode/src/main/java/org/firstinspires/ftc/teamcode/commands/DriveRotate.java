@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        ROTATE COMMAND                                     ║
  * ║                                                                           ║
- * ║  Rotates the robot by a specified angle while maintaining position.       ║
+ * ║  Rotates the robot by a specified angle while maintaining position.        ║
  * ║                                                                           ║
  * ║  IMPORTANT: Pedro Pathing uses RADIANS, not degrees!                      ║
  * ║  This command accepts degrees for convenience and converts internally.    ║
@@ -49,22 +49,23 @@ public class DriveRotate extends DriveAbstract {
 
     @Override
     public void initialize() {
+        finished = false;  // ← CRITICAL: Reset state
         timer.start();
-        finished = false;
+
+        // Get FRESH pose data from Pedro's follower
         Pose currentPose = drive.getPose();
 
-        // Get current heading in radians
-        double currentHeadingRad = drive.getNormalizedHeading();
-
-        // Convert rotation from degrees to radians, then add to current heading
+        // Calculate target heading in radians
+        // Use currentPose.getHeading() directly - it's already Pedro's heading
+        double currentHeadingRad = currentPose.getHeading();
         double rotationRad = Math.toRadians(rotationDegrees);
         double targetHeadingRad = drive.toPedroHeading(currentHeadingRad + rotationRad);
 
-        // Create target pose with same position but new heading
+        // Create target pose with same X/Y, new heading
         targetPose = new Pose(
                 currentPose.getX(),
                 currentPose.getY(),
-                targetHeadingRad  // Already in radians, already normalized
+                targetHeadingRad
         );
 
         // Build and follow the path
@@ -72,50 +73,41 @@ public class DriveRotate extends DriveAbstract {
                 .addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
 
-        // ← REMOVE THIS LINE! Don't set finished = true here!
-        // finished = true;
-
-        // Debug telemetry
-        robot.telemetry.addData("DriveRotate", "Initialized");
-        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeadingRad));
-        robot.telemetry.addData("Rotation", "%.1f°", rotationDegrees);
-        robot.telemetry.addData("Target Heading", "%.1f°", Math.toDegrees(targetHeadingRad));
+        // Persistent telemetry (won't scroll away)
+        robot.sensors.addTelemetry("DriveRotate", "ACTIVE");
+        robot.sensors.addTelemetry("Rotation", String.format("%.1f°", rotationDegrees));
     }
 
     @Override
     public void execute() {
-        // Note: follower.update() is called by PedroDrive.periodic()
-        // We don't call it here to avoid double-updating
+        super.execute();  // ← CRITICAL: Call parent's execute
 
-        // Get current heading using PedroDrive's normalized method
-        double currentHeading = drive.getNormalizedHeading();
+        // Check if follower thinks we're at the target pose
+        // Use HEADING_TOLERANCE_DEGREES for the heading check
+        double headingToleranceInches = Constants.HEADING_TOLERANCE_DEGREES * 0.1; // Convert to "distance"
 
-        // Calculate heading error (shortest angular distance)
-        double headingError = angleDifference(targetPose.getHeading(), currentHeading);
-        double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
-
-        // Check if we're within 2 degrees tolerance
-        if (headingErrorDegrees < 5.0) {
+        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, headingToleranceInches)) {
             finished = true;
         }
 
-        // Real-time telemetry for debugging
-        robot.sensors.addTelemetry("Current Heading", "%.1f°", Math.toDegrees(currentHeading));
-        robot.sensors.addTelemetry("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
-        robot.sensors.addTelemetry("Heading Error", "%.1f°", headingErrorDegrees);
+        // Update telemetry - only current/target heading (persistent display)
+        Pose current = drive.getPose();
+        robot.sensors.addTelemetry("Current Hdg", String.format("%.1f°", Math.toDegrees(current.getHeading())));
+        robot.sensors.addTelemetry("Target Hdg", String.format("%.1f°", Math.toDegrees(targetPose.getHeading())));
     }
 
     @Override
     public void end(boolean interrupted) {
-        standardCleanup();
-        robot.drive.follower.breakFollowing();
-        finished = false;
+        super.end(interrupted);  // ← Call parent first
+        standardCleanup();       // ← Then cleanup
 
-        if (interrupted) {
-            robot.telemetry.addData("DriveRotate", "INTERRUPTED");
-        } else {
-            robot.telemetry.addData("DriveRotate", "Complete!");
-        }
+        // Break following to release control
+        drive.follower.breakFollowing();
+
+        finished = false;  // ← Reset for next time
+
+        // Final telemetry
+        robot.sensors.addTelemetry("DriveRotate", interrupted ? "INTERRUPTED" : "COMPLETE");
     }
 
     @Override
