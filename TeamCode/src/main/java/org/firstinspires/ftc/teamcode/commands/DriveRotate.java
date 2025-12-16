@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
  * ╔═══════════════════════════════════════════════════════════════════════════╗
  * ║                        ROTATE COMMAND                                     ║
  * ║                                                                           ║
- * ║  Rotates the robot by a specified angle while maintaining position.        ║
+ * ║  Rotates the robot by a specified angle while maintaining position.       ║
  * ║                                                                           ║
  * ║  IMPORTANT: Pedro Pathing uses RADIANS, not degrees!                      ║
  * ║  This command accepts degrees for convenience and converts internally.    ║
@@ -50,7 +50,7 @@ public class DriveRotate extends DriveAbstract {
     @Override
     public void initialize() {
         timer.start();
-
+        finished = false;
         Pose currentPose = drive.getPose();
 
         // Get current heading in radians
@@ -95,7 +95,7 @@ public class DriveRotate extends DriveAbstract {
         double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
 
         // Check if we're within 2 degrees tolerance
-        if (headingErrorDegrees < 2.0) {
+        if (headingErrorDegrees < 5.0) {
             finished = true;
         }
 
@@ -108,6 +108,8 @@ public class DriveRotate extends DriveAbstract {
     @Override
     public void end(boolean interrupted) {
         standardCleanup();
+        robot.drive.follower.breakFollowing();
+        finished = false;
 
         if (interrupted) {
             robot.telemetry.addData("DriveRotate", "INTERRUPTED");

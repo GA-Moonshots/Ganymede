@@ -197,7 +197,7 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.Y)
                 .whenPressed(new LauncherLaunch(this));
 
-        // Button X
+        // Button X - FEED GREEN
         new GamepadButton(player2, GamepadKeys.Button.X)
                 .whenPressed(new InstantCommand (() -> {
                             launcher.greenFeeder.setPower(1); } ));
@@ -215,7 +215,7 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new InstantCommand(() -> {intake.stopperP.setPosition(0);}));
 
-        // RIGHT TRIGGER -- POWER THE LAUNCHER
+        // RIGHT TRIGGER -- RAW POWER THE LAUNCHER
         Trigger rightTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
         rightTriggerP2.whileActiveContinuous(new LauncherRawPower(this));
 
