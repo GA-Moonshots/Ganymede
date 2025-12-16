@@ -5,7 +5,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
-import org.firstinspires.ftc.teamcode.utils.Constants;
 
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════╗
@@ -26,7 +25,7 @@ public class DriveRotate extends DriveAbstract {
     private final double rotationDegrees;
     private Pose targetPose;
     private boolean finished = false;
-    private static final double ROTATION_TOLERANCE_DEGREES = 5.0;  // Looser tolerance for heading
+    private static final double ROTATION_TOLERANCE_DEGREES = 10.0;  // Loose tolerance for bad PID
 
     // ============================================================
     //                     CONSTRUCTOR
@@ -56,7 +55,7 @@ public class DriveRotate extends DriveAbstract {
         Pose currentPose = drive.getPose();
 
         // Get current heading in radians
-        double currentHeadingRad = currentPose.getHeading();  // Use pose directly, not getNormalizedHeading()
+        double currentHeadingRad = currentPose.getHeading();
 
         // Convert rotation from degrees to radians, then add to current heading
         double rotationRad = Math.toRadians(rotationDegrees);
@@ -66,7 +65,7 @@ public class DriveRotate extends DriveAbstract {
         targetPose = new Pose(
                 currentPose.getX(),
                 currentPose.getY(),
-                targetHeadingRad  // Already in radians, already normalized
+                targetHeadingRad
         );
 
         // Build and follow the path
@@ -93,6 +92,9 @@ public class DriveRotate extends DriveAbstract {
 
         // Check if we're within tolerance
         if (headingErrorDegrees < ROTATION_TOLERANCE_DEGREES) {
+            // CRITICAL: Break following IMMEDIATELY when close enough
+            // This clears the busy state so the next command can start
+            follower.breakFollowing();
             finished = true;
         }
 
@@ -106,7 +108,10 @@ public class DriveRotate extends DriveAbstract {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        standardCleanup();  // This calls breakFollowing() and stop() already
+
+        // Break following and stop motors
+        follower.breakFollowing();
+        drive.stop();
 
         if (interrupted) {
             robot.telemetry.addData("DriveRotate", "INTERRUPTED");
