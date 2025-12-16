@@ -263,7 +263,15 @@ public class Ganymede extends Robot {
                 new SequentialCommandGroup(
                         new DriveToPose(this,
                                 new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        // rotate 90 degrees counter clockwise to fire green
+                        new DriveRotate(this, -90, 5),
                         new TurretRotate(this, Turret.TurretState.LEFT),
+                        new LauncherLaunch(this),
+                        // rotate 90 degrees clockwise so we're facing front again
+                        new DriveRotate(this, 90, 5),
+                        // FIRE PURPLE x2
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),
                         new LauncherLaunch(this),
                         new DriveToPose(this,
                                 new Pose(60, 55, this.drive.follower.getHeading()), 5)
