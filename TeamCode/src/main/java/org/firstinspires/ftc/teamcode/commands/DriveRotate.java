@@ -54,16 +54,18 @@ public class DriveRotate extends DriveAbstract {
 
         Pose currentPose = drive.getPose();
 
-        // Calculate target heading - use currentPose.getHeading() directly
-        double currentHeadingRad = currentPose.getHeading();
+        // Get current heading in radians
+        double currentHeadingRad = drive.getNormalizedHeading();
+
+        // Convert rotation from degrees to radians, then add to current heading
         double rotationRad = Math.toRadians(rotationDegrees);
         double targetHeadingRad = drive.toPedroHeading(currentHeadingRad + rotationRad);
 
-        // Create target pose with same X/Y, new heading
+        // Create target pose with same position but new heading
         targetPose = new Pose(
                 currentPose.getX(),
                 currentPose.getY(),
-                targetHeadingRad
+                targetHeadingRad  // Already in radians, already normalized
         );
 
         // Build and follow the path
@@ -71,7 +73,7 @@ public class DriveRotate extends DriveAbstract {
                 .addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
 
-        // Telemetry for debugging
+        // Debug telemetry
         robot.telemetry.addData("DriveRotate", "Initialized");
         robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeadingRad));
         robot.telemetry.addData("Rotation", "%.1f°", rotationDegrees);
@@ -80,19 +82,25 @@ public class DriveRotate extends DriveAbstract {
 
     @Override
     public void execute() {
-        // Check if we've reached target heading within tolerance
-        // Use a loose heading tolerance since Pedro's heading control can be finicky
-        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)) {
+        // Note: follower.update() is called by PedroDrive.periodic()
+        // We don't call it here to avoid double-updating
+
+        // Get current heading using PedroDrive's normalized method
+        double currentHeading = drive.getNormalizedHeading();
+
+        // Calculate heading error (shortest angular distance)
+        double headingError = angleDifference(targetPose.getHeading(), currentHeading);
+        double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
+
+        // Check if we're within tolerance (using degrees for readability)
+        if (headingErrorDegrees < Constants.HEADING_TOLERANCE_DEGREES) {
             finished = true;
         }
 
-        // Update telemetry
-        Pose current = drive.getPose();
-        double headingError = Math.abs(targetPose.getHeading() - current.getHeading());
-
-        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(current.getHeading()));
-        robot.telemetry.addData("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
-        robot.telemetry.addData("Heading Error", "%.1f°", Math.toDegrees(headingError));
+        // Real-time telemetry for debugging
+        robot.sensors.addTelemetry("Current Heading", "%.1f°", Math.toDegrees(currentHeading));
+        robot.sensors.addTelemetry("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
+        robot.sensors.addTelemetry("Heading Error", "%.1f°", headingErrorDegrees);
     }
 
     @Override
@@ -111,5 +119,31 @@ public class DriveRotate extends DriveAbstract {
     @Override
     public boolean isFinished() {
         return finished || timer.done();
+    }
+
+    // ============================================================
+    //                     HELPER METHODS
+    // ============================================================
+
+    /**
+     * Calculates the shortest angular difference between two angles.
+     * Properly handles wrap-around at ±180°.
+     *
+     * @param targetAngle Target angle in radians
+     * @param currentAngle Current angle in radians
+     * @return Shortest difference in radians, range [-π, π]
+     */
+    private double angleDifference(double targetAngle, double currentAngle) {
+        double difference = targetAngle - currentAngle;
+
+        // Normalize the difference to [-π, π]
+        while (difference > Math.PI) {
+            difference -= 2 * Math.PI;
+        }
+        while (difference <= -Math.PI) {
+            difference += 2 * Math.PI;
+        }
+
+        return difference;
     }
 }
