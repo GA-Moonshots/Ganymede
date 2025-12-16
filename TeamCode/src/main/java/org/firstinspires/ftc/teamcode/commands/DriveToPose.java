@@ -43,7 +43,9 @@ public class DriveToPose extends DriveAbstract {
         // Get normalized heading to handle ±180° wrap-around correctly
         double currentHeading = drive.getNormalizedHeading();
 
-        PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierCurve(currentPose, targetPose));
+        PathBuilder builder = new PathBuilder(robot.drive.follower)
+                .addPath(new BezierCurve(currentPose, targetPose))
+                .setConstantHeadingInterpolation(targetPose.getHeading());
         follower.followPath(builder.build());
 
         // Telemetry for debugging
