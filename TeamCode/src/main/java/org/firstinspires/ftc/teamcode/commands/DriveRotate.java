@@ -26,6 +26,7 @@ public class DriveRotate extends DriveAbstract {
     private final double rotationDegrees;
     private Pose targetPose;
     private boolean finished = false;
+    private static final double ROTATION_TOLERANCE_DEGREES = 5.0;  // Looser tolerance for heading
 
     // ============================================================
     //                     CONSTRUCTOR
@@ -55,7 +56,7 @@ public class DriveRotate extends DriveAbstract {
         Pose currentPose = drive.getPose();
 
         // Get current heading in radians
-        double currentHeadingRad = drive.getNormalizedHeading();
+        double currentHeadingRad = currentPose.getHeading();  // Use pose directly, not getNormalizedHeading()
 
         // Convert rotation from degrees to radians, then add to current heading
         double rotationRad = Math.toRadians(rotationDegrees);
@@ -82,18 +83,16 @@ public class DriveRotate extends DriveAbstract {
 
     @Override
     public void execute() {
-        // Note: follower.update() is called by PedroDrive.periodic()
-        // We don't call it here to avoid double-updating
-
-        // Get current heading using PedroDrive's normalized method
-        double currentHeading = drive.getNormalizedHeading();
+        // Get current heading directly from pose
+        Pose currentPose = drive.getPose();
+        double currentHeading = currentPose.getHeading();
 
         // Calculate heading error (shortest angular distance)
         double headingError = angleDifference(targetPose.getHeading(), currentHeading);
         double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
 
-        // Check if we're within tolerance (using degrees for readability)
-        if (headingErrorDegrees < Constants.HEADING_TOLERANCE_DEGREES) {
+        // Check if we're within tolerance
+        if (headingErrorDegrees < ROTATION_TOLERANCE_DEGREES) {
             finished = true;
         }
 
@@ -101,13 +100,13 @@ public class DriveRotate extends DriveAbstract {
         robot.sensors.addTelemetry("Current Heading", "%.1f°", Math.toDegrees(currentHeading));
         robot.sensors.addTelemetry("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
         robot.sensors.addTelemetry("Heading Error", "%.1f°", headingErrorDegrees);
+        robot.sensors.addTelemetry("Is Busy", String.valueOf(follower.isBusy()));
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        standardCleanup();
-        drive.follower.breakFollowing();
+        standardCleanup();  // This calls breakFollowing() and stop() already
 
         if (interrupted) {
             robot.telemetry.addData("DriveRotate", "INTERRUPTED");
