@@ -25,7 +25,7 @@ public class DriveRotate extends DriveAbstract {
     private final double rotationDegrees;
     private Pose targetPose;
     private boolean finished = false;
-    private static final double ROTATION_TOLERANCE_DEGREES = 10.0;  // Loose tolerance for bad PID
+    private static final double ROTATION_TOLERANCE_DEGREES = 10.0;
 
     // ============================================================
     //                     CONSTRUCTOR
@@ -85,22 +85,25 @@ public class DriveRotate extends DriveAbstract {
         // Get current heading directly from pose
         Pose currentPose = drive.getPose();
         double currentHeading = currentPose.getHeading();
+        double targetHeading = targetPose.getHeading();
+
+        // CRITICAL: Normalize both to [-π, π] before comparing
+        currentHeading = normalizeAngle(currentHeading);
+        targetHeading = normalizeAngle(targetHeading);
 
         // Calculate heading error (shortest angular distance)
-        double headingError = angleDifference(targetPose.getHeading(), currentHeading);
+        double headingError = angleDifference(targetHeading, currentHeading);
         double headingErrorDegrees = Math.toDegrees(Math.abs(headingError));
 
         // Check if we're within tolerance
         if (headingErrorDegrees < ROTATION_TOLERANCE_DEGREES) {
-            // CRITICAL: Break following IMMEDIATELY when close enough
-            // This clears the busy state so the next command can start
-            follower.breakFollowing();
             finished = true;
+            // Don't break following here - let Pedro finish naturally
         }
 
         // Real-time telemetry for debugging
         robot.sensors.addTelemetry("Current Heading", "%.1f°", Math.toDegrees(currentHeading));
-        robot.sensors.addTelemetry("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
+        robot.sensors.addTelemetry("Target Heading", "%.1f°", Math.toDegrees(targetHeading));
         robot.sensors.addTelemetry("Heading Error", "%.1f°", headingErrorDegrees);
         robot.sensors.addTelemetry("Is Busy", String.valueOf(follower.isBusy()));
     }
@@ -130,11 +133,27 @@ public class DriveRotate extends DriveAbstract {
     // ============================================================
 
     /**
+     * Normalizes angle to [-π, π] range.
+     *
+     * @param angle Angle in radians
+     * @return Normalized angle in range [-π, π]
+     */
+    private double normalizeAngle(double angle) {
+        while (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        }
+        while (angle <= -Math.PI) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
+    }
+
+    /**
      * Calculates the shortest angular difference between two angles.
      * Properly handles wrap-around at ±180°.
      *
-     * @param targetAngle Target angle in radians
-     * @param currentAngle Current angle in radians
+     * @param targetAngle Target angle in radians (should be normalized)
+     * @param currentAngle Current angle in radians (should be normalized)
      * @return Shortest difference in radians, range [-π, π]
      */
     private double angleDifference(double targetAngle, double currentAngle) {
