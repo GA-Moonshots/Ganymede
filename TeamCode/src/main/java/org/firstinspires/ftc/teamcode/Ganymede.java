@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.Robot;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
@@ -246,52 +247,186 @@ public class Ganymede extends Robot {
 
         drive.update(); // make sure we update our localization before we start moving
 
-        // BLUE SHOOT
+        // ════════════════════════════════════════════════════════
+        //                    BLUE ALLIANCE SHOOT
+        // ════════════════════════════════════════════════════════
         if(!isRed && isNearGoal) {
-            // DUMB SHOOT - NO MOTIF
-            if(motif == null || motif.equals("")) {
+
+            // DUMB SHOOT - NO MOTIF (Just shoot 3 purples)
+            if(motif == null || motif.isEmpty()) {
                 new SequentialCommandGroup(
                         new DriveToPose(this,
                                 new Pose(60, 88, this.drive.follower.getHeading()), 5),
-                        new LauncherLaunch(this),
-                        new DriveToPose(this,
-                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
-                ).schedule();
-            }
-            // GREEN - PURPLE - PURPLE
-            else if(motif.equals("GPP")){
-                new SequentialCommandGroup(
-                        new DriveToPose(this,
-                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
-                        // rotate 90 degrees counter clockwise to fire green
-                        new DriveRotate(this, -90, 5),
-                        new TurretRotate(this, Turret.TurretState.LEFT),
-                        new LauncherLaunch(this),
-                        // rotate 90 degrees clockwise so we're facing front again
-                        new DriveRotate(this, 90, 5),
-                        // FIRE PURPLE x2
                         new TurretRotate(this, Turret.TurretState.FRONT),
-                        new LauncherLaunch(this),
-                        new LauncherLaunch(this),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: GREEN - PURPLE - PURPLE
+            else if(motif.equals("GPP")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
+                        // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.FRONT),
+                                new DriveRotate(this, 90, 5)  // Counter-clockwise back
+                        ),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: PURPLE - GREEN - PURPLE
+            else if(motif.equals("PGP")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE PURPLE FIRST (turret FRONT)
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),  // Purple 1
+                        // FIRE GREEN (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
+                        // FIRE PURPLE (turret FRONT + robot back to original heading)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.FRONT),
+                                new DriveRotate(this, 90, 5)  // Counter-clockwise back
+                        ),
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(60, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: PURPLE - PURPLE - GREEN
+            else if(motif.equals("PPG")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(60, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE PURPLE x2 FIRST (turret FRONT)
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        // FIRE GREEN (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
                         new DriveToPose(this,
                                 new Pose(60, 55, this.drive.follower.getHeading()), 5)
                 ).schedule();
             }
         }
-        // RED SHOOT
+
+        // ════════════════════════════════════════════════════════
+        //                    RED ALLIANCE SHOOT
+        // ════════════════════════════════════════════════════════
         else if(isRed && isNearGoal) {
-            new SequentialCommandGroup(
-                    new DriveToPose(this,
-                            new Pose(77, 88, this.drive.follower.getHeading()), 5),
-                    new LauncherLaunch(this),
-                    new DriveToPose(this,
-                            new Pose(77, 55, this.drive.follower.getHeading()), 5)
-            ).schedule();
+
+            // DUMB SHOOT - NO MOTIF (Just shoot 3 purples)
+            if(motif == null || motif.isEmpty()) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(77, 88, this.drive.follower.getHeading()), 5),
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(77, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: GREEN - PURPLE - PURPLE
+            else if(motif.equals("GPP")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(77, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
+                        // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.FRONT),
+                                new DriveRotate(this, 90, 5)  // Counter-clockwise back
+                        ),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(77, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: PURPLE - GREEN - PURPLE
+            else if(motif.equals("PGP")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(77, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE PURPLE FIRST (turret FRONT)
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),  // Purple 1
+                        // FIRE GREEN (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
+                        // FIRE PURPLE (turret FRONT + robot back to original heading)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.FRONT),
+                                new DriveRotate(this, 90, 5)  // Counter-clockwise back
+                        ),
+                        new LauncherLaunch(this),  // Purple 2
+                        new DriveToPose(this,
+                                new Pose(77, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
+
+            // MOTIF: PURPLE - PURPLE - GREEN
+            else if(motif.equals("PPG")) {
+                new SequentialCommandGroup(
+                        new DriveToPose(this,
+                                new Pose(77, 88, this.drive.follower.getHeading()), 5),
+                        // FIRE PURPLE x2 FIRST (turret FRONT)
+                        new TurretRotate(this, Turret.TurretState.FRONT),
+                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this),  // Purple 2
+                        // FIRE GREEN (turret LEFT + robot rotates clockwise)
+                        new ParallelCommandGroup(
+                                new TurretRotate(this, Turret.TurretState.LEFT),
+                                new DriveRotate(this, -90, 5)  // Clockwise to compensate
+                        ),
+                        new LauncherLaunch(this),  // Green
+                        new DriveToPose(this,
+                                new Pose(77, 55, this.drive.follower.getHeading()), 5)
+                ).schedule();
+            }
         }
-        // MOVE FORWARD
+
+        // ════════════════════════════════════════════════════════
+        //                    DEFAULT FALLBACK
+        // ════════════════════════════════════════════════════════
         else {
             new SequentialCommandGroup(
-                    new DriveFwdByDist(this,24,20 )
+                    new DriveFwdByDist(this, 24, 20)
             ).schedule();
         }
     }

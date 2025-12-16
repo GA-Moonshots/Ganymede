@@ -49,14 +49,12 @@ public class DriveRotate extends DriveAbstract {
 
     @Override
     public void initialize() {
-        finished = false;  // ← CRITICAL: Reset state
+        finished = false;
         timer.start();
 
-        // Get FRESH pose data from Pedro's follower
         Pose currentPose = drive.getPose();
 
-        // Calculate target heading in radians
-        // Use currentPose.getHeading() directly - it's already Pedro's heading
+        // Calculate target heading - use currentPose.getHeading() directly
         double currentHeadingRad = currentPose.getHeading();
         double rotationRad = Math.toRadians(rotationDegrees);
         double targetHeadingRad = drive.toPedroHeading(currentHeadingRad + rotationRad);
@@ -73,71 +71,45 @@ public class DriveRotate extends DriveAbstract {
                 .addPath(new BezierCurve(currentPose, targetPose));
         follower.followPath(builder.build());
 
-        // Persistent telemetry (won't scroll away)
-        robot.sensors.addTelemetry("DriveRotate", "ACTIVE");
-        robot.sensors.addTelemetry("Rotation", String.format("%.1f°", rotationDegrees));
+        // Telemetry for debugging
+        robot.telemetry.addData("DriveRotate", "Initialized");
+        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(currentHeadingRad));
+        robot.telemetry.addData("Rotation", "%.1f°", rotationDegrees);
+        robot.telemetry.addData("Target Heading", "%.1f°", Math.toDegrees(targetHeadingRad));
     }
 
     @Override
     public void execute() {
-        super.execute();  // ← CRITICAL: Call parent's execute
-
-        // Check if follower thinks we're at the target pose
-        // Use HEADING_TOLERANCE_DEGREES for the heading check
-        double headingToleranceInches = Constants.HEADING_TOLERANCE_DEGREES * 0.1; // Convert to "distance"
-
-        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, headingToleranceInches)) {
+        // Check if we've reached target heading within tolerance
+        // Use a loose heading tolerance since Pedro's heading control can be finicky
+        if (follower.atPose(targetPose, Constants.POSE_TOLERANCE, Constants.POSE_TOLERANCE)) {
             finished = true;
         }
 
-        // Update telemetry - only current/target heading (persistent display)
+        // Update telemetry
         Pose current = drive.getPose();
-        robot.sensors.addTelemetry("Current Hdg", String.format("%.1f°", Math.toDegrees(current.getHeading())));
-        robot.sensors.addTelemetry("Target Hdg", String.format("%.1f°", Math.toDegrees(targetPose.getHeading())));
+        double headingError = Math.abs(targetPose.getHeading() - current.getHeading());
+
+        robot.telemetry.addData("Current Heading", "%.1f°", Math.toDegrees(current.getHeading()));
+        robot.telemetry.addData("Target Heading", "%.1f°", Math.toDegrees(targetPose.getHeading()));
+        robot.telemetry.addData("Heading Error", "%.1f°", Math.toDegrees(headingError));
     }
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);  // ← Call parent first
-        standardCleanup();       // ← Then cleanup
-
-        // Break following to release control
+        super.end(interrupted);
+        standardCleanup();
         drive.follower.breakFollowing();
 
-        finished = false;  // ← Reset for next time
-
-        // Final telemetry
-        robot.sensors.addTelemetry("DriveRotate", interrupted ? "INTERRUPTED" : "COMPLETE");
+        if (interrupted) {
+            robot.telemetry.addData("DriveRotate", "INTERRUPTED");
+        } else {
+            robot.telemetry.addData("DriveRotate", "Complete!");
+        }
     }
 
     @Override
     public boolean isFinished() {
         return finished || timer.done();
-    }
-
-    // ============================================================
-    //                     HELPER METHODS
-    // ============================================================
-
-    /**
-     * Calculates the shortest angular difference between two angles.
-     * Properly handles wrap-around at ±180°.
-     *
-     * @param targetAngle Target angle in radians
-     * @param currentAngle Current angle in radians
-     * @return Shortest difference in radians, range [-π, π]
-     */
-    private double angleDifference(double targetAngle, double currentAngle) {
-        double difference = targetAngle - currentAngle;
-
-        // Normalize the difference to [-π, π]
-        while (difference > Math.PI) {
-            difference -= 2 * Math.PI;
-        }
-        while (difference <= -Math.PI) {
-            difference += 2 * Math.PI;
-        }
-
-        return difference;
     }
 }
