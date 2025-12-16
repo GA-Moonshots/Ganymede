@@ -50,22 +50,36 @@ public class LauncherLaunch extends CommandBase {
     @Override
     public void execute() {
 
-        launcher.launcher.setPower(1); // LAUNCHER POWER
+        launcher.launcher.setPower(0.9); // LAUNCHER POWER
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
 
         // START FEEDING
         if (timer.elapsedTime() >= 2) {
             feeder.setPower(runFeeder);
         }
+        // GREEN TIMING
+        if (robot.turret.state == Turret.TurretState.LEFT) {
+            // STOP FEEDING
+            if (timer.elapsedTime() >= 3) {
+                feeder.setPower(0);
+            }
 
-        // STOP FEEDING
-        if (timer.elapsedTime() >= 5) {
-            feeder.setPower(0);
+            // GIVE TIME FOR BALL TO GET THROUGH
+            if (timer.elapsedTime() >= 4) {
+                ballOutputted = true;
+            }
         }
+        // PURPLE TIMING
+        else {
+            // STOP FEEDING
+            if (timer.elapsedTime() >= 3) {
+                feeder.setPower(0);
+            }
 
-        // GIVE TIME FOR BALL TO GET THROUGH
-        if (timer.elapsedTime() >= 7) {
-            ballOutputted = true;
+            // GIVE TIME FOR BALL TO GET THROUGH
+            if (timer.elapsedTime() >= 4) {
+                ballOutputted = true;
+            }
         }
     }
 
