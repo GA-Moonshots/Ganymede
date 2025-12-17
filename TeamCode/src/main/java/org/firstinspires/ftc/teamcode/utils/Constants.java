@@ -149,7 +149,7 @@ public class Constants {
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
-            .centripetalScaling(0.005);
+            .centripetalScaling(0.024);
 
     // ============================================================
     //               MECANUM DRIVETRAIN CONSTANTS
