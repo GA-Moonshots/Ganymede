@@ -141,7 +141,7 @@ public class Constants {
 
             /** Tune with: Manual → Heading - rotate robot, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/heading
-            .headingPIDFCoefficients(new PIDFCoefficients(2.0, 0, 0.1, 0.005))
+            .headingPIDFCoefficients(new PIDFCoefficients(1.0, 0, 0.03, 0.005))
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
