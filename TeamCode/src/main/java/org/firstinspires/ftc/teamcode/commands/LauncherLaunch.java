@@ -15,6 +15,7 @@ public class LauncherLaunch extends CommandBase {
     private Launcher launcher;
     private CRServo feeder; // we'll use this for green or purple
     int runFeeder;
+    double launcherSpeed;
 
     private Timing.Timer timer;
 
@@ -23,6 +24,17 @@ public class LauncherLaunch extends CommandBase {
     public LauncherLaunch(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
+        launcherSpeed = 0.9;
+
+        this.timer = new Timing.Timer(15, TimeUnit.SECONDS);
+
+        addRequirements(launcher);
+    }
+
+    public LauncherLaunch(Ganymede robot, double launcherSpeed) {
+        this.robot = robot;
+        this.launcher = robot.launcher;
+        this.launcherSpeed = launcherSpeed;
 
         this.timer = new Timing.Timer(15, TimeUnit.SECONDS);
 
@@ -49,8 +61,7 @@ public class LauncherLaunch extends CommandBase {
 
     @Override
     public void execute() {
-
-        launcher.launcher.setPower(0.9); // LAUNCHER POWER
+        launcher.launcher.setPower(launcherSpeed); // LAUNCHER POWER
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
 
         // START FEEDING
