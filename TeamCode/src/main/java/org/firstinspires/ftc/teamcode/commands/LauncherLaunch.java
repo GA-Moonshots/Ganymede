@@ -60,24 +60,24 @@ public class LauncherLaunch extends CommandBase {
         // GREEN TIMING
         if (robot.turret.state == Turret.TurretState.LEFT) {
             // STOP FEEDING
-            if (timer.elapsedTime() >= 3) {
+            if (timer.elapsedTime() >= 4) {
                 feeder.setPower(0);
             }
 
             // GIVE TIME FOR BALL TO GET THROUGH
-            if (timer.elapsedTime() >= 4) {
+            if (timer.elapsedTime() >= 5) {
                 ballOutputted = true;
             }
         }
         // PURPLE TIMING
         else {
             // STOP FEEDING
-            if (timer.elapsedTime() >= 3) {
+            if (timer.elapsedTime() >= 4) {
                 feeder.setPower(0);
             }
 
             // GIVE TIME FOR BALL TO GET THROUGH
-            if (timer.elapsedTime() >= 4) {
+            if (timer.elapsedTime() >= 5) {
                 ballOutputted = true;
             }
         }

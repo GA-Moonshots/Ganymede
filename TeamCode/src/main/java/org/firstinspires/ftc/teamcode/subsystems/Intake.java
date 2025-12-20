@@ -43,6 +43,9 @@ public class Intake extends SubsystemBase {
 
         this.stopperG = robot.hardwareMap.get(Servo.class, Constants.GREEN_SORTER_NAME);
         this.stopperP = robot.hardwareMap.get(Servo.class, Constants.PURPLE_SORTER_NAME);
+
+        stopperG.setPosition(0.5);
+        stopperP.setPosition(0);
     }
 
     // ============================================================
