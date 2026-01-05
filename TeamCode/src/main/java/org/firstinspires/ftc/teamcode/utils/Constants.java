@@ -145,11 +145,11 @@ public class Constants {
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.02, 0, 0.001, 0.0, 0.5))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.03, 0, 0.002, 0.5, 0.0))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
-            .centripetalScaling(0.024);
+            .centripetalScaling(0.001);
 
     // ============================================================
     //               MECANUM DRIVETRAIN CONSTANTS
