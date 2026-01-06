@@ -57,7 +57,8 @@ public class Ganymede extends Robot {
 
     // Pedro Pathing specific
     public Pose startPose;
-    private final double AUTO_TURN = 100;
+    private final double RED_AUTO_TURN = 100;
+    private final double BLUE_AUTO_TURN = 115;
 
     /**
      * TELEOP MODE [--Constructor--]
@@ -273,13 +274,13 @@ public class Ganymede extends Robot {
                         // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.LEFT),
-                                new DriveRotate(this, 115, 5)  // Clockwise to compensate
+                                new DriveRotate(this, BLUE_AUTO_TURN, 5)  // Clockwise to compensate
                         ),
                         new LauncherLaunch(this, 0.8),  // Green
                         // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.FRONT),
-                                new DriveRotate(this, -115, 5)  // Counter-clockwise back
+                                new DriveRotate(this, -BLUE_AUTO_TURN, 5)  // Counter-clockwise back
                         ),
                         new LauncherLaunch(this, 0.85),  // Purple 1
                         new LauncherLaunch(this, 0.83 ),  // Purple 2
@@ -299,13 +300,13 @@ public class Ganymede extends Robot {
                         // FIRE GREEN (turret LEFT + robot rotates clockwise)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.LEFT),
-                                new DriveRotate(this, 115, 5)  // Clockwise to compensate
+                                new DriveRotate(this, BLUE_AUTO_TURN, 5)  // Clockwise to compensate
                         ),
                         new LauncherLaunch(this, 0.8),  // Green
                         // FIRE PURPLE (turret FRONT + robot back to original heading)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.FRONT),
-                                new DriveRotate(this, -115, 5)  // Counter-clockwise back
+                                new DriveRotate(this, -BLUE_AUTO_TURN, 5)  // Counter-clockwise back
                         ),
                         new LauncherLaunch(this, 0.85),  // Purple 2
                         new DriveToPose(this,
@@ -359,16 +360,16 @@ public class Ganymede extends Robot {
                         // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.LEFT),
-                                new DriveRotate(this, AUTO_TURN, 5)  // Clockwise to compensate
+                                new DriveRotate(this, RED_AUTO_TURN, 5)  // Clockwise to compensate
                         ),
-                        new LauncherLaunch(this),  // Green
+                        new LauncherLaunch(this, 0.8),  // Green
                         // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.FRONT),
-                                new DriveRotate(this, -AUTO_TURN, 5)  // Counter-clockwise back
+                                new DriveRotate(this, -RED_AUTO_TURN, 5)  // Counter-clockwise back
                         ),
-                        new LauncherLaunch(this),  // Purple 1
-                        new LauncherLaunch(this),  // Purple 2
+                        new LauncherLaunch(this, 0.85),  // Purple 1
+                        new LauncherLaunch(this, 0.83),  // Purple 2
                         new DriveToPose(this,
                                 new Pose(77, 55, this.drive.follower.getHeading()), 5)
                 ).schedule();
@@ -381,19 +382,19 @@ public class Ganymede extends Robot {
                                 new Pose(77, 88, this.drive.follower.getHeading()), 5),
                         // FIRE PURPLE FIRST (turret FRONT)
                         new TurretRotate(this, Turret.TurretState.FRONT),
-                        new LauncherLaunch(this),  // Purple 1
+                        new LauncherLaunch(this, 0.85),  // Purple 1
                         // FIRE GREEN (turret LEFT + robot rotates clockwise)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.LEFT),
-                                new DriveRotate(this, AUTO_TURN, 5)  // Clockwise to compensate
+                                new DriveRotate(this, RED_AUTO_TURN, 5)  // Clockwise to compensate
                         ),
-                        new LauncherLaunch(this),  // Green
+                        new LauncherLaunch(this, 0.8),  // Green
                         // FIRE PURPLE (turret FRONT + robot back to original heading)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.FRONT),
-                                new DriveRotate(this, -AUTO_TURN, 5)  // Counter-clockwise back
+                                new DriveRotate(this, -RED_AUTO_TURN, 5)  // Counter-clockwise back
                         ),
-                        new LauncherLaunch(this),  // Purple 2
+                        new LauncherLaunch(this, 0.85),  // Purple 2
                         new DriveToPose(this,
                                 new Pose(77, 55, this.drive.follower.getHeading()), 5)
                 ).schedule();
@@ -406,14 +407,14 @@ public class Ganymede extends Robot {
                                 new Pose(77, 88, this.drive.follower.getHeading()), 5),
                         // FIRE PURPLE x2 FIRST (turret FRONT)
                         new TurretRotate(this, Turret.TurretState.FRONT),
-                        new LauncherLaunch(this),  // Purple 1
-                        new LauncherLaunch(this),  // Purple 2
+                        new LauncherLaunch(this, 0.85),  // Purple 1
+                        new LauncherLaunch(this, 0.83),  // Purple 2
                         // FIRE GREEN (turret LEFT + robot rotates clockwise)
                         new ParallelCommandGroup(
                                 new TurretRotate(this, Turret.TurretState.LEFT),
-                                new DriveRotate(this, AUTO_TURN, 5)  // Clockwise to compensate
+                                new DriveRotate(this, RED_AUTO_TURN, 5)  // Clockwise to compensate
                         ),
-                        new LauncherLaunch(this),  // Green
+                        new LauncherLaunch(this, 0.8),  // Green
                         new DriveToPose(this,
                                 new Pose(77, 55, this.drive.follower.getHeading()), 5)
                 ).schedule();
