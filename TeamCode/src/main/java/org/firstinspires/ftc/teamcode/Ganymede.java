@@ -226,8 +226,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(() -> new LauncherLaunch(this).schedule());
 
-        // LEFT BUMPER - nothing
-        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER);
+        // LEFT BUMPER - reverse intake
+        new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER)
+                .whileHeld(new IntakeByDirection(this, false));
 
         // LEFT TRIGGER -- INTAKE
         Trigger leftTriggerP2 = new Trigger(() -> player2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5);

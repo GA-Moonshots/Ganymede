@@ -24,7 +24,7 @@ public class LauncherLaunch extends CommandBase {
     public LauncherLaunch(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
-        launcherSpeed = 0.9;
+        launcherSpeed = 0.85;
 
         this.timer = new Timing.Timer(15, TimeUnit.SECONDS);
 
