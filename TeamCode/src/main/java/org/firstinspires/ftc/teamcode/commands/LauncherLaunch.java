@@ -24,7 +24,7 @@ public class LauncherLaunch extends CommandBase {
     public LauncherLaunch(Ganymede robot) {
         this.robot = robot;
         this.launcher = robot.launcher;
-        launcherSpeed = 0.85;
+        launcherSpeed = 0.85; //0.85
 
         this.timer = new Timing.Timer(15, TimeUnit.SECONDS);
 
@@ -71,7 +71,7 @@ public class LauncherLaunch extends CommandBase {
         // GREEN TIMING
         if (robot.turret.state == Turret.TurretState.LEFT) {
             // STOP FEEDING
-            if (timer.elapsedTime() >= 4) {
+            if (timer.elapsedTime() >= 4) { //used to be 4
                 feeder.setPower(0);
             }
 
@@ -88,7 +88,7 @@ public class LauncherLaunch extends CommandBase {
             }
 
             // GIVE TIME FOR BALL TO GET THROUGH
-            if (timer.elapsedTime() >= 5) {
+            if (timer.elapsedTime() >= 4.5) {
                 ballOutputted = true;
             }
         }
