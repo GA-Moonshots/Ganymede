@@ -226,7 +226,7 @@ public class LauncherDynamic extends DriveAbstract {
      * │                                                                         │
      * │  Finally, we convert velocity to motor power using an empirically       │
      * │  determined conversion factor k:                                        │
-     * │    power = v₀ * k                                                       │
+     * │    power = v₀ / k                                                       │
      * └─────────────────────────────────────────────────────────────────────────┘
      *
      * @return Motor power level (0.0 to 1.0) needed to reach the goal
@@ -318,8 +318,8 @@ public class LauncherDynamic extends DriveAbstract {
         double velocity = Math.sqrt(inside);
 
         // Convert velocity to motor power using empirical factor
-        // power = velocity * k
-        double power = velocity * k;
+        // power = velocity / k
+        double power = velocity / k;
 
         // Debug telemetry for tuning
         robot.sensors.addTelemetry("Kinematics Debug", "r=%.2fm, y=%.2fm, v₀=%.2fm/s",
