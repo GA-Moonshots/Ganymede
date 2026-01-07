@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * ║    3. Converts velocity to motor power (0.0 - 1.0)                        ║
  * ║    4. Fires the launcher at the calculated power                          ║
  * ║                                                                           ║
- * ║  Usage: Can be combined with DriveTurnToGoal for full auto-targeting:     ║
+ * ║  Usage: Can MUST combined with DriveTurnToGoal for full auto-targeting:     ║
  * ║    new SequentialCommandGroup(                                            ║
  * ║        new DriveTurnToGoal(robot, isGreen, 3),                            ║
  * ║        new LauncherDynamic(robot, isGreen, 10)                            ║
@@ -219,7 +219,7 @@ public class LauncherDynamic extends DriveAbstract {
      * │    v₀² = (g × x²) / (2 × cos²(θ) × (x × tan(θ) - y))                    │
      * │                                                                         │
      * │  Or equivalently (the form used below):                                 │
-     * │    v₀² = -g / ((y - x×tan(θ)) × 2 × cos²(θ))      [note the sign!]      │
+     * │    v₀² = g / ((x×tan(θ) - y) × 2 × cos²(θ))      [note the sign!]      │
      * │                                                                         │
      * │  The negative sign appears because (y - x×tan(θ)) is typically          │
      * │  negative when shooting upward at a target (the ball rises then falls). │
@@ -269,8 +269,8 @@ public class LauncherDynamic extends DriveAbstract {
 
         // Horizontal distance to goal (Pythagorean theorem)
         // Convert from inches to meters for physics calculation
-        double x_inches = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
-        double x = x_inches * 0.0254;  // inches to meters
+        double r_inches = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+        double r = r_inches * 0.0254;  // inches to meters
 
         // ────────────────────────────────────────────────────────────
         // PROJECTILE MOTION FORMULA
@@ -291,12 +291,12 @@ public class LauncherDynamic extends DriveAbstract {
         double cosThetaSquared = cosTheta * cosTheta;
 
         // Denominator: (y - x×tan(θ)) × 2 × cos²(θ)
-        double denominator = (y - x * tanTheta) * 2 * cosThetaSquared;
+        double denominator = (r * tanTheta - y) * 2 * cosThetaSquared;
 
         // The full expression: -g / denominator
         // Note: denominator is typically negative (ball must rise then fall),
         // so -g / (negative) gives positive v₀²
-        double inside = -g / denominator;
+        double inside = g / denominator;
 
         // ────────────────────────────────────────────────────────────
         // SAFETY CHECK
@@ -322,8 +322,8 @@ public class LauncherDynamic extends DriveAbstract {
         double power = velocity / k;
 
         // Debug telemetry for tuning
-        robot.sensors.addTelemetry("Kinematics Debug", "x=%.2fm, y=%.2fm, v₀=%.2fm/s",
-                x, y, velocity);
+        robot.sensors.addTelemetry("Kinematics Debug", "r=%.2fm, y=%.2fm, v₀=%.2fm/s",
+                r, y, velocity);
 
         return power;
     }
