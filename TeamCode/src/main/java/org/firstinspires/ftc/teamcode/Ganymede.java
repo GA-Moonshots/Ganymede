@@ -101,7 +101,7 @@ public class Ganymede extends Robot {
                 startPose = new Pose(115, 125, Math.toRadians(45));
             } else {
                 // Red small triangle starting position
-                startPose = new Pose(80, 12, Math.toRadians(90));
+                startPose = new Pose(80, 12, Math.toRadians(64));
             }
         } else {
             if (isNearGoal) {
@@ -109,7 +109,7 @@ public class Ganymede extends Robot {
                 startPose = new Pose(15, 122, Math.toRadians(135.3));
             } else {
                 // Blue small triangle starting position
-                startPose = new Pose(50, 12, Math.toRadians(90));
+                startPose = new Pose(50, 12, Math.toRadians(109));
             }
         }
         initAuto();
@@ -420,6 +420,7 @@ public class Ganymede extends Robot {
         // ════════════════════════════════════════════════════════
         else {
             new SequentialCommandGroup(
+                    new LauncherLaunch(this, 1),
                     new DriveFwdByDist(this, 24, 20)
             ).schedule();
         }
