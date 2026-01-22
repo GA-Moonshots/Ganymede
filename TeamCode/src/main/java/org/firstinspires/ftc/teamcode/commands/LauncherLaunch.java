@@ -83,12 +83,12 @@ public class LauncherLaunch extends CommandBase {
         // PURPLE TIMING
         else {
             // STOP FEEDING
-            if (timer.elapsedTime() >= 3) { // used to be 4
+            if (timer.elapsedTime() >= 3.33) { // used to be 4
                 feeder.setPower(0);
             }
 
             // GIVE TIME FOR BALL TO GET THROUGH
-            if (timer.elapsedTime() >= 3.5) {
+            if (timer.elapsedTime() >= 3.83) {
                 ballOutputted = true;
             }
         }

@@ -42,10 +42,10 @@ public class Constants {
     public static final String FRONT_BUTTON_NAME = "frontButton";
 
     /** Motor directions - verify this first with teleOp driving while propped up on a foam block */
-    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.FORWARD;
-    public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction LEFT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction LEFT_BACK_DIRECTION = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction RIGHT_FRONT_DIRECTION = DcMotorSimple.Direction.REVERSE;
-    public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction RIGHT_BACK_DIRECTION = DcMotorSimple.Direction.FORWARD;
 
     /** Zero power behavior: BRAKE = resist, FLOAT = free spin */
     public static final DcMotor.ZeroPowerBehavior DRIVE_ZERO_POWER_BEHAVIOR =
@@ -60,7 +60,7 @@ public class Constants {
     /** Drive speed multipliers for teleop */
     public static final double MIN_DRIVE_SPEED = 0.2;
     public static final double MAX_DRIVE_SPEED = 1.0;
-    public static final double DEFAULT_DRIVE_SPEED = 0.9;
+    public static final double DEFAULT_DRIVE_SPEED = 1;
     public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     /** Input threshold and tolerances */
@@ -109,6 +109,7 @@ public class Constants {
 
     public static final String COLOR_SENSOR = "colorSensor";
 
+    public static final String LIMELIGHT_NAME = "limelight";
     /** IMU mounting orientation - update based on REV Hub position */
     public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
             RevHubOrientationOnRobot.LogoFacingDirection.DOWN;

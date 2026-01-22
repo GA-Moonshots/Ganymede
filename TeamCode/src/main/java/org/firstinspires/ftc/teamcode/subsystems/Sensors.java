@@ -1,27 +1,25 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import android.telecom.TelecomManager;
-
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
+import java.util.List;
+
 
 public class Sensors extends SubsystemBase {
     private Telemetry telemetry;
     private TelemetryManager telemetryM;
     private Ganymede robot;
+//    private Limelight3A limelight;
 
     public RevColorSensorV3 colorSensor;
 
@@ -51,12 +49,61 @@ public class Sensors extends SubsystemBase {
 
         // Set gain for better color detection
         colorSensor.setGain(COLOR_SENSOR_GAIN);
+
+
     }
+
+    /*public Sensors(Ganymede robot) {
+        telemetry = robot.telemetry;
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
+
+//        try {
+//            limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
+//            limelight.setPollRateHz(100);
+//            limelight.start();
+//            limelight.pipelineSwitch(0);
+//        } catch (Exception ignored) {
+//
+//        }
+    } */
+
+//    public LLResult getLLResult() {
+//        return limelight.getLatestResult();
+//    }
+
+//    private void addAprilTagTelemetry() {
+//        LLResult result = limelight.getLatestResult();
+//
+//        if (result == null) {
+//            addTelemetry("Limelight", "No result");
+//            return;
+//        }
+//
+//        if (!result.isValid()) {
+//            addTelemetry("Limelight", "Invalid frame");
+//            return;
+//        }
+//
+//        List<LLResultTypes.BarcodeResult> tags = result.getBarcodeResults();
+//
+//        if (tags.isEmpty()) {
+//            addTelemetry("AprilTags", "None detected");
+//            return;
+//        }
+//
+//        addTelemetry("AprilTags Detected", "%d", tags.size());
+//    }
+
 
     @Override
     public void periodic() {
         // Add color sensor telemetry for debugging
         addColorTelemetry();
+
+        //limlight telemetry
+//        addAprilTagTelemetry();
+
 
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!
         telemetryM.update(telemetry);
