@@ -31,8 +31,6 @@ public class Sensors extends SubsystemBase {
     private static final float GREEN_RATIO_THRESHOLD = 1.3f;
     private static final float COLOR_SENSOR_GAIN = 2.0f;
 
-    // Motif detection state
-
     public enum BallColor {
         GREEN,
         PURPLE,
@@ -64,19 +62,15 @@ public class Sensors extends SubsystemBase {
     //              MOTIF DETECTION
     // ============================================================
 
-
     /**
      * Passively scans for obelisk AprilTags.
-     * Called automatically during periodic() until a motif is detected.
-     * Once a motif is detected, it's locked in.
+     * @param result Current Limelight result from this cycle
      */
-    private void scanForMotif() {
-        // Don't scan if already detected OR if Limelight unavailable
-        if (!robot.motif.isEmpty() || limelight == null) {
+    private void scanForMotif(LLResult result) {
+        // Don't scan if already detected
+        if (!robot.motif.isEmpty()) {
             return;
         }
-
-        LLResult result = limelight.getLatestResult();
 
         if (result == null || !result.isValid()) {
             return;
@@ -111,16 +105,10 @@ public class Sensors extends SubsystemBase {
 
     /**
      * Adds AprilTag telemetry for debugging.
+     * @param result Current Limelight result from this cycle
      */
-    private void addAprilTagTelemetry() {
-        if (limelight == null) {
-            return;
-        }
-
-        LLResult result = limelight.getLatestResult();
-
+    private void addAprilTagTelemetry(LLResult result) {
         if (result == null || !result.isValid()) {
-            addTelemetry("Limelight", "No valid frame");
             return;
         }
 
@@ -144,14 +132,20 @@ public class Sensors extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // PASSIVE MOTIF SCANNING (until detected)
-        scanForMotif();
+        // Get Limelight result ONCE per cycle
+        LLResult currentResult = null;
+        if (limelight != null) {
+            currentResult = limelight.getLatestResult();
+        }
+
+        // PASSIVE MOTIF SCANNING (pass the result)
+        scanForMotif(currentResult);
 
         // Color sensor telemetry
         addColorTelemetry();
 
-        // Limelight telemetry (enable for debugging)
-        addAprilTagTelemetry();
+        // Limelight telemetry
+        addAprilTagTelemetry(currentResult);
 
         // Motif status
         if (robot.motif.isEmpty()) {
