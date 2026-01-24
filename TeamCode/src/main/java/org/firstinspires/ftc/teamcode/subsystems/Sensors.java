@@ -20,6 +20,9 @@ public class Sensors extends SubsystemBase {
     private TelemetryManager telemetryM;
     private Ganymede robot;
     private Limelight3A limelight;
+    private boolean limelightInitialized = false;
+    private boolean limelightReady = false;
+    private int warmupCyclesRemaining = 0;
 
     public RevColorSensorV3 colorSensor;
 
@@ -30,6 +33,9 @@ public class Sensors extends SubsystemBase {
     private static final float MIN_VALUE = 0.15f;
     private static final float GREEN_RATIO_THRESHOLD = 1.3f;
     private static final float COLOR_SENSOR_GAIN = 2.0f;
+
+    // Limelight warmup settings
+    private static final int WARMUP_CYCLES = 100;  // ~2 seconds at 50Hz periodic rate
 
     public enum BallColor {
         GREEN,
@@ -46,15 +52,36 @@ public class Sensors extends SubsystemBase {
         colorSensor.setGain(COLOR_SENSOR_GAIN);
 
         // ============================================================
-        //              LIMELIGHT INITIALIZATION
+        //              LIMELIGHT INITIALIZATION (NON-BLOCKING)
         // ============================================================
+        initializeLimelight();
+    }
+
+    /**
+     * Initializes Limelight with minimal blocking.
+     * Actual readiness is determined over time in periodic().
+     */
+    private void initializeLimelight() {
         try {
+            // Get hardware reference
             limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
-            limelight.setPollRateHz(50);
+
+            // Configure with REDUCED settings for lower power draw
+            limelight.setPollRateHz(30);  // Start low, can increase if stable
             limelight.start();
             limelight.pipelineSwitch(0);  // AprilTag pipeline
+
+            // Mark as initialized, but not ready yet
+            limelightInitialized = true;
+            warmupCyclesRemaining = WARMUP_CYCLES;
+
+            addTelemetry("Limelight", "Warming up...");
+
         } catch (Exception e) {
+            limelightInitialized = false;
+            limelightReady = false;
             addTelemetry("Limelight Error", e.getMessage());
+            addTelemetry("Limelight", "⚠ Disabled - using manual motif");
         }
     }
 
@@ -64,6 +91,7 @@ public class Sensors extends SubsystemBase {
 
     /**
      * Passively scans for obelisk AprilTags.
+     * Only runs after Limelight warmup period.
      * @param result Current Limelight result from this cycle
      */
     private void scanForMotif(LLResult result) {
@@ -72,7 +100,8 @@ public class Sensors extends SubsystemBase {
             return;
         }
 
-        if (result == null || !result.isValid()) {
+        // Don't scan if Limelight not ready
+        if (!limelightReady || result == null || !result.isValid()) {
             return;
         }
 
@@ -105,9 +134,14 @@ public class Sensors extends SubsystemBase {
 
     /**
      * Adds AprilTag telemetry for debugging.
+     * Only runs after Limelight is ready.
      * @param result Current Limelight result from this cycle
      */
     private void addAprilTagTelemetry(LLResult result) {
+        if (!limelightReady) {
+            return;
+        }
+
         if (result == null || !result.isValid()) {
             return;
         }
@@ -132,24 +166,67 @@ public class Sensors extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Get Limelight result ONCE per cycle
-        LLResult currentResult = null;
-        if (limelight != null) {
-            currentResult = limelight.getLatestResult();
+        // ============================================================
+        //              LIMELIGHT WARMUP MANAGEMENT
+        // ============================================================
+
+        // If initialized but warming up, count down
+        if (limelightInitialized && !limelightReady && warmupCyclesRemaining > 0) {
+            warmupCyclesRemaining--;
+
+            // Show warmup progress every 20 cycles
+            if (warmupCyclesRemaining % 20 == 0) {
+                addTelemetry("Limelight Warmup", "%d cycles", warmupCyclesRemaining);
+            }
+
+            // When warmup complete, mark as ready
+            if (warmupCyclesRemaining == 0) {
+                limelightReady = true;
+                addTelemetry("Limelight", "✓ Ready");
+            }
         }
 
-        // PASSIVE MOTIF SCANNING (pass the result)
+        // ============================================================
+        //              LIMELIGHT DATA RETRIEVAL
+        // ============================================================
+
+        // Get Limelight result ONCE per cycle (only if initialized)
+        LLResult currentResult = null;
+        if (limelightInitialized && limelight != null) {
+            try {
+                currentResult = limelight.getLatestResult();
+            } catch (Exception e) {
+                // If we get an exception, disable Limelight
+                limelightInitialized = false;
+                limelightReady = false;
+                addTelemetry("Limelight", "⚠ Lost connection");
+            }
+        }
+
+        // ============================================================
+        //              SENSOR DATA PROCESSING
+        // ============================================================
+
+        // PASSIVE MOTIF SCANNING (only after warmup)
         scanForMotif(currentResult);
 
         // Color sensor telemetry
         addColorTelemetry();
 
-        // Limelight telemetry
-        addAprilTagTelemetry(currentResult);
+        // Limelight telemetry (only if ready)
+        if (limelightReady) {
+            addAprilTagTelemetry(currentResult);
+        }
 
         // Motif status
         if (robot.motif.isEmpty()) {
-            addTelemetry("Motif", "Scanning...");
+            if (!limelightInitialized) {
+                addTelemetry("Motif", "Manual - LL offline");
+            } else if (!limelightReady) {
+                addTelemetry("Motif", "Warming up LL...");
+            } else {
+                addTelemetry("Motif", "Scanning...");
+            }
         } else {
             addTelemetry("Motif", robot.motif);
         }
