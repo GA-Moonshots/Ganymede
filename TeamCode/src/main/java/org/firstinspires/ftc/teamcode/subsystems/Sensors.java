@@ -52,7 +52,7 @@ public class Sensors extends SubsystemBase {
         // ============================================================
         try {
             limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
-            limelight.setPollRateHz(100);
+            limelight.setPollRateHz(50);
             limelight.start();
             limelight.pipelineSwitch(0);  // AprilTag pipeline
         } catch (Exception e) {
