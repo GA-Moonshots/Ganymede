@@ -14,7 +14,14 @@ import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 import java.util.List;
 
-
+/**
+ * ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║                         SENSOR SUBSYSTEM                                  ║
+ * ║                                                                           ║
+ * ║  Manages all sensors: Color detection, Limelight AprilTags, and more.     ║
+ * ║  Handles passive MOTIF scanning during autonomous.                        ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝
+ */
 public class Sensors extends SubsystemBase {
     private Telemetry telemetry;
     private TelemetryManager telemetryM;
@@ -26,7 +33,9 @@ public class Sensors extends SubsystemBase {
 
     public RevColorSensorV3 colorSensor;
 
-    // Color detection thresholds
+    // ============================================================
+    //              COLOR DETECTION CONSTANTS
+    // ============================================================
     private static final float GREEN_HUE_MIN = 145f;
     private static final float GREEN_HUE_MAX = 160f;
     private static final float MIN_SATURATION = 0.3f;
@@ -34,15 +43,27 @@ public class Sensors extends SubsystemBase {
     private static final float GREEN_RATIO_THRESHOLD = 1.3f;
     private static final float COLOR_SENSOR_GAIN = 2.0f;
 
-    // Limelight warmup settings
-    private static final int WARMUP_CYCLES = 100;  // ~2 seconds at 50Hz periodic rate
+    // ============================================================
+    //              LIMELIGHT WARMUP SETTINGS
+    // ============================================================
+    /**
+     * Reduced warmup period - cable was the real issue!
+     * ~200ms at 50Hz periodic rate
+     */
+    private static final int WARMUP_CYCLES = 10;
 
+    // ============================================================
+    //              BALL COLOR ENUM
+    // ============================================================
     public enum BallColor {
         GREEN,
         PURPLE,
         NONE
     }
 
+    // ============================================================
+    //                        CONSTRUCTOR
+    // ============================================================
     public Sensors(Ganymede robot) {
         this.robot = robot;
         telemetry = robot.telemetry;
@@ -51,31 +72,28 @@ public class Sensors extends SubsystemBase {
         colorSensor = robot.hardwareMap.get(RevColorSensorV3.class, Constants.COLOR_SENSOR);
         colorSensor.setGain(COLOR_SENSOR_GAIN);
 
-        // ============================================================
-        //              LIMELIGHT INITIALIZATION (NON-BLOCKING)
-        // ============================================================
         initializeLimelight();
     }
 
+    // ============================================================
+    //              LIMELIGHT INITIALIZATION
+    // ============================================================
     /**
      * Initializes Limelight with minimal blocking.
      * Actual readiness is determined over time in periodic().
      */
     private void initializeLimelight() {
         try {
-            // Get hardware reference
             limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
 
-            // Configure with REDUCED settings for lower power draw
-            limelight.setPollRateHz(30);  // Start low, can increase if stable
+            limelight.setPollRateHz(30);
             limelight.start();
             limelight.pipelineSwitch(0);  // AprilTag pipeline
 
-            // Mark as initialized, but not ready yet
             limelightInitialized = true;
             warmupCyclesRemaining = WARMUP_CYCLES;
 
-            addTelemetry("Limelight", "Warming up...");
+            addTelemetry("Limelight", "Initializing...");
 
         } catch (Exception e) {
             limelightInitialized = false;
@@ -88,10 +106,9 @@ public class Sensors extends SubsystemBase {
     // ============================================================
     //              MOTIF DETECTION
     // ============================================================
-
     /**
-     * Passively scans for obelisk AprilTags.
-     * Only runs after Limelight warmup period.
+     * Passively scans for obelisk AprilTags (IDs 21, 22, 23).
+     * Only runs after brief Limelight warmup period.
      * @param result Current Limelight result from this cycle
      */
     private void scanForMotif(LLResult result) {
@@ -101,32 +118,42 @@ public class Sensors extends SubsystemBase {
         }
 
         // Don't scan if Limelight not ready
-        if (!limelightReady || result == null || !result.isValid()) {
+        if (!limelightReady) {
+            return;
+        }
+
+        if (result == null || !result.isValid()) {
+            addTelemetry("Scan", "Invalid result");
             return;
         }
 
         List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
 
         if (fiducials.isEmpty()) {
+            addTelemetry("Scan", "No tags visible");
             return;
         }
+
+        addTelemetry("Scan", "Checking %d tag(s)", fiducials.size());
 
         // Search for obelisk tags (IDs 21, 22, 23)
         for (LLResultTypes.FiducialResult fiducial : fiducials) {
             int tagId = fiducial.getFiducialId();
 
+            addTelemetry("Scan", "Found Tag %d", tagId);
+
             switch (tagId) {
                 case 21:
                     robot.motif = "GPP";
-                    addTelemetry("MOTIF LOCKED", "GPP (Tag 21)");
+                    addTelemetry("MOTIF LOCKED", "✓ GPP (Tag 21)");
                     return;
                 case 22:
                     robot.motif = "PGP";
-                    addTelemetry("MOTIF LOCKED", "PGP (Tag 22)");
+                    addTelemetry("MOTIF LOCKED", "✓ PGP (Tag 22)");
                     return;
                 case 23:
                     robot.motif = "PPG";
-                    addTelemetry("MOTIF LOCKED", "PPG (Tag 23)");
+                    addTelemetry("MOTIF LOCKED", "✓ PPG (Tag 23)");
                     return;
             }
         }
@@ -164,22 +191,17 @@ public class Sensors extends SubsystemBase {
         addTelemetry("Tag IDs", tagIds.toString());
     }
 
+    // ============================================================
+    //              PERIODIC UPDATE
+    // ============================================================
     @Override
     public void periodic() {
         // ============================================================
         //              LIMELIGHT WARMUP MANAGEMENT
         // ============================================================
-
-        // If initialized but warming up, count down
         if (limelightInitialized && !limelightReady && warmupCyclesRemaining > 0) {
             warmupCyclesRemaining--;
 
-            // Show warmup progress every 20 cycles
-            if (warmupCyclesRemaining % 20 == 0) {
-                addTelemetry("Limelight Warmup", "%d cycles", warmupCyclesRemaining);
-            }
-
-            // When warmup complete, mark as ready
             if (warmupCyclesRemaining == 0) {
                 limelightReady = true;
                 addTelemetry("Limelight", "✓ Ready");
@@ -189,14 +211,11 @@ public class Sensors extends SubsystemBase {
         // ============================================================
         //              LIMELIGHT DATA RETRIEVAL
         // ============================================================
-
-        // Get Limelight result ONCE per cycle (only if initialized)
         LLResult currentResult = null;
         if (limelightInitialized && limelight != null) {
             try {
                 currentResult = limelight.getLatestResult();
             } catch (Exception e) {
-                // If we get an exception, disable Limelight
                 limelightInitialized = false;
                 limelightReady = false;
                 addTelemetry("Limelight", "⚠ Lost connection");
@@ -223,7 +242,7 @@ public class Sensors extends SubsystemBase {
             if (!limelightInitialized) {
                 addTelemetry("Motif", "Manual - LL offline");
             } else if (!limelightReady) {
-                addTelemetry("Motif", "Warming up LL...");
+                addTelemetry("Motif", "Warming up...");
             } else {
                 addTelemetry("Motif", "Scanning...");
             }
@@ -238,7 +257,6 @@ public class Sensors extends SubsystemBase {
     // ============================================================
     //              TELEMETRY HELPERS
     // ============================================================
-
     public void addTelemetry(String key, String value){
         telemetryM.addData(key, value);
     }
@@ -262,7 +280,6 @@ public class Sensors extends SubsystemBase {
     // ============================================================
     //              COLOR DETECTION METHODS
     // ============================================================
-
     public boolean isGreen() {
         NormalizedRGBA sample = colorSensor.getNormalizedColors();
 
