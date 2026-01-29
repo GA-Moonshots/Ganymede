@@ -304,6 +304,7 @@ public class Ganymede extends Robot {
                     new SequentialCommandGroup(
                             // FIRE PURPLE x2 FIRST (turret FRONT)
                             new TurretRotate(this, Turret.TurretState.FRONT),
+                            new DriveRotate(this, 65, 2),
                             new LauncherLaunch(this, 0.8),  // Purple 1
                             new LauncherLaunch(this, 0.83),  // Purple 2
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
