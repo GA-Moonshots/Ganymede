@@ -256,10 +256,12 @@ public class Ganymede extends Robot {
             );
 
             // After setup, check robot.motif and execute appropriate shooting sequence
+            // TODO: Check if BlUE_AUTO and RED_Auto accounts for the rotation needed to come back from our new angle
             setup.andThen(new InstantCommand(() -> {
                 // MOTIF: GREEN - PURPLE - PURPLE
                 if (motif.equals("GPP")) {
                     new SequentialCommandGroup(
+                            new DriveRotate(this, 65, 2), // putting this here to aim first
                             // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new TurretRotate(this, Turret.TurretState.LEFT),
@@ -282,11 +284,12 @@ public class Ganymede extends Robot {
                     new SequentialCommandGroup(
                             // FIRE PURPLE FIRST (turret FRONT)
                             new TurretRotate(this, Turret.TurretState.FRONT),
+                            new DriveRotate(this, 65, 2),
                             new LauncherLaunch(this, 0.83),  // Purple 1
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new TurretRotate(this, Turret.TurretState.LEFT),
-                                    new DriveRotate(this, BLUE_AUTO_TURN, 5)
+                                    new DriveRotate(this, BLUE_AUTO_TURN, 5) //TODO: Check if this value is ok
                             ),
                             new LauncherLaunch(this, 0.83),  // Green
                             // FIRE PURPLE (turret FRONT + robot back to original heading)
@@ -334,11 +337,13 @@ public class Ganymede extends Robot {
             );
 
             // After setup, check robot.motif and execute appropriate shooting sequence
+            // TODO: Check if the Auto angles here is good me kinda guessing
             setup.andThen(new InstantCommand(() -> {
                 // MOTIF: GREEN - PURPLE - PURPLE
                 if (motif.equals("GPP")) {
                     new SequentialCommandGroup(
                             // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
+                            new DriveRotate(this, -65, 2),
                             new ParallelCommandGroup(
                                     new TurretRotate(this, Turret.TurretState.LEFT),
                                     new DriveRotate(this, RED_AUTO_TURN, 5)
@@ -360,6 +365,7 @@ public class Ganymede extends Robot {
                     new SequentialCommandGroup(
                             // FIRE PURPLE FIRST (turret FRONT)
                             new TurretRotate(this, Turret.TurretState.FRONT),
+                            new DriveRotate(this, -65, 2),
                             new LauncherLaunch(this, 0.83),  // Purple 1
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
@@ -382,6 +388,7 @@ public class Ganymede extends Robot {
                     new SequentialCommandGroup(
                             // FIRE PURPLE x2 FIRST (turret FRONT)
                             new TurretRotate(this, Turret.TurretState.FRONT),
+                            new DriveRotate(this, -65, 2),
                             new LauncherLaunch(this, 0.83),  // Purple 1
                             new LauncherLaunch(this, 0.8),  // Purple 2
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
