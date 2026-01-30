@@ -130,23 +130,23 @@ public class Constants {
 
             /** Tune with: Automatic → Forward Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-zero-power-acceleration
-            .forwardZeroPowerAcceleration(-80.95127679462914)
+            .forwardZeroPowerAcceleration(-47.192998)
             /** Tune with: Automatic → Lateral Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#lateral-zero-power-acceleration
-            .lateralZeroPowerAcceleration(-79.41907763249665)
+            .lateralZeroPowerAcceleration(-88.721913)
 
             /** Tune with: Manual → Translational - push sideways, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/translational
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.06, 0, 0.004, 0.1))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.08, 0, 0.003, 0.03))
             //.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
 
             /** Tune with: Manual → Heading - rotate robot, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/heading
-            .headingPIDFCoefficients(new PIDFCoefficients(0.75, 0, 0.0075, 0.01))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.02, 0.05))
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.05, 0, 0.0, 0.5, 0.03))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.001, 0, 0.0, 13, 0.5))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
@@ -158,9 +158,9 @@ public class Constants {
     public static MecanumConstants mecanumConstants = new MecanumConstants()
             /** Tune with: Automatic → Forward Velocity  */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-velocity-tuner
-            .xVelocity(32.55606703870878)
+            .xVelocity(69.96109)
             /** Tune with: Automatic → Lateral Velocity */
-            .yVelocity(30.41691889725332)
+            .yVelocity(54.53147)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
             .rightFrontMotorName(RIGHT_FRONT_NAME)
