@@ -1,6 +1,15 @@
 //
 // build.gradle in TeamCode
 //
+// Most of the definitions for building your module reside in a common, shared
+// file 'build.common.gradle'. Being factored in this way makes it easier to
+// integrate updates to the FTC into your code. If you really need to customize
+// the build definitions, you can place those customizations in this file, but
+// please think carefully as to whether such customizations are really necessary
+// before doing so.
+
+
+// Custom definitions may go here
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
@@ -15,26 +24,22 @@ android {
 }
 
 repositories {
+    mavenCentral()
     maven {
         url = 'https://maven.brott.dev/'
     }
-
     maven {
-        url = 'https://maven.pedropathing.com'
+        url= "https://maven.pedropathing.com/"
     }
-    maven {
-        url = 'https://mymaven.bylazar.com/releases'
-    }
-
     maven {
         url "https://repo.dairy.foundation/releases"
     }
 
-    // For Snapshot/Beta Versions of SolversLib
+    /* Only if you are using a Snapshot/Beta Version of SolversLib
     maven {
         url "https://repo.dairy.foundation/snapshots"
     }
-
+     */
 }
 
 dependencies {
@@ -42,13 +47,17 @@ dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     // SolversLib
-    implementation "org.solverslib:core:0.3.3" // core
-    implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
+    implementation "org.solverslib:core:0.3.1" // core
+    implementation "org.solverslib:pedroPathing:0.3.1" // pedroPathing
 
     // Pedro Pathing
-    implementation 'com.pedropathing:ftc:2.0.4'
-    implementation 'com.pedropathing:telemetry:1.0.0'
-
-    // Panels Dashboard
-    implementation "com.bylazar:fullpanels:1.0.10"
+    implementation "com.pedropathing:pedro:1.0.9" // Pedro Pathing Library
+    implementation "com.acmerobotics.dashboard:dashboard:0.4.16" // FTC Dashboard
+    //noinspection GradleDependency
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
+    //noinspection GradleDependency
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.23"
+    implementation "com.acmerobotics.roadrunner:core:1.0.1"
+    implementation "com.acmerobotics.roadrunner:actions:1.0.1"
 }

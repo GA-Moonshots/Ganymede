@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.geometry.Pose;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Ganymede;
-import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
-import org.firstinspires.ftc.teamcode.utils.TeleOpMain;
-import org.firstinspires.ftc.teamcode.utils.PersistentPoseManager;
+import org.firstinspires.ftc.teamcode.Ophelia;
+import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
+import org.firstinspires.ftc.teamcode.util.PersistentPoseManager;
 
 public class SavePoseCommand extends CommandBase {
-    private final PedroDrive driveSubsystem;
-    private Ganymede robot;
+    private final Mecanum driveSubsystem;
 
-    public SavePoseCommand(Ganymede robot) {
-        this.driveSubsystem = robot.drive;
-        this.robot = robot;
+    public SavePoseCommand(Ophelia robot) {
+        this.driveSubsystem = robot.mecanum;
     }
 
     @Override
@@ -24,7 +21,7 @@ public class SavePoseCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        Pose finalPose = driveSubsystem.getPose();
-        PersistentPoseManager.savePose(finalPose, robot.isRed);
+        Pose2d finalPose = driveSubsystem.pose;
+        PersistentPoseManager.savePose(finalPose);
     }
 }
