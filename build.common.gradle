@@ -20,9 +20,10 @@ import java.util.regex.Pattern
 apply plugin: 'com.android.application'
 
 android {
+    compileSdk 34
+
 
     //noinspection GradleDependency
-    compileSdkVersion 30
 
     signingConfigs {
         release {
