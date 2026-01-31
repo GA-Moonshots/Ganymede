@@ -229,6 +229,14 @@ public class Sensors extends SubsystemBase {
             }
         }
 
+        if (limelightInitialized && limelight != null) {
+            addTelemetry("LL ConnInfo", limelight.getConnectionInfo());
+            addTelemetry("LL Status", "conn=%s age=%dms valid=%s",
+                    limelight.isConnected(),
+                    limelight.getTimeSinceLastUpdate(),
+                    (currentResult != null && currentResult.isValid()));
+        }
+
         // ============================================================
         //              SENSOR DATA PROCESSING
         // ============================================================
