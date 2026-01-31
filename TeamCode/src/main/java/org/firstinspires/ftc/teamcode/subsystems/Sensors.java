@@ -199,14 +199,21 @@ public class Sensors extends SubsystemBase {
         // ============================================================
         //              LIMELIGHT WARMUP MANAGEMENT
         // ============================================================
-        if (limelightInitialized && !limelightReady && warmupCyclesRemaining > 0) {
-            warmupCyclesRemaining--;
+        if (limelightInitialized && limelight != null && !limelightReady) {
+            LLResult r = limelight.getLatestResult();
 
-            if (warmupCyclesRemaining == 0) {
+            // "Ready" means: we are receiving updates recently AND the result is valid
+            if (limelight.isConnected() && r != null && r.isValid()) {
                 limelightReady = true;
-                addTelemetry("Limelight", "✓ Ready");
+                addTelemetry("Limelight", "✓ Ready (valid results)");
+            } else {
+                addTelemetry("Limelight", "Warming... conn=%s valid=%s age=%dms",
+                        limelight.isConnected(),
+                        (r != null && r.isValid()),
+                        limelight.getTimeSinceLastUpdate());
             }
         }
+
 
         // ============================================================
         //              LIMELIGHT DATA RETRIEVAL
