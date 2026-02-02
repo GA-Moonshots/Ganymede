@@ -34,7 +34,6 @@ import org.firstinspires.ftc.teamcode.utils.PersistentPoseManager;
  * Main robot class for the 2025 FTC season using SolversLib and Pedro Pathing
  */
 public class Ganymede extends Robot {
-
     // Core OpMode references
     public LinearOpMode opMode;
     public GamepadEx player1;
