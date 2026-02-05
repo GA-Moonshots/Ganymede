@@ -49,11 +49,11 @@ public class LauncherLaunch extends CommandBase {
         // determine the correct feeder
         if(robot.turret.state == Turret.TurretState.LEFT) {
             feeder = robot.launcher.greenFeeder;
-            runFeeder = 1;
+            runFeeder = 1; // to be reversed because of gearing
         }
         else {
             feeder = robot.launcher.purpleFeeder;
-            runFeeder = -1;
+            runFeeder = 1; // reversed because of gearing
         }
 
         timer.start();
