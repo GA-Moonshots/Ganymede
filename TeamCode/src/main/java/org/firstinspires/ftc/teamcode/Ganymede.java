@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveToPose;
 import org.firstinspires.ftc.teamcode.commands.DriveRotate;
 import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
+import org.firstinspires.ftc.teamcode.commands.LauncherDefault;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
@@ -133,6 +134,7 @@ public class Ganymede extends Robot {
 
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
+        launcher.setDefaultCommand(new LauncherDefault(this));
 
         /*
                 .__                                      ____
