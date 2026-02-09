@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
 import org.firstinspires.ftc.teamcode.commands.LauncherDefault;
 import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
+import org.firstinspires.ftc.teamcode.commands.LauncherRPM;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -220,7 +221,7 @@ public class Ganymede extends Robot {
 
         // RIGHT BUMPER - Launcher launch
         new GamepadButton(player2, GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(() -> new LauncherLaunch(this).schedule());
+                .whenPressed(() -> new LauncherRPM(this).schedule());
 
         // LEFT BUMPER - reverse intake
         new GamepadButton(player2, GamepadKeys.Button.LEFT_BUMPER)

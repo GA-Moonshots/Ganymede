@@ -21,10 +21,10 @@ public class LauncherRPM extends CommandBase {
     int counter = 0;
 
     private boolean ballOutputted;
-    private double rpmThresh = 1000;
+    private double rpmThresh = 1000; //TODO: Fine tune this
 
     private double baseCurrent;
-    private double currentThresh = 2;
+    private double currentThresh = 2; //TODO: Fine tune this
     private boolean spikeDetected = false;
 
     public LauncherRPM(Ganymede robot, double launcherSpeed) {
@@ -95,7 +95,7 @@ public class LauncherRPM extends CommandBase {
             spikeDetected = false;
             ballOutputted = true;
         }
-        
+
         counter++;
     }
 
