@@ -100,6 +100,23 @@ public class Constants {
      */
     public static final double LAUNCHER_LEFT_HEADING_OFFSET_DEGREES = 90.0;
 
+    // ============================================================
+    //                    LAUNCHER CONSTANTS
+
+    /** Idle flywheel power - keeps motor warm for faster spin-up */
+    public static final double LAUNCHER_IDLE_POWER = 0.3;
+
+    /** Default launch power when no specific power is provided */
+    public static final double LAUNCHER_DEFAULT_POWER = 0.7;
+
+    /** RPM at which the flywheel is fast enough to start feeding */
+    public static final double LAUNCHER_FEED_RPM = 150.0;
+
+    /** RPM drop threshold indicating ball has been launched */
+    public static final double LAUNCHER_LAUNCHED_RPM = 135.0;
+
+    /** Safety timeout for RPM-based launch (seconds) */
+    public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 10.0;
 
     // ============================================================
     //                    SENSOR MAPPINGS

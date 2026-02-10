@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * ║    1. Calculates distance from robot to alliance goal                     ║
  * ║    2. Uses projectile motion kinematics to determine required velocity    ║
  * ║    3. Converts velocity to motor power (0.0 - 1.0)                        ║
- * ║    4. Fires the launcher at the calculated power                          ║
+ * ║    4. Fires the launcher at the calculated power via LauncherRPM          ║
  * ║                                                                           ║
  * ║  Usage: Can MUST combined with DriveTurnToGoal for full auto-targeting:     ║
  * ║    new SequentialCommandGroup(                                            ║
@@ -137,10 +137,10 @@ public class LauncherDynamic extends DriveAbstract {
 
     @Override
     public void execute() {
-        // Trigger the launch once (LauncherLaunch handles the timing)
+        // Trigger the launch once (LauncherRPM handles RPM-based feeding)
         if (!launchTriggered) {
-            // Schedule LauncherLaunch with our calculated power
-            new LauncherLaunch(robot, calculatedPower).schedule();
+            // Schedule LauncherRPM with our calculated power
+            new LauncherRPM(robot, calculatedPower).schedule();
             launchTriggered = true;
 
             robot.sensors.addTelemetry("Launch Status", "FIRING at %.2f power", calculatedPower);
@@ -158,7 +158,7 @@ public class LauncherDynamic extends DriveAbstract {
 
     @Override
     public boolean isFinished() {
-        // Let the LauncherLaunch command handle its own timing
+        // Let the LauncherRPM command handle its own RPM-based logic
         // We just provide a safety timeout
         return timer.done();
     }

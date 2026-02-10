@@ -18,7 +18,7 @@ public class LauncherRawPower extends CommandBase {
 
     @Override
     public void execute() {
-        launcher.launcher.setPower(1);
+        launcher.launcher.setPower(1.0);
         robot.sensors.addTelemetry("Motor Speed", String.valueOf(launcher.launcher.getVelocity()));
     }
 
@@ -27,8 +27,4 @@ public class LauncherRawPower extends CommandBase {
         launcher.launcher.setPower(0);
     }
 
-    @Override
-    public boolean isFinished() {
-        return super.isFinished();
-    }
 }

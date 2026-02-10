@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 //import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 
@@ -26,15 +27,16 @@ public class Launcher extends SubsystemBase {
         purpleFeeder = robot.hardwareMap.get(CRServo.class, Constants.PURPLE_FEEDER_SERVO_NAME);
     }
 
-    // HAPPENS 30x per second
     @Override
     public void periodic() {
-        // robot.sensors.addTelemetry("Intake" , "Feeling SUPER");
+        double currentRPM = launcher.getVelocity(AngleUnit.DEGREES) / 6.0;
+        robot.sensors.addTelemetry("Flywheel RPM", String.format("%.0f", currentRPM));
     }
 
-    public boolean readyToLaunch(){
-        // TODO: dynamically calculate required speed based on location
-        return launcher.getVelocity() > 2000;
+    /** Returns true if flywheel RPM is at or above the feed threshold */
+    public boolean isAtLaunchRPM() {
+        double currentRPM = launcher.getVelocity(AngleUnit.DEGREES) / 6.0;
+        return currentRPM >= Constants.LAUNCHER_FEED_RPM;
     }
 
     public void feedGreen(){

@@ -2,31 +2,40 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.util.Timing;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Ganymede;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.utils.Constants;
 
+import java.util.concurrent.TimeUnit;
+
+/**
+ * RPM-based launcher command.
+ * Spins the flywheel up to launch power, waits until RPM reaches the feed
+ * threshold, feeds the ball, then detects the launch by the RPM drop.
+ */
 public class LauncherRPM extends CommandBase {
     private Ganymede robot;
     private Launcher launcher;
     private CRServo feeder;
+    private Timing.Timer timer;
 
     int runFeeder;
     double launcherSpeed;
 
     private boolean ballOutputted;
-    private double rpmThresh = 150; //TODO: Fine tune this
-    private boolean readyToLaunch = false;
-
+    private boolean readyToLaunch;
 
     public LauncherRPM(Ganymede robot, double launcherSpeed) {
         this.robot = robot;
         this.launcher = this.robot.launcher;
-
         this.launcherSpeed = launcherSpeed;
+        this.timer = new Timing.Timer(
+                (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
 
         addRequirements(launcher);
     }
@@ -34,8 +43,9 @@ public class LauncherRPM extends CommandBase {
     public LauncherRPM(Ganymede robot) {
         this.robot = robot;
         this.launcher = this.robot.launcher;
-
-        this.launcherSpeed = 0.7;
+        this.launcherSpeed = Constants.LAUNCHER_DEFAULT_POWER;
+        this.timer = new Timing.Timer(
+                (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
 
         addRequirements(launcher);
     }
@@ -44,6 +54,7 @@ public class LauncherRPM extends CommandBase {
     public void initialize() {
         super.initialize();
         ballOutputted = false;
+        readyToLaunch = false;
 
         // determine the correct feeder
         if(robot.turret.state == Turret.TurretState.LEFT) {
@@ -55,7 +66,7 @@ public class LauncherRPM extends CommandBase {
             runFeeder = 1; // reversed because of gearing
         }
 
-//        timer.start(); maybe add timer giver
+        timer.start();
     }
 
     @Override
@@ -63,21 +74,20 @@ public class LauncherRPM extends CommandBase {
         launcher.launcher.setPower(launcherSpeed);
 
         // Conversion from deg/s to rpm
-        double currentSpeed = launcher.launcher.getVelocity(AngleUnit.DEGREES)/6;
+        double currentSpeed = launcher.launcher.getVelocity(AngleUnit.DEGREES) / 6;
         robot.sensors.addTelemetry("Current RPM: ", String.valueOf(currentSpeed));
 
-        // just a temporary thing to test for voltage
         double activeCurrent = launcher.launcher.getCurrent(CurrentUnit.AMPS);
-        robot.sensors.addTelemetry("Motor Voltage: ", String.valueOf(activeCurrent));
+        robot.sensors.addTelemetry("Motor Current (A): ", String.valueOf(activeCurrent));
 
-
-        // starts feeding
-        if(currentSpeed >= rpmThresh) {
+        // Start feeding once flywheel reaches target RPM
+        if(currentSpeed >= Constants.LAUNCHER_FEED_RPM) {
             feeder.setPower(runFeeder);
             readyToLaunch = true;
         }
 
-        if (currentSpeed <= 135 && readyToLaunch) {
+        // RPM drop after feeding indicates ball has been launched
+        if (currentSpeed <= Constants.LAUNCHER_LAUNCHED_RPM && readyToLaunch) {
             feeder.setPower(0);
             ballOutputted = true;
         }
@@ -85,12 +95,12 @@ public class LauncherRPM extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return ballOutputted;
+        return ballOutputted || timer.done();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        launcher.stopAll(); // Potential error here
+        launcher.stopAll();
     }
 }

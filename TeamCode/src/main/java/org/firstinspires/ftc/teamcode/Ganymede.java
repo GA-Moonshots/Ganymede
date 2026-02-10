@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.commands.DriveToPose;
 import org.firstinspires.ftc.teamcode.commands.DriveRotate;
 import org.firstinspires.ftc.teamcode.commands.DriveFwdByDist;
 import org.firstinspires.ftc.teamcode.commands.IntakeByDirection;
-import org.firstinspires.ftc.teamcode.commands.LauncherDefault;
-import org.firstinspires.ftc.teamcode.commands.LauncherLaunch;
+import org.firstinspires.ftc.teamcode.commands.LauncherIdle;
+import org.firstinspires.ftc.teamcode.utils.old.LauncherLaunch;
 import org.firstinspires.ftc.teamcode.commands.LauncherRPM;
 import org.firstinspires.ftc.teamcode.commands.LauncherRawPower;
 import org.firstinspires.ftc.teamcode.commands.TurretRotate;
@@ -135,7 +135,7 @@ public class Ganymede extends Robot {
 
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
-        launcher.setDefaultCommand(new LauncherDefault(this));
+        launcher.setDefaultCommand(new LauncherIdle(this));
 
         /*
                 .__                                      ____
@@ -198,9 +198,9 @@ public class Ganymede extends Robot {
         new GamepadButton(player2, GamepadKeys.Button.B)
                 .whenPressed(new TurretRotate(this, Turret.TurretState.FRONT ));
 
-        // Button Y -- Launcher LAUNCH
+        // Button Y -- Launcher RPM-based launch
         new GamepadButton(player2, GamepadKeys.Button.Y)
-                .whenPressed(new LauncherLaunch(this));
+                .whenPressed(new LauncherRPM(this));
 
         // D-PAD intake servos
         new GamepadButton(player2, GamepadKeys.Button.DPAD_UP)
