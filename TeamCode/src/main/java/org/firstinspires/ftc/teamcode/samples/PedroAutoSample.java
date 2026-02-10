@@ -115,7 +115,6 @@ public class PedroAutoSample extends CommandOpMode {
 
         // Schedule the autonomous sequence
         schedule(
-                new RunCommand(() -> follower.update()),
                 // Score preload
                 new FollowPathCommand(follower, scorePreload),
                 openOuttakeClaw(),
@@ -149,6 +148,7 @@ public class PedroAutoSample extends CommandOpMode {
     @Override
     public void run() {
         super.run();
+        follower.update();
 
         telemetryData.addData("X", follower.getPose().getX());
         telemetryData.addData("Y", follower.getPose().getY());
