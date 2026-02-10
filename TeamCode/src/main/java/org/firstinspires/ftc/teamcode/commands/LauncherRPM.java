@@ -17,15 +17,10 @@ public class LauncherRPM extends CommandBase {
     int runFeeder;
     double launcherSpeed;
 
-    // temporary
-    int counter = 0;
-
     private boolean ballOutputted;
-    private double rpmThresh = 1000; //TODO: Fine tune this
+    private double rpmThresh = 150; //TODO: Fine tune this
+    private boolean readyToLaunch = false;
 
-    private double baseCurrent;
-    private double currentThresh = 2; //TODO: Fine tune this
-    private boolean spikeDetected = false;
 
     public LauncherRPM(Ganymede robot, double launcherSpeed) {
         this.robot = robot;
@@ -73,30 +68,19 @@ public class LauncherRPM extends CommandBase {
 
         // just a temporary thing to test for voltage
         double activeCurrent = launcher.launcher.getCurrent(CurrentUnit.AMPS);
-        if (counter == 30) {
-            robot.sensors.addTelemetry("Motor Voltage: ", String.valueOf(activeCurrent));
-        }
+        robot.sensors.addTelemetry("Motor Voltage: ", String.valueOf(activeCurrent));
+
 
         // starts feeding
         if(currentSpeed >= rpmThresh) {
             feeder.setPower(runFeeder);
-            baseCurrent = activeCurrent;
+            readyToLaunch = true;
         }
 
-        // timing on both side shouldn't matter, both should be similar
-        // prone to error tho
-        if (activeCurrent >= baseCurrent + currentThresh) {
-            spikeDetected = true;
+        if (currentSpeed <= 135 && readyToLaunch) {
             feeder.setPower(0);
-        }
-
-        // Checking if the spike is done, our end condition
-        if (spikeDetected && activeCurrent < baseCurrent + 0.5) {
-            spikeDetected = false;
             ballOutputted = true;
         }
-
-        counter++;
     }
 
     @Override
