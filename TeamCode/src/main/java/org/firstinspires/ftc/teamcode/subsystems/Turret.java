@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
@@ -35,7 +36,8 @@ public class Turret extends SubsystemBase {
     public TouchSensor leftButton;
 
     // Servos
-    public CRServo spinServo;
+//    public CRServo spinServo;
+    public Servo spinServo;
 
     // State tracking - public for direct access from commands
     public TurretState state = TurretState.FRONT ;  // Default to FRONT position
@@ -48,7 +50,7 @@ public class Turret extends SubsystemBase {
         this.robot = robot;
 
         // Load motors from hardware map using Constants
-        spinServo = robot.hardwareMap.get(CRServo.class, Constants.TURRET_SERVO_NAME);
+        spinServo = robot.hardwareMap.get(Servo.class, Constants.TURRET_SERVO_NAME);
         frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
         leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
     }

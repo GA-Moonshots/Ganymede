@@ -58,7 +58,7 @@ public class TurretRotate extends CommandBase {
      */
     @Override
     public void execute() {
-        robot.sensors.addTelemetry("Turret rotate pwr", String.valueOf(turret.spinServo.getPower()));
+        robot.sensors.addTelemetry("Turret Position pwr", String.valueOf(turret.spinServo.getPosition()));
     }
 
     /**
@@ -88,7 +88,8 @@ public class TurretRotate extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         // Stop the servo
-        turret.spinServo.setPower(0);
+        // wont need this
+//        turret.spinServo.setPower(0);
 
         // Update state to target position (unless interrupted)
         if (!interrupted) {
@@ -101,17 +102,21 @@ public class TurretRotate extends CommandBase {
      * Direction depends on current and target positions.
      */
     private void startRotation() {
-        double power = 0;
+        double position = 0;
 
+        // Im assuming Left = green and Front = purple therefore this might be prone to error
         if (targetState == TurretState.LEFT) {
-            power = -Constants.TURRET_ROTATION_POWER;
+//            power = -Constants.TURRET_ROTATION_POWER;
+            position = 1;
+
         } else if (targetState == TurretState.FRONT) {
             // Rotate toward left position
-            power = Constants.TURRET_ROTATION_POWER;
+//            power = Constants.TURRET_ROTATION_POWER;
+            position = 0;
         }
 
         // State remains MOVING (set in initialize()) until end() is called
-        turret.spinServo.setPower(power);
+        turret.spinServo.setPosition(position);
     }
 
 }
