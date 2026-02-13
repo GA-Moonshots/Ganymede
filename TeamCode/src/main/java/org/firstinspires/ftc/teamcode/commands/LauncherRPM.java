@@ -74,7 +74,7 @@ public class LauncherRPM extends CommandBase {
         launcher.launcher.setPower(launcherSpeed);
 
         // Conversion from deg/s to rpm
-        double currentSpeed = launcher.launcher.getVelocity(AngleUnit.DEGREES) / 6;
+        double currentSpeed = Math.abs(launcher.launcher.getVelocity(AngleUnit.DEGREES)) / 6;
         robot.sensors.addTelemetry("Current RPM: ", String.valueOf(currentSpeed));
 
         double activeCurrent = launcher.launcher.getCurrent(CurrentUnit.AMPS);
