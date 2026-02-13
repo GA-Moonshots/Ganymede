@@ -59,7 +59,7 @@ public class LauncherRPM extends CommandBase {
         // determine the correct feeder
         if(robot.turret.state == Turret.TurretState.LEFT) {
             feeder = robot.launcher.greenFeeder;
-            runFeeder = 1; // to be reversed because of gearing
+            runFeeder = -1; // to be reversed because of gearing
         }
         else {
             feeder = robot.launcher.purpleFeeder;

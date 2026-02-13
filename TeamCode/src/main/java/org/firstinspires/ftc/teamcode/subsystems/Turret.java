@@ -51,8 +51,8 @@ public class Turret extends SubsystemBase {
 
         // Load motors from hardware map using Constants
         spinServo = robot.hardwareMap.get(Servo.class, Constants.TURRET_SERVO_NAME);
-        frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
-        leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
+//        frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
+//        leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
     }
 
     // ============================================================
@@ -62,8 +62,8 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic(){
         robot.sensors.addTelemetry("Turret State", state.toString());
-        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
-        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
+//        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
+//        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
     }
 
 }

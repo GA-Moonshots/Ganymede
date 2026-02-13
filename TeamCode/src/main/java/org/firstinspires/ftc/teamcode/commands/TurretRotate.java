@@ -71,9 +71,9 @@ public class TurretRotate extends CommandBase {
     public boolean isFinished() {
         // Check which sensor should stop the rotation
         if (targetState == TurretState.LEFT) {
-            return turret.frontButton.isPressed();
+            return turret.spinServo.getPosition() == 1;
         } else if (targetState == TurretState.FRONT) {
-            return turret.leftButton.isPressed();
+            return turret.spinServo.getPosition() == 0;
         }
         // Safety: shouldn't reach here, but stop if target is MOVING
         return false;
