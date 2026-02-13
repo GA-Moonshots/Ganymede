@@ -62,6 +62,7 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic(){
         robot.sensors.addTelemetry("Turret State", state.toString());
+        robot.sensors.addTelemetry("Spin Servo Positio,", String.valueOf(spinServo.getPosition()));
 //        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
 //        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
     }

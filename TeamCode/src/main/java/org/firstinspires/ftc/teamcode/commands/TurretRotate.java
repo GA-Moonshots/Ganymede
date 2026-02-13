@@ -71,7 +71,7 @@ public class TurretRotate extends CommandBase {
     public boolean isFinished() {
         // Check which sensor should stop the rotation
         if (targetState == TurretState.LEFT) {
-            return turret.spinServo.getPosition() == 1;
+            return turret.spinServo.getPosition() == 0.8;
         } else if (targetState == TurretState.FRONT) {
             return turret.spinServo.getPosition() == 0;
         }
@@ -107,7 +107,7 @@ public class TurretRotate extends CommandBase {
         // Im assuming Left = green and Front = purple therefore this might be prone to error
         if (targetState == TurretState.LEFT) {
 //            power = -Constants.TURRET_ROTATION_POWER;
-            position = 1;
+            position = 0.65;
 
         } else if (targetState == TurretState.FRONT) {
             // Rotate toward left position
