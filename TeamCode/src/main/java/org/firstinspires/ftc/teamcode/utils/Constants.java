@@ -104,10 +104,10 @@ public class Constants {
     //                    LAUNCHER CONSTANTS
 
     /** Idle flywheel power - keeps motor warm for faster spin-up */
-    public static final double LAUNCHER_IDLE_POWER = -0.3;
+    public static final double LAUNCHER_IDLE_POWER = 0.3;
 
     /** Default launch power when no specific power is provided */
-    public static final double LAUNCHER_DEFAULT_POWER = -0.7;
+    public static final double LAUNCHER_DEFAULT_POWER = 0.7;
 
     /** RPM at which the flywheel is fast enough to start feeding */
     public static final double LAUNCHER_FEED_RPM = 150.0;
