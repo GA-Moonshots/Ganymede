@@ -11,6 +11,13 @@ import org.firstinspires.ftc.teamcode.utils.Constants;
 public class Turret extends SubsystemBase {
 
     // ============================================================
+    //                     POSITION CONSTANTS
+    // ============================================================
+
+    private static final double TURRET_FRONT_POSITION = 0.0;
+    private static final double TURRET_LEFT_POSITION  = 0.65;
+
+    // ============================================================
     //                     TURRET STATE ENUM
     // ============================================================
     /**
@@ -35,8 +42,7 @@ public class Turret extends SubsystemBase {
     public TouchSensor frontButton;
     public TouchSensor leftButton;
 
-    // Servos
-//    public CRServo spinServo;
+    // Servo
     public Servo spinServo;
 
     // State tracking - public for direct access from commands
@@ -51,8 +57,7 @@ public class Turret extends SubsystemBase {
 
         // Load motors from hardware map using Constants
         spinServo = robot.hardwareMap.get(Servo.class, Constants.TURRET_SERVO_NAME);
-//        frontButton = robot.hardwareMap.get(TouchSensor.class, Constants.FRONT_BUTTON_NAME);
-//        leftButton = robot.hardwareMap.get(TouchSensor.class, Constants.LEFT_BUTTON_NAME);
+
     }
 
     // ============================================================
@@ -63,8 +68,20 @@ public class Turret extends SubsystemBase {
     public void periodic(){
         robot.sensors.addTelemetry("Turret State", state.toString());
         robot.sensors.addTelemetry("Spin Servo Positio,", String.valueOf(spinServo.getPosition()));
-//        robot.sensors.addTelemetry("Left Button", String.valueOf(leftButton.isPressed()));
-//        robot.sensors.addTelemetry("Front Button", String.valueOf(frontButton.isPressed()));
+    }
+
+    // ============================================================
+    //                      POSITION HELPERS
+    // ============================================================
+
+    public void rotateToFront() {
+        spinServo.setPosition(TURRET_FRONT_POSITION);
+        state = TurretState.FRONT;
+    }
+
+    public void rotateToLeft() {
+        spinServo.setPosition(TURRET_LEFT_POSITION);
+        state = TurretState.LEFT;
     }
 
 }
