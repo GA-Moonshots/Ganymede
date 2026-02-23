@@ -70,9 +70,9 @@ public class TurretRotate extends CommandBase {
     @Override
     public boolean isFinished() {
         // Check which sensor should stop the rotation
-        if (targetState == TurretState.LEFT) {
+        if (targetState == TurretState.LEFT) {    // set to ther value of the servo
             return turret.spinServo.getPosition() == 0.8;
-        } else if (targetState == TurretState.FRONT) {
+        } else if (targetState == TurretState.FRONT) { // set to the  value of front
             return turret.spinServo.getPosition() == 0;
         }
         // Safety: shouldn't reach here, but stop if target is MOVING
