@@ -56,14 +56,14 @@ public class LauncherRPM extends CommandBase {
         ballOutputted = false;
         readyToLaunch = false;
 
-        // determine the correct feeder
+        // determine the correct feeder and power orientation (green feeds negative)
         if(robot.turret.state == Turret.TurretState.LEFT) {
             feeder = robot.launcher.greenFeeder;
             runFeeder = -1; // to be reversed because of gearing
         }
         else {
             feeder = robot.launcher.purpleFeeder;
-            runFeeder = 1; // reversed because of gearing
+            runFeeder = 1; 
         }
 
         timer.start();

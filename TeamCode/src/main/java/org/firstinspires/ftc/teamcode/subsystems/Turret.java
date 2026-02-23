@@ -38,10 +38,6 @@ public class Turret extends SubsystemBase {
 
     private Ganymede robot;
 
-    // Sensors unique to this subsystem
-    public TouchSensor frontButton;
-    public TouchSensor leftButton;
-
     // Servo
     public Servo spinServo;
 

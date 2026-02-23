@@ -134,6 +134,8 @@ public class Ganymede extends Robot {
         // Set default commands
         drive.setDefaultCommand(new Drive(this));
         launcher.setDefaultCommand(new LauncherIdle(this));
+        // start with turret in the front position
+        turret.rotateToFront();
 
         /*
                 .__                                      ____
@@ -243,6 +245,9 @@ public class Ganymede extends Robot {
         intake = new Intake(this);
         register(drive, sensors, launcher, turret, intake);
 
+        // we always start with the turret facing front
+        turret.rotateToFront();
+
         drive.update(); // make sure we update our localization before we start moving
 
         // ════════════════════════════════════════════════════════
@@ -339,7 +344,6 @@ public class Ganymede extends Robot {
             );
 
             // After setup, check robot.motif and execute appropriate shooting sequence
-            // TODO: Check if the Auto angles here is good me kinda guessing
             setup.andThen(new InstantCommand(() -> {
                 // MOTIF: GREEN - PURPLE - PURPLE
                 if (motif.equals("GPP")) {
