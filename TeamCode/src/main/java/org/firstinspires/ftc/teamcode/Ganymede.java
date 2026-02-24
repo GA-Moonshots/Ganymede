@@ -57,8 +57,8 @@ public class Ganymede extends Robot {
 
     // Pedro Pathing specific
     public Pose startPose;
-    private final double RED_AUTO_TURN = 100;
-    private final double BLUE_AUTO_TURN = 115;
+    private final double RED_AUTO_TURN = 90;
+    private final double BLUE_AUTO_TURN = 90;
 
     /**
      * TELEOP MODE [--Constructor--]

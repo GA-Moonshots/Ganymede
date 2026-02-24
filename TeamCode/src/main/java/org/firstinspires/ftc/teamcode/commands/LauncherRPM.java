@@ -87,7 +87,7 @@ public class LauncherRPM extends CommandBase {
         }
 
         // RPM drop after feeding indicates ball has been launched
-        if (currentSpeed <= Constants.LAUNCHER_LAUNCHED_RPM && readyToLaunch) {
+        if (currentSpeed <= (Constants.LAUNCHER_FEED_RPM*0.8) && readyToLaunch) {
             feeder.setPower(0);
             ballOutputted = true;
         }

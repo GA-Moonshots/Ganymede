@@ -14,8 +14,8 @@ public class Turret extends SubsystemBase {
     //                     POSITION CONSTANTS
     // ============================================================
 
-    private static final double TURRET_FRONT_POSITION = 0.0;
-    private static final double TURRET_LEFT_POSITION  = 0.65;
+    private static final double TURRET_FRONT_POSITION = 0.0; // change values ??
+    private static final double TURRET_LEFT_POSITION  = 0.6;
 
     // ============================================================
     //                     TURRET STATE ENUM
