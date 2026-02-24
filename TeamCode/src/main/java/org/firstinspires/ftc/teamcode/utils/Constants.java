@@ -113,7 +113,7 @@ public class Constants {
     public static final double LAUNCHER_FEED_RPM = 150.0;
 
     /** Safety timeout for RPM-based launch (seconds) */
-    public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 10.0;
+    public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 7.0;
 
     /** Duration each feeder pulse runs (ms) — short enough to push one ball */
     public static final long LAUNCHER_PULSE_ON_MS = 150;
