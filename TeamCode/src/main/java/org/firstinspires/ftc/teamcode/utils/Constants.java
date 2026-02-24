@@ -115,6 +115,15 @@ public class Constants {
     /** Safety timeout for RPM-based launch (seconds) */
     public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 10.0;
 
+    /** Duration each feeder pulse runs (ms) — short enough to push one ball */
+    public static final long LAUNCHER_PULSE_ON_MS = 150;
+
+    /** Observation gap after each pulse — flywheel tells us if a ball went through */
+    public static final long LAUNCHER_PULSE_OFF_MS = 150;
+
+    /** Max feed attempts before giving up (safety fallback, not the primary stop) */
+    public static final int LAUNCHER_MAX_PULSES = 6;
+
     // ============================================================
     //                    SENSOR MAPPINGS
 

@@ -16,19 +16,25 @@ import java.util.concurrent.TimeUnit;
 /**
  * RPM-based launcher command.
  * Spins the flywheel up to launch power, waits until RPM reaches the feed
- * threshold, feeds the ball, then detects the launch by the RPM drop.
+ * threshold, then feeds the ball in short pulses. After each pulse the feeder
+ * stops and the command checks for an RPM drop — confirming the ball passed
+ * through. This prevents double-fires and avoids burning the full timeout when
+ * back-to-back shots are needed in autonomous.
  */
 public class LauncherRPM extends CommandBase {
     private Ganymede robot;
     private Launcher launcher;
     private CRServo feeder;
     private Timing.Timer timer;
+    private Timing.Timer pulseTimer;
 
     int runFeeder;
     double launcherSpeed;
 
+    private enum FeedState { SPINNING_UP, PULSE_ON, PULSE_OFF, DONE }
+    private FeedState feedState;
+    private int pulseCount;
     private boolean ballOutputted;
-    private boolean readyToLaunch;
 
     public LauncherRPM(Ganymede robot, double launcherSpeed) {
         this.robot = robot;
@@ -54,16 +60,16 @@ public class LauncherRPM extends CommandBase {
     public void initialize() {
         super.initialize();
         ballOutputted = false;
-        readyToLaunch = false;
+        feedState = FeedState.SPINNING_UP;
+        pulseCount = 0;
 
-        // determine the correct feeder and power orientation (green feeds negative)
-        if(robot.turret.state == Turret.TurretState.LEFT) {
+        // Determine the correct feeder and power orientation (green feeds negative)
+        if (robot.turret.state == Turret.TurretState.LEFT) {
             feeder = robot.launcher.greenFeeder;
-            runFeeder = -1; // to be reversed because of gearing
-        }
-        else {
+            runFeeder = -1; // reversed because of gearing
+        } else {
             feeder = robot.launcher.purpleFeeder;
-            runFeeder = 1; 
+            runFeeder = 1;
         }
 
         timer.start();
@@ -79,17 +85,57 @@ public class LauncherRPM extends CommandBase {
 
         double activeCurrent = launcher.launcher.getCurrent(CurrentUnit.AMPS);
         robot.sensors.addTelemetry("Motor Current (A): ", String.valueOf(activeCurrent));
+        robot.sensors.addTelemetry("Feed State", feedState.name());
+        robot.sensors.addTelemetry("Pulse Count", String.valueOf(pulseCount));
 
-        // Start feeding once flywheel reaches target RPM
-        if(currentSpeed >= Constants.LAUNCHER_FEED_RPM) {
-            feeder.setPower(runFeeder);
-            readyToLaunch = true;
-        }
+        double dropThreshold = Constants.LAUNCHER_FEED_RPM * 0.8;
 
-        // RPM drop after feeding indicates ball has been launched
-        if (currentSpeed <= (Constants.LAUNCHER_FEED_RPM*0.8) && readyToLaunch) {
-            feeder.setPower(0);
-            ballOutputted = true;
+        switch (feedState) {
+            case SPINNING_UP:
+                if (currentSpeed >= Constants.LAUNCHER_FEED_RPM) {
+                    pulseTimer = new Timing.Timer(Constants.LAUNCHER_PULSE_ON_MS, TimeUnit.MILLISECONDS);
+                    pulseTimer.start();
+                    feedState = FeedState.PULSE_ON;
+                }
+                break;
+
+            case PULSE_ON:
+                feeder.setPower(runFeeder);
+                if (currentSpeed <= dropThreshold) {
+                    // RPM drop caught mid-pulse — ball is through
+                    feeder.setPower(0);
+                    feedState = FeedState.DONE;
+                } else if (pulseTimer.done()) {
+                    // Pulse window elapsed; open observation gap
+                    feeder.setPower(0);
+                    pulseTimer = new Timing.Timer(Constants.LAUNCHER_PULSE_OFF_MS, TimeUnit.MILLISECONDS);
+                    pulseTimer.start();
+                    feedState = FeedState.PULSE_OFF;
+                }
+                break;
+
+            case PULSE_OFF:
+                feeder.setPower(0);
+                if (currentSpeed <= dropThreshold) {
+                    // RPM drop caught in the observation gap — ball confirmed through
+                    feedState = FeedState.DONE;
+                } else if (pulseTimer.done()) {
+                    // RPM recovered — ball didn't go through this pulse, try again
+                    pulseCount++;
+                    if (pulseCount >= Constants.LAUNCHER_MAX_PULSES) {
+                        feedState = FeedState.DONE; // safety: gave up after max attempts
+                    } else {
+                        pulseTimer = new Timing.Timer(Constants.LAUNCHER_PULSE_ON_MS, TimeUnit.MILLISECONDS);
+                        pulseTimer.start();
+                        feedState = FeedState.PULSE_ON;
+                    }
+                }
+                break;
+
+            case DONE:
+                feeder.setPower(0);
+                ballOutputted = true;
+                break;
         }
     }
 
