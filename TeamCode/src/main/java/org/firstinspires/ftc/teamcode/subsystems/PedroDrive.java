@@ -427,9 +427,8 @@ public class PedroDrive extends SubsystemBase {
         robot.sensors.addTelemetry("═══ Position ═══", "");
         robot.sensors.addTelemetry("Position", "X:%.1f\" Y:%.1f\"",
                 currentPose.getX(), currentPose.getY());
-        robot.sensors.addTelemetry("Heading", "Pedro:%.1f° IMU:%.1f°",
-                Math.toDegrees(currentPose.getHeading()),
-                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        robot.sensors.addTelemetry("Heading", "%.1f°",
+                Math.toDegrees(currentPose.getHeading()));
         robot.sensors.addTelemetry("Dist to Goal (in)", "%.1f", getDistanceToGoal());
     }
 

@@ -59,8 +59,6 @@ public class Intake extends SubsystemBase {
     @Override
 
     public void periodic(){
-        robot.sensors.addTelemetry("isGreen", String.valueOf(robot.sensors.isGreen()));
-
         if (robot.sensors.isGreen()) {
             stopperG.setPosition(0);
             stopperP.setPosition(0.5);

@@ -30,6 +30,7 @@ public class Launcher extends SubsystemBase {
     @Override
     public void periodic() {
         double currentRPM = launcher.getVelocity(AngleUnit.DEGREES) / 6.0;
+        robot.sensors.addTelemetry("═══ Launcher ═══", "");
         robot.sensors.addTelemetry("Flywheel RPM", String.format("%.0f", currentRPM));
     }
 
