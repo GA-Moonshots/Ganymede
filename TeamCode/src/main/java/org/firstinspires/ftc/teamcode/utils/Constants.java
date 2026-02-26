@@ -140,11 +140,13 @@ public class Constants {
      *   Motor power varies with battery voltage — RPM control uses the
      *   motor's built-in velocity PID to hit the same speed every time.
      */
+    // Motor max is ~200 RPM — all target values must stay at or below this.
+    // LAUNCHER_FEED_RPM (150) is the floor; useful calibration range is ~150–200.
     public static final double[][] LAUNCHER_RPM_TABLE = {
-        {  40.0,  350.0 },   // ~41 in  (Blue NEAR auto position)   ← tune
-        {  80.0,  500.0 },   // mid-range                           ← tune
-        { 120.0,  700.0 },   // ~119 in (Red NEAR auto position)    ← tune
-        { 145.0,  900.0 },   // far range                           ← tune
+        {  40.0,  160.0 },   // ~41 in  (Blue NEAR shooting position)   ← tune
+        {  80.0,  175.0 },   // ~80 in  mid-range                       ← tune
+        { 120.0,  190.0 },   // ~119 in (Red NEAR shooting position)    ← tune
+        { 145.0,  200.0 },   // ~145 in far-goal range (motor max)      ← tune
     };
 
     /**
