@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/utils/old/PedroAutoSample.java
 package org.firstinspires.ftc.teamcode.utils.old;
+========
+package org.firstinspires.ftc.teamcode.samples;
+>>>>>>>> upstream/master:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/samples/PedroAutoSample.java
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -9,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
@@ -114,8 +119,8 @@ public class PedroAutoSample extends CommandOpMode {
         follower.setStartingPose(startPose);
         buildPaths();
 
-        // Create the autonomous command sequence
-        SequentialCommandGroup autonomousSequence = new SequentialCommandGroup(
+        // Schedule the autonomous sequence
+        schedule(
                 // Score preload
                 new FollowPathCommand(follower, scorePreload),
                 openOuttakeClaw(),
@@ -123,7 +128,7 @@ public class PedroAutoSample extends CommandOpMode {
 
                 // First pickup cycle
                 new FollowPathCommand(follower, grabPickup1).setGlobalMaxPower(0.5), // Sets globalMaxPower to 50% for all future paths
-                                                                                     // (unless a custom maxPower is given)
+                // (unless a custom maxPower is given)
                 grabSample(),
                 new FollowPathCommand(follower, scorePickup1),
                 scoreSample(),
@@ -144,14 +149,12 @@ public class PedroAutoSample extends CommandOpMode {
                 new FollowPathCommand(follower, park, false), // park with holdEnd false
                 level1Ascent()
         );
-
-        // Schedule the autonomous sequence
-        schedule(autonomousSequence);
     }
 
     @Override
     public void run() {
         super.run();
+        follower.update();
 
         telemetryData.addData("X", follower.getPose().getX());
         telemetryData.addData("Y", follower.getPose().getY());
