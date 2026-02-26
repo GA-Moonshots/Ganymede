@@ -31,6 +31,10 @@ public class LauncherRPM extends CommandBase {
     int runFeeder;
     double launcherSpeed;
 
+    // When > 0, the motor runs in velocity PID mode targeting this exact RPM.
+    // When -1, falls back to raw power (setPower) using launcherSpeed.
+    double targetRPM = -1;
+
     private enum FeedState { SPINNING_UP, PULSE_ON, PULSE_OFF, DONE }
     private FeedState feedState;
     private int pulseCount;
@@ -50,6 +54,36 @@ public class LauncherRPM extends CommandBase {
         this.robot = robot;
         this.launcher = this.robot.launcher;
         this.launcherSpeed = Constants.LAUNCHER_DEFAULT_POWER;
+        this.timer = new Timing.Timer(
+                (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
+
+        addRequirements(launcher);
+    }
+
+    /**
+     * Dynamic constructor — automatically calculates the correct flywheel RPM
+     * based on how far the robot currently is from the goal.
+     *
+     * Why RPM instead of power?
+     *   Motor power (0.0–1.0) varies with battery voltage, so the same power
+     *   setting fires faster or slower depending on battery charge. Using
+     *   setVelocity() lets the motor's built-in PID maintain a consistent RPM.
+     *
+     * @param robot   the main robot object (provides pose + alliance info)
+     * @param dynamic pass true to enable distance-based RPM; false = default power
+     */
+    public LauncherRPM(Ganymede robot, boolean dynamic) {
+        this.robot = robot;
+        this.launcher = this.robot.launcher;
+        if (dynamic) {
+            // Ask PedroDrive for the distance — single source of truth, matches telemetry
+            double dist = robot.drive.getDistanceToGoal();
+            // Look up the target RPM in the calibration table (Constants.LAUNCHER_RPM_TABLE)
+            this.targetRPM = Constants.distanceToRPM(dist);
+            this.launcherSpeed = -1; // unused in velocity mode
+        } else {
+            this.launcherSpeed = Constants.LAUNCHER_DEFAULT_POWER;
+        }
         this.timer = new Timing.Timer(
                 (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
 
@@ -77,7 +111,15 @@ public class LauncherRPM extends CommandBase {
 
     @Override
     public void execute() {
-        launcher.launcher.setPower(launcherSpeed);
+        // Velocity mode: motor PID holds the exact RPM regardless of battery level.
+        // Power mode: raw 0.0–1.0 — simpler but drifts as battery drains.
+        if (targetRPM > 0) {
+            // RPM → deg/s conversion: 1 RPM = 6 deg/s (since 360°/60s = 6 deg/s per RPM)
+            launcher.launcher.setVelocity(targetRPM * 6, AngleUnit.DEGREES);
+            robot.sensors.addTelemetry("Target RPM", String.format("%.0f", targetRPM));
+        } else {
+            launcher.launcher.setPower(launcherSpeed);
+        }
 
         // Conversion from deg/s to rpm
         double currentSpeed = Math.abs(launcher.launcher.getVelocity(AngleUnit.DEGREES)) / 6;
@@ -88,11 +130,15 @@ public class LauncherRPM extends CommandBase {
         robot.sensors.addTelemetry("Feed State", feedState.name());
         robot.sensors.addTelemetry("Pulse Count", String.valueOf(pulseCount));
 
-        double dropThreshold = Constants.LAUNCHER_FEED_RPM * 0.8;
+        // Thresholds scale with target RPM in velocity mode so the spin-up
+        // wait and ball-detection drop are proportional to the actual speed target.
+        // In power mode we fall back to the fixed constant.
+        double feedReadyRPM  = targetRPM > 0 ? targetRPM * 0.9 : Constants.LAUNCHER_FEED_RPM;
+        double dropThreshold = targetRPM > 0 ? targetRPM * 0.8 : Constants.LAUNCHER_FEED_RPM * 0.8;
 
         switch (feedState) {
             case SPINNING_UP:
-                if (currentSpeed >= Constants.LAUNCHER_FEED_RPM) {
+                if (currentSpeed >= feedReadyRPM) {  // wait until flywheel is up to speed
                     pulseTimer = new Timing.Timer(Constants.LAUNCHER_PULSE_ON_MS, TimeUnit.MILLISECONDS);
                     pulseTimer.start();
                     feedState = FeedState.PULSE_ON;

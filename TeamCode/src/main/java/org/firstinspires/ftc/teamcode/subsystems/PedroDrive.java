@@ -430,10 +430,23 @@ public class PedroDrive extends SubsystemBase {
         robot.sensors.addTelemetry("Heading", "Pedro:%.1f° IMU:%.1f°",
                 Math.toDegrees(currentPose.getHeading()),
                 imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        robot.sensors.addTelemetry("Dist to Goal (in)", "%.1f", getDistanceToGoal());
     }
 
     // ============================================================
     //                    GETTERS AND SETTERS
+
+    /**
+     * Returns the straight-line distance (inches) from the robot's current pose
+     * to the alliance scoring goal. Uses robot.isRed to select the correct target.
+     * This is the single source of truth — telemetry and LauncherRPM both call this.
+     */
+    public double getDistanceToGoal() {
+        Pose current = getPose();
+        double targetX = robot.isRed ? Constants.RED_TARGET_X : Constants.BLUE_TARGET_X;
+        double targetY = robot.isRed ? Constants.RED_TARGET_Y : Constants.BLUE_TARGET_Y;
+        return Math.hypot(targetX - current.getX(), targetY - current.getY());
+    }
 
     /**
      * @return Current field-centric mode state

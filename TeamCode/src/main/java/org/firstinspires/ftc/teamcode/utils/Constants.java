@@ -124,6 +124,55 @@ public class Constants {
     /** Max feed attempts before giving up (safety fallback, not the primary stop) */
     public static final int LAUNCHER_MAX_PULSES = 6;
 
+    /**
+     * Distance-to-RPM calibration table.
+     *
+     * Each row is { distanceInches, targetRPM }.
+     * The table must be sorted by distance (ascending).
+     *
+     * HOW TO FILL THIS IN:
+     *   1. Run TeleOp — telemetry shows "Dist to Goal (in)" live.
+     *   2. Position the robot at each distance.
+     *   3. Fire shots at various RPMs and observe which ones land.
+     *   4. Update the RPM values below with what actually worked.
+     *
+     * WHY RPM AND NOT POWER?
+     *   Motor power varies with battery voltage — RPM control uses the
+     *   motor's built-in velocity PID to hit the same speed every time.
+     */
+    public static final double[][] LAUNCHER_RPM_TABLE = {
+        {  40.0,  350.0 },   // ~41 in  (Blue NEAR auto position)   ← tune
+        {  80.0,  500.0 },   // mid-range                           ← tune
+        { 120.0,  700.0 },   // ~119 in (Red NEAR auto position)    ← tune
+        { 145.0,  900.0 },   // far range                           ← tune
+    };
+
+    /**
+     * Given a distance (inches), returns the target flywheel RPM by linearly
+     * interpolating between the two nearest entries in LAUNCHER_RPM_TABLE.
+     *
+     * Linear interpolation: if dist is halfway between two table entries,
+     * the returned RPM is halfway between their RPM values.
+     */
+    public static double distanceToRPM(double distanceInches) {
+        double[][] t = LAUNCHER_RPM_TABLE;
+
+        // Clamp to table bounds — don't extrapolate beyond tested range
+        if (distanceInches <= t[0][0])          return t[0][1];
+        if (distanceInches >= t[t.length-1][0]) return t[t.length-1][1];
+
+        // Find the two surrounding entries and interpolate between them
+        for (int i = 0; i < t.length - 1; i++) {
+            if (distanceInches <= t[i+1][0]) {
+                // frac = how far between entry i and entry i+1 we are (0.0 to 1.0)
+                double frac = (distanceInches - t[i][0]) / (t[i+1][0] - t[i][0]);
+                return t[i][1] + frac * (t[i+1][1] - t[i][1]);
+            }
+        }
+
+        return LAUNCHER_FEED_RPM; // fallback — should never reach here
+    }
+
     // ============================================================
     //                    SENSOR MAPPINGS
 
