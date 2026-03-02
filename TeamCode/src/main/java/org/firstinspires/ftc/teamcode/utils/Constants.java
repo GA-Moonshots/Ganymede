@@ -113,7 +113,7 @@ public class Constants {
     public static final double LAUNCHER_FEED_RPM = 150.0;
 
     /** Safety timeout for RPM-based launch (seconds) */
-    public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 7.0;
+    public static final double LAUNCHER_RPM_TIMEOUT_SECONDS = 9.0;
 
     /** Duration each feeder pulse runs (ms) — short enough to push one ball */
     public static final long LAUNCHER_PULSE_ON_MS = 150;
@@ -204,27 +204,28 @@ public class Constants {
 
             /** Tune with: Automatic → Forward Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-zero-power-acceleration
-            .forwardZeroPowerAcceleration(-47.192998)
+            .forwardZeroPowerAcceleration(-49.49417)
             /** Tune with: Automatic → Lateral Zero Power Acceleration */
             // https://pedropathing.com/docs/pathing/tuning/automatic#lateral-zero-power-acceleration
-            .lateralZeroPowerAcceleration(-88.721913)
+            .lateralZeroPowerAcceleration(-96.90029)
 
             /** Tune with: Manual → Translational - push sideways, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/translational
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.08, 0, 0.003, 0.03))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.08, 0, 0.005, 0.035))
             //.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.095, 0, 0.01, 0.03))
 
             /** Tune with: Manual → Heading - rotate robot, adjust until smooth return */
             // https://pedropathing.com/docs/pathing/tuning/pids/heading
-            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.02, 0.05))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.9, 0, 0.02, 0.03))
 
             /** Tune with: Manual → Drive (optional) - only after other PIDs work */
             // https://pedropathing.com/docs/pathing/tuning/pids/drive
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.001, 0, 0.0, 13, 0.5))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.003, 0, 0.0001, 0, 0.3))
 
             /** Tune with: Manual → Centripetal - run circles, typical: 0.001-0.01 */
             // https://pedropathing.com/docs/pathing/tuning/pids/centripetal
-            .centripetalScaling(0.0001);
+            .centripetalScaling(0.0005
+            );
 
     // ============================================================
     //               MECANUM DRIVETRAIN CONSTANTS
@@ -232,9 +233,9 @@ public class Constants {
     public static MecanumConstants mecanumConstants = new MecanumConstants()
             /** Tune with: Automatic → Forward Velocity  */
             // https://pedropathing.com/docs/pathing/tuning/automatic#forward-velocity-tuner
-            .xVelocity(69.96109)
+            .xVelocity(62.72988)
             /** Tune with: Automatic → Lateral Velocity */
-            .yVelocity(54.53147)
+            .yVelocity(49.42162)
             .maxPower(MAX_DRIVE_POWER)
             .rightRearMotorName(RIGHT_BACK_NAME)
             .rightFrontMotorName(RIGHT_FRONT_NAME)
