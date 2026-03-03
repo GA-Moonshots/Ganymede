@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.seattlesolvers.solverslib.command.CommandBase;
@@ -44,7 +45,7 @@ public class DriveToPose extends DriveAbstract {
         double currentHeading = drive.getNormalizedHeading();
 
         PathBuilder builder = new PathBuilder(robot.drive.follower)
-                .addPath(new BezierCurve(currentPose, targetPose))
+                .addPath(new BezierLine(currentPose, targetPose))
                 .setConstantHeadingInterpolation(targetPose.getHeading());
         follower.followPath(builder.build());
 

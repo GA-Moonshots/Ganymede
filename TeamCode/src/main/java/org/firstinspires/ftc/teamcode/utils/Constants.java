@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,6 +16,7 @@ import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 public class Constants {
 
@@ -90,6 +92,14 @@ public class Constants {
     /** Red alliance scoring target  */
     public static final double RED_TARGET_X = 207;
     public static final double RED_TARGET_Y = 123;
+
+    public static final Pose FIRST_RED_BALL_SET = new Pose(41.8, 84.4, Math.toRadians(-178.1));
+    public static final Pose SECOND_RED_BALL_SET = new Pose(41.8, 60.2, Math.toRadians(-178.1));
+    public static final Pose THIRD_RED_BALL_SET = new Pose(41.8, 34.5, Math.toRadians(-178.1));
+
+    public static final Pose FIRST_BLUE_BALL_SET = new Pose(103.9, 84.5, Math.toRadians(-0.9));
+    public static final Pose SECOND_BLUE_BALL_SET = new Pose(103.9, 59.5, Math.toRadians(-0.9));
+    public static final Pose THIRD_BLUE_BALL_SET = new Pose(103.9, 36.3, Math.toRadians(-0.9));
 
     /**
      * Launcher heading offset in degrees
