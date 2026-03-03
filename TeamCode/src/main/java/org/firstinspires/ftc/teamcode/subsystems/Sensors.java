@@ -26,10 +26,7 @@ public class Sensors extends SubsystemBase {
     private Telemetry telemetry;
     private TelemetryManager telemetryM;
     private Ganymede robot;
-    private Limelight3A limelight;
-    private boolean limelightInitialized = false;
-    private boolean limelightReady = false;
-    private int warmupCyclesRemaining = 0;
+    private Limelight3A limelight;  // null means unavailable
 
     public RevColorSensorV3 colorSensor;
 
@@ -42,15 +39,6 @@ public class Sensors extends SubsystemBase {
     private static final float MIN_VALUE = 0.15f;
     private static final float GREEN_RATIO_THRESHOLD = 1.3f;
     private static final float COLOR_SENSOR_GAIN = 2.0f;
-
-    // ============================================================
-    //              LIMELIGHT WARMUP SETTINGS
-    // ============================================================
-    /**
-     * Reduced warmup period - cable was the real issue!
-     * ~200ms at 50Hz periodic rate
-     */
-    private static final int WARMUP_CYCLES = 10;
 
     // ============================================================
     //              BALL COLOR ENUM
@@ -72,34 +60,14 @@ public class Sensors extends SubsystemBase {
         colorSensor = robot.hardwareMap.get(RevColorSensorV3.class, Constants.COLOR_SENSOR);
         colorSensor.setGain(COLOR_SENSOR_GAIN);
 
-        initializeLimelight();
-    }
-
-    // ============================================================
-    //              LIMELIGHT INITIALIZATION
-    // ============================================================
-    /**
-     * Initializes Limelight with minimal blocking.
-     * Actual readiness is determined over time in periodic().
-     */
-    private void initializeLimelight() {
         try {
             limelight = robot.hardwareMap.get(Limelight3A.class, Constants.LIMELIGHT_NAME);
-
             limelight.setPollRateHz(30);
             limelight.start();
             limelight.pipelineSwitch(0);  // AprilTag pipeline
-
-            limelightInitialized = true;
-            warmupCyclesRemaining = WARMUP_CYCLES;
-
-            addTelemetry("Limelight", "Initializing...");
-
         } catch (Exception e) {
-            limelightInitialized = false;
-            limelightReady = false;
-            addTelemetry("Limelight Error", e.getMessage());
-            addTelemetry("Limelight", "⚠ Disabled - using manual motif");
+            limelight = null;
+            addTelemetry("Limelight", "OFFLINE: " + e.getMessage());
         }
     }
 
@@ -108,87 +76,18 @@ public class Sensors extends SubsystemBase {
     // ============================================================
     /**
      * Passively scans for obelisk AprilTags (IDs 21, 22, 23).
-     * Only runs after brief Limelight warmup period.
      * @param result Current Limelight result from this cycle
      */
     private void scanForMotif(LLResult result) {
-        // Don't scan if already detected
-        if (!robot.motif.isEmpty()) {
-            return;
-        }
+        if (!robot.motif.isEmpty() || result == null || !result.isValid()) return;
 
-        // Don't scan if Limelight not ready
-        if (!limelightReady) {
-            return;
-        }
-
-        if (result == null || !result.isValid()) {
-            addTelemetry("Scan", "Invalid result");
-            return;
-        }
-
-        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
-
-        if (fiducials.isEmpty()) {
-            addTelemetry("Scan", "No tags visible");
-            return;
-        }
-
-        addTelemetry("Scan", "Checking %d tag(s)", fiducials.size());
-
-        // Search for obelisk tags (IDs 21, 22, 23)
-        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-            int tagId = fiducial.getFiducialId();
-
-            addTelemetry("Scan", "Found Tag %d", tagId);
-
-            switch (tagId) {
-                case 21:
-                    robot.motif = "GPP";
-                    addTelemetry("MOTIF LOCKED", "✓ GPP (Tag 21)");
-                    return;
-                case 22:
-                    robot.motif = "PGP";
-                    addTelemetry("MOTIF LOCKED", "✓ PGP (Tag 22)");
-                    return;
-                case 23:
-                    robot.motif = "PPG";
-                    addTelemetry("MOTIF LOCKED", "✓ PPG (Tag 23)");
-                    return;
+        for (LLResultTypes.FiducialResult fiducial : result.getFiducialResults()) {
+            switch (fiducial.getFiducialId()) {
+                case 21: robot.motif = "GPP"; return;
+                case 22: robot.motif = "PGP"; return;
+                case 23: robot.motif = "PPG"; return;
             }
         }
-    }
-
-    /**
-     * Adds AprilTag telemetry for debugging.
-     * Only runs after Limelight is ready.
-     * @param result Current Limelight result from this cycle
-     */
-    private void addAprilTagTelemetry(LLResult result) {
-        if (!limelightReady) {
-            return;
-        }
-
-        if (result == null || !result.isValid()) {
-            return;
-        }
-
-        List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
-
-        if (tags.isEmpty()) {
-            addTelemetry("AprilTags", "None");
-            return;
-        }
-
-        addTelemetry("AprilTags", "%d detected", tags.size());
-
-        // Show detected tag IDs
-        StringBuilder tagIds = new StringBuilder();
-        for (LLResultTypes.FiducialResult tag : tags) {
-            if (tagIds.length() > 0) tagIds.append(", ");
-            tagIds.append(tag.getFiducialId());
-        }
-        addTelemetry("Tag IDs", tagIds.toString());
     }
 
     // ============================================================
@@ -196,73 +95,27 @@ public class Sensors extends SubsystemBase {
     // ============================================================
     @Override
     public void periodic() {
-        // ============================================================
-        //              LIMELIGHT WARMUP MANAGEMENT
-        // ============================================================
-        if (limelightInitialized && limelight != null && !limelightReady) {
-            LLResult r = limelight.getLatestResult();
-
-            // "Ready" means: we are receiving updates recently AND the result is valid
-            if (limelight.isConnected() && r != null && r.isValid()) {
-                limelightReady = true;
-                addTelemetry("Limelight", "✓ Ready (valid results)");
-            } else {
-                addTelemetry("Limelight", "Warming... conn=%s valid=%s age=%dms",
-                        limelight.isConnected(),
-                        (r != null && r.isValid()),
-                        limelight.getTimeSinceLastUpdate());
-            }
-        }
-
-
-        // ============================================================
-        //              LIMELIGHT DATA RETRIEVAL
-        // ============================================================
-        LLResult currentResult = null;
-        if (limelightInitialized && limelight != null) {
+        LLResult result = null;
+        if (limelight != null) {
             try {
-                currentResult = limelight.getLatestResult();
+                result = limelight.getLatestResult();
+                addTelemetry("Limelight", "conn=%s valid=%s age=%dms",
+                        limelight.isConnected(),
+                        result != null && result.isValid(),
+                        limelight.getTimeSinceLastUpdate());
             } catch (Exception e) {
-                limelightInitialized = false;
-                limelightReady = false;
-                addTelemetry("Limelight", "⚠ Lost connection");
+                limelight = null;
+                addTelemetry("Limelight", "Lost connection");
             }
         }
 
-        if (limelightInitialized && limelight != null) {
-            addTelemetry("LL ConnInfo", limelight.getConnectionInfo());
-            addTelemetry("LL Status", "conn=%s age=%dms valid=%s",
-                    limelight.isConnected(),
-                    limelight.getTimeSinceLastUpdate(),
-                    (currentResult != null && currentResult.isValid()));
-        }
-
-        // ============================================================
-        //              SENSOR DATA PROCESSING
-        // ============================================================
-
-        // PASSIVE MOTIF SCANNING (only after warmup)
-        scanForMotif(currentResult);
-
-        // Color sensor telemetry
+        scanForMotif(result);
         addColorTelemetry();
 
-        // Limelight telemetry (only if ready)
-        if (limelightReady) {
-            addAprilTagTelemetry(currentResult);
-        }
-
-        // Motif status
-        if (robot.motif.isEmpty()) {
-            if (!limelightInitialized) {
-                addTelemetry("Motif", "Manual - LL offline");
-            } else if (!limelightReady) {
-                addTelemetry("Motif", "Warming up...");
-            } else {
-                addTelemetry("Motif", "Scanning...");
-            }
-        } else {
+        if (!robot.motif.isEmpty()) {
             addTelemetry("Motif", robot.motif);
+        } else {
+            addTelemetry("Motif", limelight == null ? "Manual" : "Scanning...");
         }
 
         // !!! THIS SHOULD BE THE ONLY TELEMETRY UPDATE IN THE WHOLE PROJECT !!
@@ -282,14 +135,7 @@ public class Sensors extends SubsystemBase {
     }
 
     private void addColorTelemetry() {
-        NormalizedRGBA sample = colorSensor.getNormalizedColors();
-        BallColor detectedColor = detectBallColor();
-
-        addTelemetry("Ball Color", detectedColor.toString());
-
-        if (detectedColor != BallColor.NONE) {
-            addTelemetry("Color Alpha", "%.2f", sample.alpha);
-        }
+        addTelemetry("Ball Color", detectBallColor().toString());
     }
 
     // ============================================================
