@@ -32,7 +32,7 @@ public class DriveRotate extends DriveAbstract {
      * Creates a command to rotate the robot by a specified angle.
      *
      * @param robot Main robot object containing all subsystems
-     * @param rotationDegrees Angle to rotate in degrees
+     * @param rotationDegrees Angle (in degrees) to add to current heading
      *                        Positive = counter-clockwise (left)
      *                        Negative = clockwise (right)
      * @param timeoutSeconds Safety timeout in seconds

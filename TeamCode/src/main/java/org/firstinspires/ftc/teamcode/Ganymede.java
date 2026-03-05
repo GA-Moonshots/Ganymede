@@ -12,8 +12,10 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.pedroCommand.TurnToCommand;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.commands.DriveToPark;
 import org.firstinspires.ftc.teamcode.commands.DriveToPose;
@@ -267,17 +269,19 @@ public class Ganymede extends Robot {
                 // MOTIF: GREEN - PURPLE - PURPLE
                 if (motif.equals("GPP")) {
                     new SequentialCommandGroup(
-                            new DriveRotate(this, 55, 2), // putting this here to aim first
+//                            new DriveRotate(this, 55, 2), // putting this here to aim first //used to be 55
+                            new TurnToCommand(this.drive.follower, 165, AngleUnit.DEGREES),
                             // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToLeft()),
-                                    new DriveRotate(this, BLUE_AUTO_TURN, 3)
+                                    new TurnToCommand(this.drive.follower, BLUE_AUTO_TURN, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Green
                             // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToFront()),
-                                    new DriveRotate(this, -270, 3)
+                                    // rotate clockwise 90 degrees
+                                    new TurnToCommand(this.drive.follower, 100, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Purple 1
                             new LauncherRPM(this),  // Purple 2
