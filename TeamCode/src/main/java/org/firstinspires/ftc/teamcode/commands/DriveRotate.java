@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 
 import org.firstinspires.ftc.teamcode.Ganymede;
 
@@ -52,15 +54,24 @@ public class DriveRotate extends DriveAbstract {
 
         Pose currentPose = drive.getPose();
 
-        // Get current heading in radians
-        double currentHeadingRad = currentPose.getHeading();
+        // Use the normalized heading (preferred over raw getPose().getHeading())
+        double currentHeadingRad = drive.getNormalizedHeading();
 
         // Convert rotation from degrees to radians, then add to current heading
         double rotationRad = Math.toRadians(rotationDegrees);
         targetHeadingRad = normalizeAngle(currentHeadingRad + rotationRad);
 
-        // Use Pedro's built-in turnTo method - this is designed for pure rotation!
-        follower.turnTo(targetHeadingRad);
+        // Path-based in-place turn: followPath mode uses Pedro's full unscaled PID suite.
+        // turnTo() uses holdPoint() which applies holdPointHeadingScaling (designed for
+        // stationary settling, not active rotation) and fights translational drift mid-turn.
+        Pose targetPose = new Pose(
+                currentPose.getX() + 0.1 * Math.cos(currentHeadingRad),
+                currentPose.getY() + 0.1 * Math.sin(currentHeadingRad),
+                targetHeadingRad
+        );
+        Path turnPath = new Path(new BezierLine(currentPose, targetPose));
+        turnPath.setLinearHeadingInterpolation(currentHeadingRad, targetHeadingRad, 0.8);
+        follower.followPath(turnPath);
 
         // Debug telemetry
         robot.telemetry.addData("DriveRotate", "Initialized");
@@ -72,9 +83,7 @@ public class DriveRotate extends DriveAbstract {
 
     @Override
     public void execute() {
-        // Get current heading directly from pose
-        Pose currentPose = drive.getPose();
-        double currentHeading = normalizeAngle(currentPose.getHeading());
+        double currentHeading = drive.getNormalizedHeading();
         double targetHeading = normalizeAngle(targetHeadingRad);
 
         // Calculate heading error (shortest angular distance)

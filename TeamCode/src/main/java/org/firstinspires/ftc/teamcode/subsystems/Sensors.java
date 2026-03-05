@@ -96,17 +96,24 @@ public class Sensors extends SubsystemBase {
     @Override
     public void periodic() {
         LLResult result = null;
+        addTelemetry("═══ LIMELIGHT ═══", "");
         if (limelight != null) {
             try {
                 result = limelight.getLatestResult();
-                addTelemetry("Limelight", "conn=%s valid=%s age=%dms",
-                        limelight.isConnected(),
-                        result != null && result.isValid(),
-                        limelight.getTimeSinceLastUpdate());
+                boolean valid = result != null && result.isValid();
+                addTelemetry("LL Connected", String.valueOf(limelight.isConnected()));
+                addTelemetry("LL Result", valid
+                        ? String.format("valid | %d fiducials | age %dms",
+                                result.getFiducialResults().size(),
+                                limelight.getTimeSinceLastUpdate())
+                        : String.format("NO DATA | age %dms",
+                                limelight.getTimeSinceLastUpdate()));
             } catch (Exception e) {
                 limelight = null;
-                addTelemetry("Limelight", "Lost connection");
+                addTelemetry("LL Connected", "LOST");
             }
+        } else {
+            addTelemetry("LL Connected", "OFFLINE");
         }
 
         scanForMotif(result);
