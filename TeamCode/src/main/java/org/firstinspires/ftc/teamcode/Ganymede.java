@@ -352,13 +352,13 @@ public class Ganymede extends Robot {
                             // FIRE GREEN FIRST (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToLeft()),
-                                    new TurnToCommand(drive.follower, 90, AngleUnit.DEGREES)
+                                    new TurnToCommand(drive.follower, 45, AngleUnit.DEGREES) // used to be 90
                             ),
                             new LauncherRPM(this),  // Green
                             // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToFront()),
-                                    new TurnCommand(drive.follower, 90, false, AngleUnit.DEGREES)
+                                    new TurnCommand(drive.follower, 155, false, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Purple 1
                             new LauncherRPM(this),  // Purple 2
