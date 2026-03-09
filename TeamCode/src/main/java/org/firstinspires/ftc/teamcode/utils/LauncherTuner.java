@@ -43,8 +43,6 @@ public class LauncherTuner extends CommandOpMode {
     @Override
     public void initialize() {
         robot = new Ganymede(this);
-        telemetry.addData("Status", "Launcher Tuner ready  |  Y = fire");
-        telemetry.update();
     }
 
     @Override

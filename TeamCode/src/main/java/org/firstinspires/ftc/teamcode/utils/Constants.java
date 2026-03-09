@@ -156,7 +156,7 @@ public class Constants {
         {  40.0,  160.0 },   // ~41 in  (Blue NEAR shooting position)   ← tune
         {  80.0,  175.0 },   // ~80 in  mid-range                       ← tune
         { 120.0,  190.0 },   // ~119 in (Red NEAR shooting position)    ← tune
-        { 145.0,  200.0 },   // ~145 in far-goal range (motor max)      ← tune
+        { 145.0,  170.0 },   // ~145 in far-goal range (motor max)      ← tune
     };
 
     /**

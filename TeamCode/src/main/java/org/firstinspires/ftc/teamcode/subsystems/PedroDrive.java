@@ -61,7 +61,7 @@ public class PedroDrive extends SubsystemBase {
     /** Robot radius for drawing on field (in inches) */
     private static final double ROBOT_RADIUS = 9.0;
     /** Panels field manager for drawing */
-    private static FieldManager panelsField;
+    private FieldManager panelsField;
     private static final Style ROBOT_STYLE = new Style(
             "", "#4CAF50", 3.0  // Green - current position
     );
