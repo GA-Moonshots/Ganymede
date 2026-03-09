@@ -83,6 +83,5 @@ public class LauncherTuner extends CommandOpMode {
         telemetry.addData("Test RPM  [LB +5 | ↓ -5]", testRPM);
         telemetry.addData("Motor actual RPM",  "%.1f", actualRPM);
         telemetry.addData("interpRPM @ dist",  "%.1f  ← table would pick", interpRPM);
-        telemetry.update();
     }
 }

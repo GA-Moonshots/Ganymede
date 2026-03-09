@@ -271,7 +271,7 @@ public class Ganymede extends Robot {
                             // FIRE GREEN FIRST
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToLeft()),
-                                    new TurnToCommand(this.drive.follower, -135, AngleUnit.DEGREES)
+                                    new TurnToCommand(this.drive.follower, -125, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Green
                             // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
@@ -320,7 +320,7 @@ public class Ganymede extends Robot {
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToLeft()),
-                                    new TurnCommand(drive.follower, 90, true, AngleUnit.DEGREES)
+                                    new TurnCommand(drive.follower, 100, true, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Green
                             new ParallelCommandGroup(
@@ -358,7 +358,7 @@ public class Ganymede extends Robot {
                             // FIRE PURPLE x2 (turret FRONT + robot back to original heading)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToFront()),
-                                    new TurnCommand(drive.follower, 155, false, AngleUnit.DEGREES)
+                                    new TurnCommand(drive.follower, 110, false, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Purple 1
                             new LauncherRPM(this),  // Purple 2
@@ -371,18 +371,18 @@ public class Ganymede extends Robot {
                     new SequentialCommandGroup(
                             // FIRE PURPLE FIRST (turret FRONT)
                             new InstantCommand(() -> turret.rotateToFront()),
-                            new TurnCommand(drive.follower, 90, false, AngleUnit.DEGREES),
+                            new TurnCommand(drive.follower, 55, false, AngleUnit.DEGREES),
                             new LauncherRPM(this),  // Purple 1
                             // FIRE GREEN (turret LEFT + robot rotates clockwise)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToLeft()),
-                                    new TurnCommand(drive.follower, 90, true, AngleUnit.DEGREES)
+                                    new TurnCommand(drive.follower, 95, true, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Green
                             // FIRE PURPLE (turret FRONT + robot back to original heading)
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> turret.rotateToFront()),
-                                    new TurnCommand(drive.follower, 90, false, AngleUnit.DEGREES)
+                                    new TurnCommand(drive.follower, 95, false, AngleUnit.DEGREES)
                             ),
                             new LauncherRPM(this),  // Purple 2
                             new DriveToPose(this,
