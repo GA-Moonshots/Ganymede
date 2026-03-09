@@ -50,6 +50,17 @@ public class LauncherRPM extends CommandBase {
         addRequirements(launcher);
     }
 
+    /** Explicit RPM constructor — pass a whole-number RPM directly (use for tuning). */
+    public LauncherRPM(Ganymede robot, int targetRPM) {
+        this.robot = robot;
+        this.launcher = this.robot.launcher;
+        this.targetRPM = targetRPM;
+        this.launcherSpeed = -1;
+        this.timer = new Timing.Timer(
+                (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
+        addRequirements(launcher);
+    }
+
     public LauncherRPM(Ganymede robot) {
         this.robot = robot;
         this.launcher = this.robot.launcher;

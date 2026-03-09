@@ -27,7 +27,7 @@ public class PersistentPoseManager {
     private static final String POSE_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/FIRST/pose.txt";
 
     // Defaults if file doesn't exist or can't be read
-    private static final Pose DEFAULT_POSE = new Pose(105, 32, 0); // Center of red observation zone
+    private static final Pose DEFAULT_POSE = new Pose(40, 32, 0); // Center of red observation zone (redBaseZone)
     private static final boolean DEFAULT_IS_RED = true;
 
     /**
