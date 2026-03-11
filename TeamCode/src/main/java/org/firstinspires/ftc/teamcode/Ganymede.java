@@ -199,6 +199,7 @@ public class Ganymede extends Robot {
                 .whenPressed(new InstantCommand(() -> turret.rotateToFront()));
 
         // Button Y -- Launcher RPM-based launch
+        // remove true param if you don't want dynamic shooting
         new GamepadButton(player2, GamepadKeys.Button.Y)
                 .whenPressed(new LauncherRPM(this));
 
@@ -421,8 +422,8 @@ public class Ganymede extends Robot {
             // Too far for reliable pattern scoring - just shoot some bal
             new SequentialCommandGroup(
                     new InstantCommand(() -> turret.rotateToFront()),
-                    new LauncherRPM(this),  // Launch 1
-                    new LauncherRPM(this),  // Launch 2
+                    new LauncherRPM(this, true ),  // Launch 1
+                    new LauncherRPM(this,true ),  // Launch 2
                     new DriveFwdByDist(this, 24, 20)  // Move forward
             ).schedule();
         }

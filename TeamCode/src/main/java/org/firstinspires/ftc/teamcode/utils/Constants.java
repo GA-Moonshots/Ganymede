@@ -63,7 +63,7 @@ public class Constants {
     public static final double MIN_DRIVE_SPEED = 0.2;
     public static final double MAX_DRIVE_SPEED = 1.0;
     public static final double DEFAULT_DRIVE_SPEED = 1;
-    public static final double SLOW_MODE_MULTIPLIER = 0.5;
+    public static final double SLOW_MODE_MULTIPLIER = 0.3;
 
     /** Input threshold and tolerances */
     public static final double INPUT_THRESHOLD = 0.1;
@@ -86,12 +86,12 @@ public class Constants {
     public static final double FIELD_TOP_RIGHT_Y = 144;
 
     /** Blue alliance scoring target  */
-    public static final double BLUE_TARGET_X = 27;
+    public static final double BLUE_TARGET_X = 12;
     public static final double BLUE_TARGET_Y = 124;
 
     /** Red alliance scoring target  */
-    public static final double RED_TARGET_X = 207;
-    public static final double RED_TARGET_Y = 123;
+    public static final double RED_TARGET_X = 118.4;
+    public static final double RED_TARGET_Y = 125;
 
     public static final Pose FIRST_RED_BALL_SET = new Pose(41.8, 84.4, Math.toRadians(-178.1));
     public static final Pose SECOND_RED_BALL_SET = new Pose(41.8, 60.2, Math.toRadians(-178.1));
@@ -129,7 +129,7 @@ public class Constants {
     public static final long LAUNCHER_PULSE_ON_MS = 150;
 
     /** Observation gap after each pulse — flywheel tells us if a ball went through */
-    public static final long LAUNCHER_PULSE_OFF_MS = 150;
+    public static final long LAUNCHER_PULSE_OFF_MS = 190;
 
     /** Max feed attempts before giving up (safety fallback, not the primary stop) */
     public static final int LAUNCHER_MAX_PULSES = 6;
@@ -153,10 +153,11 @@ public class Constants {
     // Motor max is ~200 RPM — all target values must stay at or below this.
     // LAUNCHER_FEED_RPM (150) is the floor; useful calibration range is ~150–200.
     public static final double[][] LAUNCHER_RPM_TABLE = {
-        {  40.4,  135.0 },   // ~41 in  (Blue NEAR shooting position)   ← tune
-        {  80.3,  150.0 },   // ~80 in  mid-range                       ← tune
-        { 115.2,  165 },   // ~119 in (Red NEAR shooting position)    ← tune
-        { 140.8,  180.0 },   // ~145 in far-goal range (motor max)      ← tune
+        { 25,  140.0 },
+        { 42,  135.0 },
+        { 55,  135.0 },
+        { 66,  145 },
+        { 113,  170.0 }
     };
 
     /**
