@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 
@@ -75,7 +75,7 @@ public class DriveFwdByDist extends DriveAbstract {
                 currentPose.getHeading()  // Maintain heading
         );
 
-        PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierCurve(currentPose, targetPose));
+        PathBuilder builder = new PathBuilder(robot.drive.follower).addPath(new BezierLine(currentPose, targetPose));
         follower.followPath(builder.build());
 
         // Telemetry for debugging
