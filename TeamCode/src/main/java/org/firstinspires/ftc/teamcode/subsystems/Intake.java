@@ -27,6 +27,7 @@ public class Intake extends SubsystemBase {
 
     public Servo stopperG;
     public Servo stopperP;
+    public Servo linearServo;
     // ============================================================
     //                        CONSTRUCTOR
 
@@ -43,6 +44,8 @@ public class Intake extends SubsystemBase {
 
         this.stopperG = robot.hardwareMap.get(Servo.class, Constants.GREEN_SORTER_NAME);
         this.stopperP = robot.hardwareMap.get(Servo.class, Constants.PURPLE_SORTER_NAME);
+        this.linearServo = robot.hardwareMap.get(Servo.class, Constants.LINEAR_SERVO);
+
 
         stopperG.setPosition(0.5);
         stopperP.setPosition(0);
@@ -70,6 +73,23 @@ public class Intake extends SubsystemBase {
     }
     public void stop() {
         intakeMotor.setPower(0);
+    }
+
+    double CLOSED_POS = 0.2;
+    double OPEN_POS = 0.8;
+    
+    public void extendServo() {
+        double current = linearServo.getPosition();
+
+        // Check which side it's closer to
+        if (Math.abs(current - CLOSED_POS) < 0.05) {
+            // It's closed → open it
+            linearServo.setPosition(OPEN_POS);
+        } else {
+            // It's open (or somewhere else) → close it
+            linearServo.setPosition(CLOSED_POS);
+        }
+
     }
 
 }

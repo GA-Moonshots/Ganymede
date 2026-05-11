@@ -175,7 +175,10 @@ public class Ganymede extends Robot {
                 .whenPressed(() -> {this.drive.follower.breakFollowing();
                     this.drive.follower.startTeleopDrive();});
 
-        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
+        new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new InstantCommand(() -> intake.extendServo()));
+
+
 
         new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT);
 
@@ -422,9 +425,9 @@ public class Ganymede extends Robot {
             // Too far for reliable pattern scoring - just shoot some bal
             new SequentialCommandGroup(
                     new InstantCommand(() -> turret.rotateToFront()),
-                    new LauncherRPM(this, true ),  // Launch 1
-                    new LauncherRPM(this,true ),  // Launch 2
-                    new DriveFwdByDist(this, 24, 20)  // Move forward
+                    new LauncherRPM(this, 170 ),  // Launch 1
+                    new LauncherRPM(this,170 ),  // Launch 2
+                    new DriveToPose(this, new Pose(this.drive.getPose().getX(),this.drive.getPose().getY() + 12,this.drive.getPose().getHeading()), 5)  // Move forward
             ).schedule();
         }
     }

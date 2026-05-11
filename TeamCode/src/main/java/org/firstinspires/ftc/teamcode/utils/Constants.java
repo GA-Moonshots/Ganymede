@@ -37,6 +37,8 @@ public class Constants {
     public static final String PURPLE_FEEDER_SERVO_NAME = "purpleServo";
     public static final String GREEN_SORTER_NAME = "stopperG";
     public static final String PURPLE_SORTER_NAME = "stopperP";
+    public static final String LINEAR_SERVO = "linearServo";
+
 
 
     /* Sensors */
@@ -129,7 +131,7 @@ public class Constants {
     public static final long LAUNCHER_PULSE_ON_MS = 150;
 
     /** Observation gap after each pulse — flywheel tells us if a ball went through */
-    public static final long LAUNCHER_PULSE_OFF_MS = 190;
+    public static final long LAUNCHER_PULSE_OFF_MS = 200;
 
     /** Max feed attempts before giving up (safety fallback, not the primary stop) */
     public static final int LAUNCHER_MAX_PULSES = 6;

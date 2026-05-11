@@ -55,7 +55,7 @@ public class LauncherRPM extends CommandBase {
         this.robot = robot;
         this.launcher = this.robot.launcher;
         this.targetRPM = targetRPM;
-        this.launcherSpeed = -1;
+        this.launcherSpeed = Constants.LAUNCHER_DEFAULT_POWER;
         this.timer = new Timing.Timer(
                 (long)(Constants.LAUNCHER_RPM_TIMEOUT_SECONDS * 1000), TimeUnit.MILLISECONDS);
         addRequirements(launcher);
